@@ -46,13 +46,14 @@ public class ServerApp {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void service() {
 
 		notifyApplicationInitialized();
 
-		List<Board> boards = (List<Board>) context.get("boardList");
-		List<Plan> plans = (List<Plan>) context.get("planList");
-		List<Member> members = (List<Member>) context.get("memberList");
+		boards = (List<Board>) context.get("boardList");
+		plans = (List<Plan>) context.get("planList");
+		members = (List<Member>) context.get("memberList");
 
 		try (
 				// 서버쪽 연결 준비
@@ -157,7 +158,7 @@ public class ServerApp {
 	}
 
 	private void notFound(ObjectOutputStream out) throws IOException {
-		out.writeUTF("FAIL");
+		out.writeUTF("OK");
 		out.writeUTF("요청한 명령을 처리할 수 없습니다.");
 	}
 
