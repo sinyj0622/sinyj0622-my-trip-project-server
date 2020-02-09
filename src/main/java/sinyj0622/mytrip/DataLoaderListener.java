@@ -26,7 +26,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 	
 	
 	@Override
-	public void ContextInitialized(Map<String, Object> context) {
+	public void contextInitialized(Map<String, Object> context) {
 		System.out.println("데이터를 로딩하였습니다.");
 		
 		loadBoardData();
@@ -41,7 +41,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 	}
 
 	@Override
-	public void ContextDestroyed(Map<String, Object> context) {
+	public void contextDestroyed(Map<String, Object> context) {
 		System.out.println("데이터를 저장하였습니다.");
 		
 		saveBoardData();

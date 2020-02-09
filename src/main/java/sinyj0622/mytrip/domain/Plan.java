@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Plan implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 20200209L;
 	
 	private int no;
 	private String Destnation;
