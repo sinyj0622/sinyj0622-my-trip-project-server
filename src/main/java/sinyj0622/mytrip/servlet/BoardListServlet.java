@@ -5,14 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
+import sinyj0622.mytrip.dao.BoardObjectDao;
 import sinyj0622.mytrip.domain.Board;
 
 public class BoardListServlet implements Servlet {
 
-	List<Board> boards;
-	
-	public BoardListServlet(List<Board> boards) {
-		this.boards = boards;
+	BoardObjectDao boardDao;
+
+	public BoardListServlet(BoardObjectDao boardDao) {
+		this.boardDao = boardDao;
 	}
 	
 	
@@ -20,7 +21,7 @@ public class BoardListServlet implements Servlet {
 	public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
 		out.writeUTF("OK");
 		out.reset();
-		out.writeObject(boards);
+		out.writeObject(boardDao.findAll());
 	}
 
 }

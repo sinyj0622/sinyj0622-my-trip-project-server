@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.mytrip.domain.Board;
+import sinyj0622.mytrip.dao.BoardObjectDao;
+import sinyj0622.mytrip.dao.MemberObjectDao;
+import sinyj0622.mytrip.dao.PlanObjectDao;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.servlet.BoardAddServlet;
@@ -40,9 +42,6 @@ public class ServerApp {
 
 	Map<String, Servlet> servlets = new HashMap(); // 서블릿객체저장
 
-	List<Board> boards;
-	List<Plan> plans;
-	List<Member> members;
 
 	public void addApplicationContextListener(ApplicationContextListener listener) {
 		listeners.add(listener);
@@ -69,27 +68,27 @@ public class ServerApp {
 
 		notifyApplicationInitialized();
 
-		boards = (List<Board>) context.get("boardList");
-		plans = (List<Plan>) context.get("planList");
-		members = (List<Member>) context.get("memberList");
+		BoardObjectDao boardDao = (BoardObjectDao) context.get("boardDao");
+		MemberObjectDao memberDao = (MemberObjectDao) context.get("memberDao");
+		PlanObjectDao planDao = (PlanObjectDao) context.get("planDao");
 
-		servlets.put("/board/list", new BoardListServlet(boards));
-		servlets.put("/board/add", new BoardAddServlet(boards));
-		servlets.put("/board/detail", new BoardDetailServlet(boards));
-		servlets.put("/board/delete", new BoardDeleteServlet(boards));
-		servlets.put("/board/update", new BoardUpdateServlet(boards));
+		servlets.put("/board/list", new BoardListServlet(boardDao));
+		servlets.put("/board/add", new BoardAddServlet(boardDao));
+		servlets.put("/board/detail", new BoardDetailServlet(boardDao));
+		servlets.put("/board/delete", new BoardDeleteServlet(boardDao));
+		servlets.put("/board/update", new BoardUpdateServlet(boardDao));
 		
-		servlets.put("/member/list", new MemberListServlet(members));
-		servlets.put("/member/add", new MemberAddServlet(members));
-		servlets.put("/member/detail", new MemberDetailServlet(members));
-		servlets.put("/member/delete", new MemberDeleteServlet(members));
-		servlets.put("/member/update", new MemberUpdateServlet(members));
+		servlets.put("/member/list", new MemberListServlet(memberDao));
+		servlets.put("/member/add", new MemberAddServlet(memberDao));
+		servlets.put("/member/detail", new MemberDetailServlet(memberDao));
+		servlets.put("/member/delete", new MemberDeleteServlet(memberDao));
+		servlets.put("/member/update", new MemberUpdateServlet(memberDao));
 		
-		servlets.put("/plan/list", new PlanListServlet(plans));
-		servlets.put("/plan/add", new PlanAddServlet(plans));
-		servlets.put("/plan/detail", new PlanDetailServlet(plans));
-		servlets.put("/plan/delete", new PlanDeleteServlet(plans));
-		servlets.put("/plan/update", new PlanUpdateServlet(plans));
+		servlets.put("/plan/list", new PlanListServlet(planDao));
+		servlets.put("/plan/add", new PlanAddServlet(planDao));
+		servlets.put("/plan/detail", new PlanDetailServlet(planDao));
+		servlets.put("/plan/delete", new PlanDeleteServlet(planDao));
+		servlets.put("/plan/update", new PlanUpdateServlet(planDao));
 
 		try (
 				// 서버쪽 연결 준비
@@ -173,11 +172,6 @@ public class ServerApp {
 		out.writeUTF("OK");
 		out.flush();
 	}
-
-	private void updatePlan(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-		
-	}
-
 
 
 	public static void main(String[] args) {

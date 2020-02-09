@@ -4,14 +4,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
+import sinyj0622.mytrip.dao.MemberObjectDao;
 import sinyj0622.mytrip.domain.Member;
 
 public class MemberListServlet implements Servlet {
 
-	List<Member> members;
-	
-	public MemberListServlet(List<Member> members) {
-		this.members = members;
+	MemberObjectDao memberDao;
+
+	public MemberListServlet(MemberObjectDao memberDao) {
+		this.memberDao = memberDao;
 	}
 	
 	
@@ -19,7 +20,7 @@ public class MemberListServlet implements Servlet {
 	public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
 		out.writeUTF("OK");
 		out.reset();
-		out.writeObject(members);
+		out.writeObject(memberDao.findAll());
 
 	}
 
