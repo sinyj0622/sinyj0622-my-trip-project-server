@@ -5,14 +5,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-import sinyj0622.mytrip.dao.BoardObjectDao;
+import sinyj0622.mytrip.dao.BoardObjectFileDao;
 import sinyj0622.mytrip.domain.Board;
 
 public class BoardListServlet implements Servlet {
 
-	BoardObjectDao boardDao;
+	BoardObjectFileDao boardDao;
 
-	public BoardListServlet(BoardObjectDao boardDao) {
+	public BoardListServlet(BoardObjectFileDao boardDao) {
 		this.boardDao = boardDao;
 	}
 	

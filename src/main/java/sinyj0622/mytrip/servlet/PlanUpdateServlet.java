@@ -4,14 +4,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-import sinyj0622.mytrip.dao.PlanObjectDao;
+import sinyj0622.mytrip.dao.PlanObjectFileDao;
 import sinyj0622.mytrip.domain.Plan;
 
 public class PlanUpdateServlet implements Servlet {
 
-	PlanObjectDao planDao;
+	PlanObjectFileDao planDao;
 	
-	public PlanUpdateServlet(PlanObjectDao planDao) {
+	public PlanUpdateServlet(PlanObjectFileDao planDao) {
 		this.planDao = planDao;
 	}
 	

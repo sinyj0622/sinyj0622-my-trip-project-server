@@ -3,14 +3,14 @@ package sinyj0622.mytrip.servlet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import sinyj0622.mytrip.dao.PlanObjectDao;
+import sinyj0622.mytrip.dao.PlanObjectFileDao;
 import sinyj0622.mytrip.domain.Plan;
 
 public class PlanAddServlet implements Servlet {
 
-	PlanObjectDao planDao;
+	PlanObjectFileDao planDao;
 	
-	public PlanAddServlet(PlanObjectDao planDao) {
+	public PlanAddServlet(PlanObjectFileDao planDao) {
 		this.planDao = planDao;
 	}
 	

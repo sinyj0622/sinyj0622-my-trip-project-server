@@ -4,14 +4,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-import sinyj0622.mytrip.dao.MemberObjectDao;
+import sinyj0622.mytrip.dao.MemberObjectFileDao;
 import sinyj0622.mytrip.domain.Member;
 
 public class MemberListServlet implements Servlet {
 
-	MemberObjectDao memberDao;
+	MemberObjectFileDao memberDao;
 
-	public MemberListServlet(MemberObjectDao memberDao) {
+	public MemberListServlet(MemberObjectFileDao memberDao) {
 		this.memberDao = memberDao;
 	}
 	

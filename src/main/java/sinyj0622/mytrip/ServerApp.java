@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.mytrip.dao.BoardObjectDao;
-import sinyj0622.mytrip.dao.MemberObjectDao;
-import sinyj0622.mytrip.dao.PlanObjectDao;
+import sinyj0622.mytrip.dao.BoardObjectFileDao;
+import sinyj0622.mytrip.dao.MemberObjectFileDao;
+import sinyj0622.mytrip.dao.PlanObjectFileDao;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.servlet.BoardAddServlet;
@@ -68,9 +68,9 @@ public class ServerApp {
 
 		notifyApplicationInitialized();
 
-		BoardObjectDao boardDao = (BoardObjectDao) context.get("boardDao");
-		MemberObjectDao memberDao = (MemberObjectDao) context.get("memberDao");
-		PlanObjectDao planDao = (PlanObjectDao) context.get("planDao");
+		BoardObjectFileDao boardDao = (BoardObjectFileDao) context.get("boardDao");
+		MemberObjectFileDao memberDao = (MemberObjectFileDao) context.get("memberDao");
+		PlanObjectFileDao planDao = (PlanObjectFileDao) context.get("planDao");
 
 		servlets.put("/board/list", new BoardListServlet(boardDao));
 		servlets.put("/board/add", new BoardAddServlet(boardDao));

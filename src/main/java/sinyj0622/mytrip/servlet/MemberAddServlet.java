@@ -3,14 +3,14 @@ package sinyj0622.mytrip.servlet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import sinyj0622.mytrip.dao.MemberObjectDao;
+import sinyj0622.mytrip.dao.MemberObjectFileDao;
 import sinyj0622.mytrip.domain.Member;
 
 public class MemberAddServlet implements Servlet {
 
-	MemberObjectDao memberDao;
+	MemberObjectFileDao memberDao;
 
-	public MemberAddServlet(MemberObjectDao memberDao) {
+	public MemberAddServlet(MemberObjectFileDao memberDao) {
 		this.memberDao = memberDao;
 	}
 	
