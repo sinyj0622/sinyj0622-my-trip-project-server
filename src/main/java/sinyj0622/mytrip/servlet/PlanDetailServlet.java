@@ -2,32 +2,30 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-
-import sinyj0622.mytrip.dao.PlanObjectFileDao;
+import sinyj0622.mytrip.dao.json.PlanJsonFileDao;
 import sinyj0622.mytrip.domain.Plan;
 
 public class PlanDetailServlet implements Servlet {
 
-	PlanObjectFileDao planDao;
-	
-	public PlanDetailServlet(PlanObjectFileDao planDao) {
-		this.planDao = planDao;
-	}
-	
-	@Override
-	public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-			int no = in.readInt();
+  PlanJsonFileDao planDao;
 
-			Plan plan = planDao.findByNo(no);
-			if (plan != null) {
-				out.writeUTF("OK");
-				out.writeObject(plan);
+  public PlanDetailServlet(PlanJsonFileDao planDao) {
+    this.planDao = planDao;
+  }
 
-			} else {
-				out.writeUTF("FAIL");
-				out.writeUTF("해당 번호의 게시물이 없습니다.");
-			}
-	}
+  @Override
+  public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
+    int no = in.readInt();
+
+    Plan plan = planDao.findByNo(no);
+    if (plan != null) {
+      out.writeUTF("OK");
+      out.writeObject(plan);
+
+    } else {
+      out.writeUTF("FAIL");
+      out.writeUTF("해당 번호의 게시물이 없습니다.");
+    }
+  }
 
 }
