@@ -3,13 +3,14 @@ package sinyj0622.mytrip.dao;
 import java.util.List;
 import sinyj0622.mytrip.domain.Member;
 
-public class MemberObjectFileDao extends AbstractObjectFileDao<Member> {
+public class MemberObjectFileDao extends AbstractObjectFileDao<Member> implements MemberDao {
 
 
   public MemberObjectFileDao(String filename) {
     super(filename);
   }
 
+  @Override
   public int insert(Member member) throws Exception {
 
     if (indexOf(member.getNo()) > -1) { // 같은 번호의 게시물이 있다면,
@@ -21,10 +22,12 @@ public class MemberObjectFileDao extends AbstractObjectFileDao<Member> {
     return 1;
   }
 
+  @Override
   public List<Member> findAll() throws Exception {
     return list;
   }
 
+  @Override
   public Member findByNo(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {
@@ -33,6 +36,7 @@ public class MemberObjectFileDao extends AbstractObjectFileDao<Member> {
     return list.get(index);
   }
 
+  @Override
   public int update(Member member) throws Exception {
     int index = indexOf(member.getNo());
 
@@ -45,6 +49,7 @@ public class MemberObjectFileDao extends AbstractObjectFileDao<Member> {
     return 1;
   }
 
+  @Override
   public int delete(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {

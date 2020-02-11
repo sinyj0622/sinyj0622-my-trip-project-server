@@ -2,14 +2,14 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import sinyj0622.mytrip.dao.json.BoardJsonFileDao;
+import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.domain.Board;
 
 public class BoardAddServlet implements Servlet {
 
-  BoardJsonFileDao boardDao;
+  BoardDao boardDao;
 
-  public BoardAddServlet(BoardJsonFileDao boardDao) {
+  public BoardAddServlet(BoardDao boardDao) {
     this.boardDao = boardDao;
   }
 

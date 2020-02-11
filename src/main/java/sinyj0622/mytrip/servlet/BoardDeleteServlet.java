@@ -2,13 +2,13 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import sinyj0622.mytrip.dao.json.BoardJsonFileDao;
+import sinyj0622.mytrip.dao.BoardDao;
 
 public class BoardDeleteServlet implements Servlet {
 
-  BoardJsonFileDao boardDao;
+  BoardDao boardDao;
 
-  public BoardDeleteServlet(BoardJsonFileDao boardDao) {
+  public BoardDeleteServlet(BoardDao boardDao) {
     this.boardDao = boardDao;
   }
 

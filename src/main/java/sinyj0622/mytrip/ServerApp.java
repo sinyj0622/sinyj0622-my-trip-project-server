@@ -10,9 +10,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.mytrip.dao.json.BoardJsonFileDao;
-import sinyj0622.mytrip.dao.json.MemberJsonFileDao;
-import sinyj0622.mytrip.dao.json.PlanJsonFileDao;
+import sinyj0622.mytrip.dao.BoardDao;
+import sinyj0622.mytrip.dao.MemberDao;
+import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.servlet.BoardAddServlet;
 import sinyj0622.mytrip.servlet.BoardDeleteServlet;
 import sinyj0622.mytrip.servlet.BoardDetailServlet;
@@ -64,9 +64,9 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
-    BoardJsonFileDao boardDao = (BoardJsonFileDao) context.get("boardDao");
-    MemberJsonFileDao memberDao = (MemberJsonFileDao) context.get("memberDao");
-    PlanJsonFileDao planDao = (PlanJsonFileDao) context.get("planDao");
+    BoardDao boardDao = (BoardDao) context.get("boardDao");
+    MemberDao memberDao = (MemberDao) context.get("memberDao");
+    PlanDao planDao = (PlanDao) context.get("planDao");
 
     servlets.put("/board/list", new BoardListServlet(boardDao));
     servlets.put("/board/add", new BoardAddServlet(boardDao));

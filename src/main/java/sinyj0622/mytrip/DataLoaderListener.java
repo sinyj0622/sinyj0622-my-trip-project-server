@@ -2,6 +2,9 @@ package sinyj0622.mytrip;
 
 import java.util.Map;
 import sinyj0622.mytrip.context.ApplicationContextListener;
+import sinyj0622.mytrip.dao.BoardDao;
+import sinyj0622.mytrip.dao.MemberDao;
+import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.dao.json.BoardJsonFileDao;
 import sinyj0622.mytrip.dao.json.MemberJsonFileDao;
 import sinyj0622.mytrip.dao.json.PlanJsonFileDao;
@@ -14,9 +17,9 @@ public class DataLoaderListener implements ApplicationContextListener {
     System.out.println("데이터를 로딩하였습니다.");
 
 
-    BoardJsonFileDao boardDao = new BoardJsonFileDao("./board.json");
-    MemberJsonFileDao memberDao = new MemberJsonFileDao("./member.json");
-    PlanJsonFileDao planDao = new PlanJsonFileDao("./plan.json");
+    BoardDao boardDao = new BoardJsonFileDao("./board.json");
+    MemberDao memberDao = new MemberJsonFileDao("./member.json");
+    PlanDao planDao = new PlanJsonFileDao("./plan.json");
 
     context.put("boardDao", boardDao);
     context.put("memberDao", memberDao);

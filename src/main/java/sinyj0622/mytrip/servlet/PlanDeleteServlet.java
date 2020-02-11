@@ -2,13 +2,13 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import sinyj0622.mytrip.dao.json.PlanJsonFileDao;
+import sinyj0622.mytrip.dao.PlanDao;
 
 public class PlanDeleteServlet implements Servlet {
 
-  PlanJsonFileDao planDao;
+  PlanDao planDao;
 
-  public PlanDeleteServlet(PlanJsonFileDao planDao) {
+  public PlanDeleteServlet(PlanDao planDao) {
     this.planDao = planDao;
   }
 

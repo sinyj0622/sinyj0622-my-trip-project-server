@@ -1,14 +1,16 @@
 package sinyj0622.mytrip.dao.json;
 
 import java.util.List;
+import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.Plan;
 
-public class PlanJsonFileDao extends AbstractJsonFileDao<Plan> {
+public class PlanJsonFileDao extends AbstractJsonFileDao<Plan> implements PlanDao {
 
   public PlanJsonFileDao(String filename) {
     super(filename);
   }
 
+  @Override
   public int insert(Plan plan) throws Exception {
 
     if (indexOf(plan.getNo()) > -1) { // 같은 번호의 게시물이 있다면,
@@ -20,10 +22,12 @@ public class PlanJsonFileDao extends AbstractJsonFileDao<Plan> {
     return 1;
   }
 
+  @Override
   public List<Plan> findAll() throws Exception {
     return list;
   }
 
+  @Override
   public Plan findByNo(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {
@@ -32,6 +36,7 @@ public class PlanJsonFileDao extends AbstractJsonFileDao<Plan> {
     return list.get(index);
   }
 
+  @Override
   public int update(Plan plan) throws Exception {
     int index = indexOf(plan.getNo());
 
@@ -44,6 +49,7 @@ public class PlanJsonFileDao extends AbstractJsonFileDao<Plan> {
     return 1;
   }
 
+  @Override
   public int delete(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {

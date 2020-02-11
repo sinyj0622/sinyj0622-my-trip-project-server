@@ -5,5 +5,5 @@ import java.io.ObjectOutputStream;
 
 public interface Servlet {
 
-	void service( ObjectInputStream in, ObjectOutputStream out) throws Exception;
+  void service(ObjectInputStream in, ObjectOutputStream out) throws Exception;
 }
