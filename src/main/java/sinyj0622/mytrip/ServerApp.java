@@ -119,17 +119,11 @@ public class ServerApp {
 
       System.out.println("통신을 위한 입출력 스트림을 준비하였음!");
 
-      while (true) {
         String request = in.readUTF();
-        System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
 
-        switch (request) {
-          case "quit":
-            quit(out);
-            return 0;
-          case "/server/stop":
-            quit(out);
-            return 9;
+        if (request.equalsIgnoreCase("/server/stop")) {
+        	quit(out);
+        	return 9;
         }
 
         Servlet servlet = servlets.get(request);
@@ -151,12 +145,13 @@ public class ServerApp {
 
         out.flush();
         System.out.println("클라이언트로 메시지를 전송하였음!");
-      }
+        return 0;
     } catch (Exception e) {
       System.out.println("예외 발생:");
       e.printStackTrace();
       return -1;
     }
+    
   }
 
   private void notFound(ObjectOutputStream out) throws IOException {
