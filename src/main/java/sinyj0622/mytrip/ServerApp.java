@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import sinyj0622.mytrip.context.ApplicationContextListener;
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.dao.MemberDao;
@@ -38,6 +41,8 @@ public class ServerApp {
 
 	Map<String, Servlet> servlets = new HashMap(); // 서블릿객체저장
 
+	// 스레드풀
+	ExecutorService executorService = Executors.newCachedThreadPool();
 
 	public void addApplicationContextListener(ApplicationContextListener listener) {
 		listeners.add(listener);
@@ -98,10 +103,12 @@ public class ServerApp {
 				System.out.println("클라이언트와 연결되었음!");
 
 
-				new Thread(() -> {
-					processRequest(socket);
+				executorService.submit(() -> {
+						processRequest(socket);
+					});
+					
 
-				}).start();
+		
 			}
 
 		} catch (Exception e) {
