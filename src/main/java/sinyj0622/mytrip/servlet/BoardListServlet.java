@@ -1,8 +1,11 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.util.List;
+import java.util.Scanner;
+
 import sinyj0622.mytrip.dao.BoardDao;
+import sinyj0622.mytrip.domain.Board;
 
 public class BoardListServlet implements Servlet {
 
@@ -14,10 +17,14 @@ public class BoardListServlet implements Servlet {
 
 
   @Override
-  public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-    out.writeUTF("OK");
-    out.reset();
-    out.writeObject(boardDao.findAll());
+  public void service(Scanner in, PrintStream out) throws Exception {
+	  
+    List<Board> boards = boardDao.findAll();
+    for (Board b : boards) {
+      out.printf("%d, %s, %s, %d\n", b.getNo(), b.getText(), b.getDate(),
+          b.getViewCount());
+    }
+
   }
 
 }

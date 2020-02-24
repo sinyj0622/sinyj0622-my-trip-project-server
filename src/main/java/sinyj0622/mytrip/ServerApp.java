@@ -1,13 +1,14 @@
 package sinyj0622.mytrip;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,11 +36,11 @@ import sinyj0622.mytrip.servlet.Servlet;
 
 public class ServerApp {
 
-	// 옵저버 관련 코드
+	// 옵저버 관련 코드 
 	Set<ApplicationContextListener> listeners = new HashSet<>();
 	Map<String, Object> context = new HashMap<>();
 
-	Map<String, Servlet> servlets = new HashMap(); // 서블릿객체저장
+	Map<String, Servlet> servlets = new HashMap<>(); // 서블릿객체저장
 
 	// 스레드풀
 	ExecutorService executorService = Executors.newCachedThreadPool();
@@ -95,8 +96,6 @@ public class ServerApp {
 				// 서버쪽 연결 준비
 				ServerSocket serverSocket = new ServerSocket(7777)) {
 
-			System.out.println("클라이언트 연결 대기중...");
-
 
 			while (true) {
 				Socket socket = serverSocket.accept();
@@ -104,11 +103,9 @@ public class ServerApp {
 
 
 				executorService.submit(() -> {
-						processRequest(socket);
-					});
-					
+					processRequest(socket);
+				});
 
-		
 			}
 
 		} catch (Exception e) {
@@ -117,22 +114,20 @@ public class ServerApp {
 
 		notifyApplicationDestroyed();
 
+		// 스레드풀 종료
+		executorService.shutdown();
+
 	} // service()
 
 	@SuppressWarnings("unchecked")
 	int processRequest(Socket clientSocket) {
 		try (Socket socket = clientSocket;
-				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
+				Scanner in = new Scanner(socket.getInputStream());
+				PrintStream out = new PrintStream(socket.getOutputStream())) {
 
-			System.out.println("통신을 위한 입출력 스트림을 준비하였음!");
+			String request = in.nextLine();
+			System.out.printf("=>%s\n", request);
 
-			String request = in.readUTF();
-
-			if (request.equalsIgnoreCase("/server/stop")) {
-				quit(out);
-				return 9;
-			}
 
 			Servlet servlet = servlets.get(request);
 
@@ -140,21 +135,22 @@ public class ServerApp {
 				try {
 					servlet.service(in, out);
 
-				} catch (Exception e) {
-					out.writeUTF("FAIL");
-					out.writeUTF(e.getMessage());
+				} catch (Exception e) { 
+					out.println("요청 처리 중 오류 발생!");
+					out.println(e.getMessage());
 
+					// 서버쪽 화면
 					System.out.println("클라이언트 요청 처리 중 오류 발생:");
 					e.printStackTrace();
 				}
 			} else {
 				notFound(out);
 			}
-
+			out.println("!end!");
 			out.flush();
-			System.out.println("클라이언트로 메시지를 전송하였음!");
+			System.out.println("클라이언트에게 응답하였음!");
+			System.out.println("-------------------------------");
 			return 0;
-
 
 		} catch (Exception e) {
 			System.out.println("예외 발생:");
@@ -165,9 +161,8 @@ public class ServerApp {
 
 	}
 
-	private void notFound(ObjectOutputStream out) throws IOException {
-		out.writeUTF("OK");
-		out.writeUTF("요청한 명령을 처리할 수 없습니다.");
+	private void notFound(PrintStream out) throws IOException {
+		out.println("요청한 명령을 처리할 수 없습니다.");
 	}
 
 	private void quit(ObjectOutputStream out) throws IOException {
