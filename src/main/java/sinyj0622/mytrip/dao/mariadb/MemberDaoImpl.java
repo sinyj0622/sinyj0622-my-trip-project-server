@@ -98,4 +98,29 @@ public class MemberDaoImpl implements MemberDao {
 			return result;
 		}
 	}
+	
+	@Override
+	public List<Member> findByKeyword(String keyword) throws Exception {
+		try (Statement stmt = con.createStatement()){
+			ResultSet rs = stmt.executeQuery("select *"
+					+ " from mytrip_member"
+					+ " where name like '" + keyword
+					+ "' or nick like '" + keyword
+					+ "'");
+
+			ArrayList<Member> list = new ArrayList<>();
+
+			while(rs.next()) {
+				Member member = new Member();
+				member.setNo(rs.getInt("member_id"));
+				member.setName(rs.getString("name"));
+				member.setNickname(rs.getString("nick"));
+				member.setEmail(rs.getString("email"));
+				member.setMyphoto(rs.getString("photo"));
+				member.setRegisteredDate(rs.getDate("cdt"));
+				list.add(member);
+			}
+			return list;
+		}
+	}
 }

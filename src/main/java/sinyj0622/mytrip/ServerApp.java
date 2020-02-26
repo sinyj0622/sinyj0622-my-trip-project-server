@@ -26,6 +26,7 @@ import sinyj0622.mytrip.servlet.MemberAddServlet;
 import sinyj0622.mytrip.servlet.MemberDeleteServlet;
 import sinyj0622.mytrip.servlet.MemberDetailServlet;
 import sinyj0622.mytrip.servlet.MemberListServlet;
+import sinyj0622.mytrip.servlet.MemberSearchServlet;
 import sinyj0622.mytrip.servlet.MemberUpdateServlet;
 import sinyj0622.mytrip.servlet.PlanAddServlet;
 import sinyj0622.mytrip.servlet.PlanDeleteServlet;
@@ -85,6 +86,7 @@ public class ServerApp {
 		servlets.put("/member/detail", new MemberDetailServlet(memberDao));
 		servlets.put("/member/delete", new MemberDeleteServlet(memberDao));
 		servlets.put("/member/update", new MemberUpdateServlet(memberDao));
+		servlets.put("/member/search", new MemberSearchServlet(memberDao));
 
 		servlets.put("/plan/list", new PlanListServlet(planDao));
 		servlets.put("/plan/add", new PlanAddServlet(planDao));
@@ -128,7 +130,7 @@ public class ServerApp {
 			String request = in.nextLine();
 			System.out.printf("=>%s\n", request);
 
-
+			
 			Servlet servlet = servlets.get(request);
 
 			if (servlet != null) {
