@@ -5,11 +5,9 @@ import java.sql.DriverManager;
 import java.util.Map;
 
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.mytrip.dao.BoardDao;
-import sinyj0622.mytrip.dao.MemberDao;
-import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.dao.mariadb.BoardDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.MemberDaoImpl;
+import sinyj0622.mytrip.dao.mariadb.PhotoBoardDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PlanDaoImpl;
 
 public class DataLoaderListener implements ApplicationContextListener {
@@ -27,6 +25,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 			context.put("boardDao", new BoardDaoImpl(con));
 			context.put("memberDao", new MemberDaoImpl(con));
 			context.put("planDao", new PlanDaoImpl(con));
+			context.put("photoBoardDao", new PhotoBoardDaoImpl(con));
 			
 			
 		} catch (Exception e) {

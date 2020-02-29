@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import sinyj0622.mytrip.context.ApplicationContextListener;
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.dao.MemberDao;
+import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.servlet.BoardAddServlet;
 import sinyj0622.mytrip.servlet.BoardDeleteServlet;
@@ -28,6 +29,11 @@ import sinyj0622.mytrip.servlet.MemberDetailServlet;
 import sinyj0622.mytrip.servlet.MemberListServlet;
 import sinyj0622.mytrip.servlet.MemberSearchServlet;
 import sinyj0622.mytrip.servlet.MemberUpdateServlet;
+import sinyj0622.mytrip.servlet.PhotoBoardAddServlet;
+import sinyj0622.mytrip.servlet.PhotoBoardDeleteServlet;
+import sinyj0622.mytrip.servlet.PhotoBoardDetailServlet;
+import sinyj0622.mytrip.servlet.PhotoBoardListServlet;
+import sinyj0622.mytrip.servlet.PhotoBoardUpdateServlet;
 import sinyj0622.mytrip.servlet.PlanAddServlet;
 import sinyj0622.mytrip.servlet.PlanDeleteServlet;
 import sinyj0622.mytrip.servlet.PlanDetailServlet;
@@ -74,6 +80,7 @@ public class ServerApp {
 		BoardDao boardDao = (BoardDao) context.get("boardDao");
 		MemberDao memberDao = (MemberDao) context.get("memberDao");
 		PlanDao planDao = (PlanDao) context.get("planDao");
+		PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
 
 		servlets.put("/board/list", new BoardListServlet(boardDao));
 		servlets.put("/board/add", new BoardAddServlet(boardDao));
@@ -93,6 +100,12 @@ public class ServerApp {
 		servlets.put("/plan/detail", new PlanDetailServlet(planDao));
 		servlets.put("/plan/delete", new PlanDeleteServlet(planDao));
 		servlets.put("/plan/update", new PlanUpdateServlet(planDao));
+		
+		servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao,photoBoardDao));
+		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao,photoBoardDao));
+		servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao));
+		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao));
+		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao));
 
 		try (
 				// 서버쪽 연결 준비

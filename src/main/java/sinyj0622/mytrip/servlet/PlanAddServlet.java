@@ -1,12 +1,9 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.PlanDao;
-import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.domain.Plan;
 
 public class PlanAddServlet implements Servlet {
