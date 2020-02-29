@@ -17,7 +17,7 @@ public class MemberSearchServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
-		out.println("회원 이름 또는 별명? ");
+		out.println("검색어? ");
 		out.println("!@#");
 	String response = in.nextLine();
 		

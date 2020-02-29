@@ -114,6 +114,20 @@ public class ServerApp {
 			System.out.println("서버 준비 중 오류 발생!");
 		}
 
+		// 스레드풀 종료
+		executorService.shutdown();
+		
+		
+		while(true) {
+			if (executorService.isTerminated()) {
+				break;	
+			} 
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		notifyApplicationDestroyed();
 
 		// 스레드풀 종료
@@ -130,7 +144,7 @@ public class ServerApp {
 			String request = in.nextLine();
 			System.out.printf("=>%s\n", request);
 
-			
+
 			Servlet servlet = servlets.get(request);
 
 			if (servlet != null) {

@@ -104,9 +104,9 @@ public class MemberDaoImpl implements MemberDao {
 		try (Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select *"
 					+ " from mytrip_member"
-					+ " where name like '" + keyword
-					+ "' or nick like '" + keyword
-					+ "'");
+					+ " where name like '%" + keyword
+					+ "%' or nick like '%" + keyword
+					+ "%'");
 
 			ArrayList<Member> list = new ArrayList<>();
 
