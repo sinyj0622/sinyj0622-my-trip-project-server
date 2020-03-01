@@ -43,8 +43,15 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 		try (Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_photo(titl,plan_id) values('"
 					+ photoBoard.getTitle() + "',"
-					+ photoBoard.getPlan().getNo() +")");
-
+					+ photoBoard.getPlan().getNo() +")", Statement.RETURN_GENERATED_KEYS);
+			// PK의 값을 생성
+			try (ResultSet generatedKey = stmt.getGeneratedKeys()){
+			// PK을 가져온다
+			generatedKey.next();
+			
+			photoBoard.setNo(generatedKey.getInt(1));
+			}
+			
 			return result;
 		}
 	}

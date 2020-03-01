@@ -8,6 +8,7 @@ import sinyj0622.mytrip.context.ApplicationContextListener;
 import sinyj0622.mytrip.dao.mariadb.BoardDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.MemberDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PhotoBoardDaoImpl;
+import sinyj0622.mytrip.dao.mariadb.PhotoFileDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PlanDaoImpl;
 
 public class DataLoaderListener implements ApplicationContextListener {
@@ -26,6 +27,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 			context.put("memberDao", new MemberDaoImpl(con));
 			context.put("planDao", new PlanDaoImpl(con));
 			context.put("photoBoardDao", new PhotoBoardDaoImpl(con));
+			context.put("photoFileDao", new PhotoFileDaoImpl(con));
 			
 			
 		} catch (Exception e) {
