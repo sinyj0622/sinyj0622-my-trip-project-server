@@ -105,9 +105,9 @@ public class ServerApp {
 		
 		servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao,photoBoardDao));
 		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao));
-		servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao));
-		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao));
-		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao));
+		servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao,photoFileDao));
+		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao,photoFileDao));
+		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao,photoFileDao));
 
 		try (
 				// 서버쪽 연결 준비

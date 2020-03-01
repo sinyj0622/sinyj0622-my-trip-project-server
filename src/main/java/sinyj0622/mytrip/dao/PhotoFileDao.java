@@ -9,12 +9,7 @@ import sinyj0622.mytrip.domain.PhotoFile;
 public interface PhotoFileDao {
 	int insert(PhotoFile photoFile) throws Exception;
 
-	PhotoFile findByNo(int no) throws Exception;
+	List<PhotoFile> findAll(int boardNo) throws Exception;
 
-	int update(PhotoFile photoFile) throws Exception;
-
-	int delete(int no) throws Exception;
-	
-	List<PhotoFile> findAllByPlanNo(int planNo) throws Exception;
-
+	int deleteAll(int boardNo) throws Exception;
 }
