@@ -25,6 +25,7 @@ import sinyj0622.mytrip.servlet.BoardDeleteServlet;
 import sinyj0622.mytrip.servlet.BoardDetailServlet;
 import sinyj0622.mytrip.servlet.BoardListServlet;
 import sinyj0622.mytrip.servlet.BoardUpdateServlet;
+import sinyj0622.mytrip.servlet.LoginServlet;
 import sinyj0622.mytrip.servlet.MemberAddServlet;
 import sinyj0622.mytrip.servlet.MemberDeleteServlet;
 import sinyj0622.mytrip.servlet.MemberDetailServlet;
@@ -103,6 +104,7 @@ public class ServerApp {
 		servlets.put("/member/delete", new MemberDeleteServlet(memberDao));
 		servlets.put("/member/update", new MemberUpdateServlet(memberDao));
 		servlets.put("/member/search", new MemberSearchServlet(memberDao));
+		servlets.put("/member/login", new LoginServlet(memberDao));
 
 		servlets.put("/plan/list", new PlanListServlet(planDao));
 		servlets.put("/plan/add", new PlanAddServlet(planDao));

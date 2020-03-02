@@ -131,4 +131,29 @@ public class MemberDaoImpl implements MemberDao {
 			return list;
 		}
 	}
+	
+	@Override
+	public Member findByEmailAndPassword(String email, String password) throws Exception {
+		try (Connection con = dataSource.getConnection();
+				Statement stmt = con.createStatement()){
+			ResultSet rs = stmt.executeQuery("select * from mytrip_member"
+					+ " where email='" + email
+					+ "' and pwd='" + password
+					+ "'");
+
+			if (rs.next()) {
+				Member member = new Member();
+				member.setNo(rs.getInt("member_id"));
+				member.setName(rs.getString("name"));
+				member.setNickname(rs.getString("nick"));
+				member.setEmail(rs.getString("email"));
+				member.setMyphoto(rs.getString("photo"));
+				member.setPhonenumber(rs.getString("tel"));
+				member.setRegisteredDate(rs.getDate("cdt"));
+				return member;
+			} else {
+				return null;
+			}
+		}
+	}
 }
