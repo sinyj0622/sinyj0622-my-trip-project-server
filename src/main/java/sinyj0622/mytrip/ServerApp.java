@@ -41,6 +41,7 @@ import sinyj0622.mytrip.servlet.PlanDetailServlet;
 import sinyj0622.mytrip.servlet.PlanListServlet;
 import sinyj0622.mytrip.servlet.PlanUpdateServlet;
 import sinyj0622.mytrip.servlet.Servlet;
+import sinyj0622.util.ConnectionFactory;
 
 public class ServerApp {
 
@@ -78,6 +79,7 @@ public class ServerApp {
 
 		notifyApplicationInitialized();
 
+		ConnectionFactory conFactory = (ConnectionFactory) context.get("conFactory");
 		BoardDao boardDao = (BoardDao) context.get("boardDao");
 		MemberDao memberDao = (MemberDao) context.get("memberDao");
 		PlanDao planDao = (PlanDao) context.get("planDao");
@@ -118,9 +120,9 @@ public class ServerApp {
 				Socket socket = serverSocket.accept();
 				System.out.println("클라이언트와 연결되었음!");
 
-
 				executorService.submit(() -> {
 					processRequest(socket);
+					conFactory.removeConnection();
 				});
 
 			}

@@ -27,6 +27,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 			context.put("planDao", new PlanDaoImpl(conFactory));
 			context.put("photoBoardDao", new PhotoBoardDaoImpl(conFactory));
 			context.put("photoFileDao", new PhotoFileDaoImpl(conFactory));
+			context.put("conFactory", conFactory);
 
 
 		} catch (Exception e) {
