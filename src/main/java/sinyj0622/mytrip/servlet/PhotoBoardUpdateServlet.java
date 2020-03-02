@@ -13,19 +13,20 @@ import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.sql.DataSource;
 import sinyj0622.sql.PlatformTransactionManager;
+import sinyj0622.sql.TransactionTemplate;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
 	PhotoBoardDao photoBoardDao;
 	PhotoFileDao photoFileDao;
-	PlatformTransactionManager txManager;
+	TransactionTemplate transactionTemplate;
 
 	public PhotoBoardUpdateServlet(PhotoBoardDao photoBoardDao, 
 			PhotoFileDao photoFileDao,PlatformTransactionManager txManager) {
 		this.photoBoardDao = photoBoardDao;
 		this.photoFileDao = photoFileDao;
-		this.txManager = txManager;
+		this.transactionTemplate = new TransactionTemplate(txManager);
 	}
 
 
@@ -45,8 +46,8 @@ public class PhotoBoardUpdateServlet implements Servlet {
 		newPhotoBoard.setTitle(Prompt.getString(in, out,
 				String.format("제목(%s)? ",old.getTitle()), old.getTitle()));
 
-		txManager.beginTransaction();
-		try {
+		transactionTemplate.execute(() -> {
+			
 			if (photoBoardDao.update(newPhotoBoard) > 0) { 
 				out.println("사진 파일:");
 				List<PhotoFile> oldPhotoFiles = photoFileDao.findAll(no);
@@ -70,13 +71,9 @@ public class PhotoBoardUpdateServlet implements Servlet {
 				} 
 
 				out.println("사진 게시글을 변경했습니다!");
-				txManager.commit();
 			}
-		} catch (Exception e) {
-			out.println(e.getMessage());
-			txManager.rollback();
-			
-		} 
+			return null;
+		});
 	}
 
 

@@ -1,7 +1,6 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,8 +10,9 @@ import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
-import sinyj0622.sql.DataSource;
 import sinyj0622.sql.PlatformTransactionManager;
+import sinyj0622.sql.TransactionCallback;
+import sinyj0622.sql.TransactionTemplate;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardAddServlet implements Servlet {
@@ -20,14 +20,14 @@ public class PhotoBoardAddServlet implements Servlet {
 	PlanDao planDao;
 	PhotoBoardDao photoBoardDao;
 	PhotoFileDao photoFileDao;
-	PlatformTransactionManager txManager;
+	TransactionTemplate transactionTemplate;
 
 	public PhotoBoardAddServlet(PlanDao planDao, 
 			PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao,PlatformTransactionManager txManager) {
 		this.planDao = planDao;
 		this.photoBoardDao = photoBoardDao;
 		this.photoFileDao = photoFileDao;
-		this.txManager = txManager;
+		this.transactionTemplate = new TransactionTemplate(txManager);
 	}
 
 
@@ -44,26 +44,20 @@ public class PhotoBoardAddServlet implements Servlet {
 		photoBoard.setTitle(Prompt.getString(in, out, "내용? "));
 		photoBoard.setPlan(plan);
 
-		txManager.beginTransaction();
+		transactionTemplate.execute(() -> {
+				if (photoBoardDao.insert(photoBoard) > 0) {
 
-		try {
-			if (photoBoardDao.insert(photoBoard) > 0) {
+					ArrayList<PhotoFile> photoFiles = inputPhotoFiles(in, out, photoBoard);
 
-				ArrayList<PhotoFile> photoFiles = inputPhotoFiles(in, out, photoBoard);
+					for (PhotoFile photoFile : photoFiles) {
+						photoFileDao.insert(photoFile);
+					}
 
-				for (PhotoFile photoFile : photoFiles) {
-					photoFileDao.insert(photoFile);
-				}
-
-				out.println("사진 게시글을 등록했습니다!");
-				txManager.commit();
-			} 
-
-		} catch (Exception e) {
-			out.println(e.getMessage());
-			txManager.rollback();
-			
-		} 
+					out.println("사진 게시글을 등록했습니다!");
+				} 
+				return null;
+			}
+		);
 	}
 
 
