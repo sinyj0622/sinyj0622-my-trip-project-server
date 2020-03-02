@@ -9,22 +9,19 @@ import java.util.List;
 
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoFile;
+import sinyj0622.util.ConnectionFactory;
 
 public class PhotoFileDaoImpl implements PhotoFileDao {
 	
-	String jdbcUrl;
-	String usename;
-	String password;
+	ConnectionFactory conFactory;
 	
-	public PhotoFileDaoImpl(String jdbcUrl, String usename, String password) {
-		this.jdbcUrl = jdbcUrl;
-		this.usename = usename;
-		this.password = password;
+	public PhotoFileDaoImpl(ConnectionFactory conFactory) {
+		this.conFactory = conFactory;
 	}
 
 	@Override
 	public int insert(PhotoFile photoFile) throws Exception {
-		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+		try (Connection con = conFactory.getConnection();
 				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_photo_file(photo_id,file_path)"
 					+ " values(" + photoFile.getBoardNo()
@@ -37,7 +34,7 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
 	@Override
 	public List<PhotoFile> findAll(int boardNo) throws Exception {
-		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+		try (Connection con = conFactory.getConnection();
 				Statement stmt = con.createStatement();
 		        ResultSet rs = stmt.executeQuery("select photo_file_id, photo_id, file_path" //
 		            + " from mytrip_photo_file" //
@@ -60,7 +57,7 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
 	@Override
 	public int deleteAll(int boardNo) throws Exception {
-	    try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+	    try (Connection con = conFactory.getConnection();
 	    		Statement stmt = con.createStatement()) {
 	        int result = stmt.executeUpdate( //
 	            "delete from mytrip_photo_file" //
