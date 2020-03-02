@@ -39,7 +39,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
 		newPhotoBoard.setTitle(Prompt.getString(in, out,
 				String.format("제목(%s)? ",old.getTitle()), old.getTitle()));
 
-		DataLoaderListener.con.setAutoCommit(false);
+		//DataLoaderListener.con.setAutoCommit(false);
 		try {
 			if (photoBoardDao.update(newPhotoBoard) > 0) { 
 				out.println("사진 파일:");
@@ -64,14 +64,14 @@ public class PhotoBoardUpdateServlet implements Servlet {
 				} 
 
 				out.println("사진 게시글을 변경했습니다!");
-				DataLoaderListener.con.commit();
+				//DataLoaderListener.con.commit();
 			}
 		} catch (Exception e) {
 			out.println(e.getMessage());
-			DataLoaderListener.con.rollback();
+			//DataLoaderListener.con.rollback();
 			
 		} finally {
-			DataLoaderListener.con.setAutoCommit(true);
+			//DataLoaderListener.con.setAutoCommit(true);
 		}
 	}
 

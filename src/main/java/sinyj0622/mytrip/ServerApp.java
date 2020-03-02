@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -41,6 +42,7 @@ import sinyj0622.mytrip.servlet.PlanDetailServlet;
 import sinyj0622.mytrip.servlet.PlanListServlet;
 import sinyj0622.mytrip.servlet.PlanUpdateServlet;
 import sinyj0622.mytrip.servlet.Servlet;
+import sinyj0622.sql.ConnectionProxy;
 import sinyj0622.util.ConnectionFactory;
 
 public class ServerApp {
@@ -48,7 +50,7 @@ public class ServerApp {
 	// 옵저버 관련 코드 
 	Set<ApplicationContextListener> listeners = new HashSet<>();
 	Map<String, Object> context = new HashMap<>();
-	
+
 	Map<String, Servlet> servlets = new HashMap<>(); // 서블릿객체저장
 
 	// 스레드풀
@@ -104,7 +106,7 @@ public class ServerApp {
 		servlets.put("/plan/detail", new PlanDetailServlet(planDao));
 		servlets.put("/plan/delete", new PlanDeleteServlet(planDao));
 		servlets.put("/plan/update", new PlanUpdateServlet(planDao));
-		
+
 		servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao,photoBoardDao));
 		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao));
 		servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao,photoFileDao));
@@ -122,7 +124,16 @@ public class ServerApp {
 
 				executorService.submit(() -> {
 					processRequest(socket);
-					conFactory.removeConnection();
+
+					// 스레드에 보관된 커넥션 제거
+					ConnectionProxy con = (ConnectionProxy) conFactory.removeConnection();
+					if (con != null) {
+						try {
+							con.realClose();
+						} catch (SQLException e) {
+						//
+						}
+					}
 				});
 
 			}
@@ -133,8 +144,8 @@ public class ServerApp {
 
 		// 스레드풀 종료
 		executorService.shutdown();
-		
-		
+
+
 		while(true) {
 			if (executorService.isTerminated()) {
 				break;	
