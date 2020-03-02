@@ -8,6 +8,7 @@ import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
+import sinyj0622.util.Prompt;
 
 public class PhotoBoardDetailServlet implements Servlet {
 
@@ -21,10 +22,7 @@ public class PhotoBoardDetailServlet implements Servlet {
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-		out.println("번호? ");
-		out.println("!@#");
-		out.flush();
-		int no = Integer.parseInt(in.nextLine());
+		int no = Prompt.getInt(in, out, "번호? ");
 
 		PhotoBoard photoBoard = photoBoardDao.findByNo(no);
 		if (photoBoard != null) {

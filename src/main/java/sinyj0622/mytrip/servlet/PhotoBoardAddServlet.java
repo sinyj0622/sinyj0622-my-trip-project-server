@@ -10,6 +10,7 @@ import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.util.Prompt;
 
 public class PhotoBoardAddServlet implements Servlet {
 
@@ -26,10 +27,7 @@ public class PhotoBoardAddServlet implements Servlet {
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-		out.println("플랜 번호? ");
-		out.println("!@#");
-		out.flush();
-		int planNo = Integer.parseInt(in.nextLine());
+		int planNo = Prompt.getInt(in, out, "플랜 번호? ");
 
 		Plan plan = planDao.findByNo(planNo);
 		if (plan == null) {
@@ -37,24 +35,17 @@ public class PhotoBoardAddServlet implements Servlet {
 		}
 
 		PhotoBoard photoBoard = new PhotoBoard();
-		out.println("내용? ");
-		out.println("!@#");
-		out.flush();
-		photoBoard.setTitle(in.nextLine());
+		photoBoard.setTitle(Prompt.getString(in, out, "내용? "));
 		photoBoard.setPlan(plan);
 
 		if (photoBoardDao.insert(photoBoard) > 0) {
 
-			// 새로 등록할 첨부 파일을 입력 받는다.
 			out.println("최소 한 개의 사진파일을 등록해야 합니다.");
 			out.println("파일명 입력없이 그냥 엔터를 치면 파일 추가를 마칩니다..");
 
 			ArrayList<PhotoFile> photoFiles = new ArrayList<>();
 			while (true) {
-				out.println("사진파일? ");
-				out.println("!@#");
-				out.flush();
-				String filepath = in.nextLine();
+				String filepath = Prompt.getString(in, out, "사진파일? ");
 
 				if (filepath.length() == 0) {
 					if (photoFiles.size() > 0) {

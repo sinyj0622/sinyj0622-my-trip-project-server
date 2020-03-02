@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.domain.Board;
+import sinyj0622.util.Prompt;
 
 public class BoardUpdateServlet implements Servlet {
 
@@ -17,10 +18,7 @@ public class BoardUpdateServlet implements Servlet {
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-
-		out.println("번호? ");
-		out.println("!@#");
-		int no = Integer.parseInt(in.nextLine());
+		int no = Prompt.getInt(in, out, "번호? ");
 		
 		Board oldBoard = boardDao.findByNo(no);
 		Board newBoard = new Board();
@@ -31,10 +29,8 @@ public class BoardUpdateServlet implements Servlet {
 		}
 		
 		newBoard.setNo(oldBoard.getNo());
-		out.printf("내용(%s):\n",oldBoard.getText());
-		out.println("!@#");
-		newBoard.setText(in.nextLine());
-	    out.flush();
+		newBoard.setText(Prompt.getString(in, out,
+				String.format("내용(%s):", oldBoard.getText()), oldBoard.getText()));
 		
 		if (boardDao.update(newBoard) > 0) {
 			out.println("게시글을 수정하였습니다.");

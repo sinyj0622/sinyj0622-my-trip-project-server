@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.util.Prompt;
 
 public class PlanDetailServlet implements Servlet {
 
@@ -18,10 +19,7 @@ public class PlanDetailServlet implements Servlet {
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-		out.println("번호? ");
-		out.println("!@#");
-		out.flush();
-		int no = Integer.parseInt(in.nextLine());
+		int no = Prompt.getInt(in, out, "번호? ");
 
 		Plan p = planDao.findByNo(no);
 		if (p != null) {

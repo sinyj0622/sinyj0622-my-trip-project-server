@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.domain.Member;
+import sinyj0622.util.Prompt;
 
 public class MemberAddServlet implements Servlet {
 
@@ -21,31 +22,12 @@ public class MemberAddServlet implements Servlet {
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
 	  Member member = new Member();
-	  
-	  out.println("이름? ");
-	  out.println("!@#");
-	  member.setName(in.nextLine());
-	  
-	  out.println("별명? ");
-	  out.println("!@#");
-	  member.setNickname(in.nextLine());
-	  
-	  out.println("암호? ");
-	  out.println("!@#");
-	  member.setPassWord(in.nextLine());
-	  
-	  out.println("이메일? ");
-	  out.println("!@#");
-	  member.setEmail(in.nextLine());
-	  
-	  out.println("사진? ");
-	  out.println("!@#");
-	  member.setMyphoto(in.nextLine());
-	  
-	  out.println("전화? ");
-	  out.println("!@#");
-	  member.setPhonenumber(in.nextLine());
-	  
+	  member.setName(Prompt.getString(in, out, "이름? "));
+	  member.setNickname(Prompt.getString(in, out, "별명? "));
+	  member.setPassWord(Prompt.getString(in, out, "암호? "));
+	  member.setEmail(Prompt.getString(in, out, "이메일? "));
+	  member.setMyphoto(Prompt.getString(in, out, "사진? "));
+	  member.setPhonenumber(Prompt.getString(in, out, "전화? "));
 	  member.setRegisteredDate(new Date(System.currentTimeMillis()));
 	  
 

@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.domain.Board;
+import sinyj0622.util.Prompt;
 
 public class BoardDetailServlet implements Servlet {
 
@@ -18,10 +19,7 @@ public class BoardDetailServlet implements Servlet {
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-		out.println("번호? ");
-		out.println("!@#");
-	    out.flush();
-		int no = Integer.parseInt(in.nextLine());
+		int no = Prompt.getInt(in, out, "번호? ");
 		
 		Board board = boardDao.findByNo(no);
 
