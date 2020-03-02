@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -12,15 +13,21 @@ import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.Plan;
 
 public class PhotoBoardDaoImpl implements PhotoBoardDao {
-	Connection con;
-
-	public PhotoBoardDaoImpl(Connection con) {
-		this.con = con;
+	
+	String jdbcUrl;
+	String usename;
+	String password;
+	
+	public PhotoBoardDaoImpl(String jdbcUrl, String usename, String password) {
+		this.jdbcUrl = jdbcUrl;
+		this.usename = usename;
+		this.password = password;
 	}
 
 	@Override
 	public List<PhotoBoard> findAllByPlanNo(int planNo) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_photo where plan_id=" + planNo);
 
 			ArrayList<PhotoBoard> list = new ArrayList<>();
@@ -40,7 +47,8 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
 	@Override
 	public int insert(PhotoBoard photoBoard) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_photo(titl,plan_id) values('"
 					+ photoBoard.getTitle() + "',"
 					+ photoBoard.getPlan().getNo() +")", Statement.RETURN_GENERATED_KEYS);
@@ -58,7 +66,8 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
 	@Override
 	public PhotoBoard findByNo(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			ResultSet rs = stmt.executeQuery("select * from mytrip_photo where photo_id=" + no );
 
@@ -81,7 +90,8 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
 	@Override
 	public int update(PhotoBoard photoBoard) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("update mytrip_photo set titl='" + photoBoard.getTitle()
 					+ "' where photo_id=" + photoBoard.getNo()
 					+ "");
@@ -92,7 +102,8 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
 	@Override
 	public int delete(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("delete from mytrip_photo where photo_id=" + no);
 

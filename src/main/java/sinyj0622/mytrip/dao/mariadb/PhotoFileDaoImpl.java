@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -11,15 +12,20 @@ import sinyj0622.mytrip.domain.PhotoFile;
 
 public class PhotoFileDaoImpl implements PhotoFileDao {
 	
-	Connection con;
+	String jdbcUrl;
+	String usename;
+	String password;
 	
-	public PhotoFileDaoImpl(Connection con) {
-		this.con = con;
+	public PhotoFileDaoImpl(String jdbcUrl, String usename, String password) {
+		this.jdbcUrl = jdbcUrl;
+		this.usename = usename;
+		this.password = password;
 	}
 
 	@Override
 	public int insert(PhotoFile photoFile) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_photo_file(photo_id,file_path)"
 					+ " values(" + photoFile.getBoardNo()
 					+ ",'" + photoFile.getFilepath()
@@ -31,7 +37,8 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
 	@Override
 	public List<PhotoFile> findAll(int boardNo) throws Exception {
-		try (Statement stmt = con.createStatement();
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement();
 		        ResultSet rs = stmt.executeQuery("select photo_file_id, photo_id, file_path" //
 		            + " from mytrip_photo_file" //
 		            + " where photo_id=" + boardNo //
@@ -53,7 +60,8 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
 	@Override
 	public int deleteAll(int boardNo) throws Exception {
-	    try (Statement stmt = con.createStatement()) {
+	    try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+	    		Statement stmt = con.createStatement()) {
 	        int result = stmt.executeUpdate( //
 	            "delete from mytrip_photo_file" //
 	                + " where photo_id=" + boardNo);

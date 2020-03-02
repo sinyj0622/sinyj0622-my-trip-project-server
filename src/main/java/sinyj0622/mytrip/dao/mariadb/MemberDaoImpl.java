@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -11,15 +12,20 @@ import sinyj0622.mytrip.domain.Member;
 
 public class MemberDaoImpl implements MemberDao {
 
-	Connection con;
-
-	public MemberDaoImpl(Connection con) {
-		this.con = con;
+	String jdbcUrl;
+	String usename;
+	String password;
+	
+	public MemberDaoImpl(String jdbcUrl, String usename, String password) {
+		this.jdbcUrl = jdbcUrl;
+		this.usename = usename;
+		this.password = password;
 	}
 
 	@Override
 	public int insert(Member member) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_member(name, nick, email, pwd, "
 					+ "photo, tel, cdt) values('" + member.getName()
 					+ "', '" + member.getNickname()
@@ -36,7 +42,8 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public List<Member> findAll() throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_member");
 
 			ArrayList<Member> list = new ArrayList<>();
@@ -56,7 +63,8 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public Member findByNo(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_member where member_id=" + no );
 
 			if (rs.next()) {
@@ -77,7 +85,8 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int update(Member member) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("update mytrip_member set name='" + member.getName()
 			+ "',nick='"  + member.getNickname()
@@ -93,7 +102,8 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int delete(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("delete from mytrip_member where member_id=" + no);
 			return result;
 		}
@@ -101,7 +111,8 @@ public class MemberDaoImpl implements MemberDao {
 	
 	@Override
 	public List<Member> findByKeyword(String keyword) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select *"
 					+ " from mytrip_member"
 					+ " where name like '%" + keyword

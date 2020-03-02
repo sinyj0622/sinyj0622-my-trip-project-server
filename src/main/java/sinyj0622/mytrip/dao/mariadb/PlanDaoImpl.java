@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -14,15 +15,20 @@ import sinyj0622.mytrip.domain.Plan;
 
 public class PlanDaoImpl implements PlanDao {
 
-	Connection con;
-
-	public PlanDaoImpl(Connection con) {
-		this.con = con;
+	String jdbcUrl;
+	String usename;
+	String password;
+	
+	public PlanDaoImpl(String jdbcUrl, String usename, String password) {
+		this.jdbcUrl = jdbcUrl;
+		this.usename = usename;
+		this.password = password;
 	}
  
 	@Override
 	public int insert(Plan plan) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_plan(spot, titl, person, sdt, edt, money) values('" 
 					+ plan.getDestnation() //
 					+ "','" + plan.getTravelTitle() //
@@ -38,7 +44,8 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public List<Plan> findAll() throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_plan");
 
 			ArrayList<Plan> list = new ArrayList<>();
@@ -60,7 +67,8 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public Plan findByNo(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_plan where plan_id=" + no );
 
 			if (rs.next()) {
@@ -81,7 +89,8 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public int update(Plan plan) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("update mytrip_plan set titl='" + plan.getTravelTitle()
 					+ "',spot='" + plan.getDestnation()
@@ -97,7 +106,8 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public int delete(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("delete from mytrip_plan where plan_id=" + no);
 			return result;
 		}

@@ -19,17 +19,21 @@ public class DataLoaderListener implements ApplicationContextListener {
 	public void contextInitialized(Map<String, Object> context) {
 
 		try {
+			// DB 연결정보
 			Class.forName("org.mariadb.jdbc.Driver");
-			con = DriverManager.getConnection( //
-					"jdbc:mariadb://localhost:3306/studydb", "study", "1111");
+			String jdbcUrl = "jdbc:mariadb://localhost:3306/studydb";
+			String usename = "study";
+			String password = "1111";
 
-			context.put("boardDao", new BoardDaoImpl(con));
-			context.put("memberDao", new MemberDaoImpl(con));
-			context.put("planDao", new PlanDaoImpl(con));
-			context.put("photoBoardDao", new PhotoBoardDaoImpl(con));
-			context.put("photoFileDao", new PhotoFileDaoImpl(con));
-			
-			
+
+
+			context.put("boardDao", new BoardDaoImpl(jdbcUrl, usename, password));
+			context.put("memberDao", new MemberDaoImpl(jdbcUrl, usename, password));
+			context.put("planDao", new PlanDaoImpl(jdbcUrl, usename, password));
+			context.put("photoBoardDao", new PhotoBoardDaoImpl(jdbcUrl, usename, password));
+			context.put("photoFileDao", new PhotoFileDaoImpl(jdbcUrl, usename, password));
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

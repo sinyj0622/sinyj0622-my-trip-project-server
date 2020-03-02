@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -11,15 +12,20 @@ import sinyj0622.mytrip.domain.Board;
 
 public class BoardDaoImpl implements BoardDao {
 
-	Connection con;
-
-	public BoardDaoImpl(Connection con) {
-		this.con = con;
+	String jdbcUrl;
+	String usename;
+	String password;
+	
+	public BoardDaoImpl(String jdbcUrl, String usename, String password) {
+		this.jdbcUrl = jdbcUrl;
+		this.usename = usename;
+		this.password = password;
 	}
 
 	@Override
 	public int insert(Board board) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("insert into mytrip_board(conts) values('"
 					+ board.getText() + "')");
@@ -30,7 +36,8 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public List<Board> findAll() throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_board");
 
 			ArrayList<Board> list = new ArrayList<>();
@@ -50,7 +57,8 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public Board findByNo(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			ResultSet rs = stmt.executeQuery("select * from mytrip_board where board_id=" + no );
 
@@ -69,7 +77,8 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public int update(Board board) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("update mytrip_board set conts='"
 					+ board.getText() +"' where board_id='"
@@ -81,7 +90,8 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public int delete(int no) throws Exception {
-		try (Statement stmt = con.createStatement()){
+		try (Connection con = DriverManager.getConnection(jdbcUrl,usename,password);
+				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("delete from mytrip_board where board_id=" + no);
 
