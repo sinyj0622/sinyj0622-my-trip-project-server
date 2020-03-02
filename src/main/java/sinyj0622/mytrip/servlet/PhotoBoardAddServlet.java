@@ -11,6 +11,7 @@ import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.util.ConnectionFactory;
 import sinyj0622.util.Prompt;
 
@@ -19,14 +20,14 @@ public class PhotoBoardAddServlet implements Servlet {
 	PlanDao planDao;
 	PhotoBoardDao photoBoardDao;
 	PhotoFileDao photoFileDao;
-	ConnectionFactory conFactory;
+	PlatformTransactionManager txManager;
 
 	public PhotoBoardAddServlet(PlanDao planDao, 
-			PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao,ConnectionFactory conFactory) {
+			PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao,PlatformTransactionManager txManager) {
 		this.planDao = planDao;
 		this.photoBoardDao = photoBoardDao;
 		this.photoFileDao = photoFileDao;
-		this.conFactory = conFactory;
+		this.txManager = txManager;
 	}
 
 
@@ -43,8 +44,7 @@ public class PhotoBoardAddServlet implements Servlet {
 		photoBoard.setTitle(Prompt.getString(in, out, "내용? "));
 		photoBoard.setPlan(plan);
 
-		Connection con = conFactory.getConnection();
-		con.setAutoCommit(false);
+		txManager.beginTransaction();
 
 		try {
 			if (photoBoardDao.insert(photoBoard) > 0) {
@@ -56,16 +56,14 @@ public class PhotoBoardAddServlet implements Servlet {
 				}
 
 				out.println("사진 게시글을 등록했습니다!");
-				con.commit();
+				txManager.commit();
 			} 
 
 		} catch (Exception e) {
 			out.println(e.getMessage());
-			con.rollback();
+			txManager.rollback();
 			
-		} finally {
-			con.setAutoCommit(true);
-		}
+		} 
 	}
 
 

@@ -9,6 +9,7 @@ import sinyj0622.mytrip.dao.mariadb.MemberDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PhotoBoardDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PhotoFileDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PlanDaoImpl;
+import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.util.ConnectionFactory;
 
 public class DataLoaderListener implements ApplicationContextListener {
@@ -22,6 +23,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 			ConnectionFactory conFactory = 
 					new ConnectionFactory("jdbc:mariadb://localhost:3306/studydb","study","1111");
 
+			context.put("txManager", new PlatformTransactionManager(conFactory));
 			context.put("boardDao", new BoardDaoImpl(conFactory));
 			context.put("memberDao", new MemberDaoImpl(conFactory));
 			context.put("planDao", new PlanDaoImpl(conFactory));

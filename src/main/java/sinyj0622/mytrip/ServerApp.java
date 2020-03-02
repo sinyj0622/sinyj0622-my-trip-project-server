@@ -43,6 +43,7 @@ import sinyj0622.mytrip.servlet.PlanListServlet;
 import sinyj0622.mytrip.servlet.PlanUpdateServlet;
 import sinyj0622.mytrip.servlet.Servlet;
 import sinyj0622.sql.ConnectionProxy;
+import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.util.ConnectionFactory;
 
 public class ServerApp {
@@ -82,6 +83,7 @@ public class ServerApp {
 		notifyApplicationInitialized();
 
 		ConnectionFactory conFactory = (ConnectionFactory) context.get("conFactory");
+		PlatformTransactionManager txManager = (PlatformTransactionManager) context.get("txManager");
 
 		BoardDao boardDao = (BoardDao) context.get("boardDao");
 		MemberDao memberDao = (MemberDao) context.get("memberDao");
@@ -109,10 +111,10 @@ public class ServerApp {
 		servlets.put("/plan/update", new PlanUpdateServlet(planDao));
 
 		servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao,photoBoardDao));
-		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao,conFactory));
+		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao,txManager));
 		servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao,photoFileDao));
-		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao,photoFileDao,conFactory));
-		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao,photoFileDao,conFactory));
+		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao,photoFileDao,txManager));
+		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao,photoFileDao,txManager));
 
 		try (
 				// 서버쪽 연결 준비
