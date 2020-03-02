@@ -36,6 +36,7 @@ public class MemberUpdateServlet implements Servlet {
 				String.format("이름(%s)? ", oldMember.getName()), oldMember.getName()));
 		newMember.setNickname(Prompt.getString(in, out, 
 				String.format("별명(%s)? ", oldMember.getNickname()), oldMember.getNickname()));
+		newMember.setPassWord(Prompt.getString(in, out, "암호? ", oldMember.getPassWord()));
 		newMember.setEmail(Prompt.getString(in, out, 
 				String.format("이메일(%s)? ", oldMember.getEmail()), oldMember.getEmail()));
 		newMember.setMyphoto(Prompt.getString(in, out, 

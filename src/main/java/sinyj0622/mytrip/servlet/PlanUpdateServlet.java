@@ -42,7 +42,7 @@ public class PlanUpdateServlet implements Servlet {
 		newPlan.setEndDate(Prompt.getString(in, out,
 				String.format("여행 종료일 (%s)? ",oldPlan.getEndDate()), oldPlan.getEndDate()));
 		newPlan.setTravelMoney(Prompt.getString(in, out,
-				String.format("예상 경비(%s)? ",oldPlan.getPerson()), oldPlan.getPerson()));
+				String.format("예상 경비(%s)? ",oldPlan.getTravelMoney()), oldPlan.getTravelMoney()));
 
 		if (planDao.update(newPlan) > 0) { 
 			out.println("여행일정 수정완료");

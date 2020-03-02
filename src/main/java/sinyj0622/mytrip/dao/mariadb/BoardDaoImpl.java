@@ -3,7 +3,7 @@ package sinyj0622.mytrip.dao.mariadb;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import sinyj0622.sql.DataSource;
 public class BoardDaoImpl implements BoardDao {
 
 	DataSource dataSource;
-	
+
 	public BoardDaoImpl(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -22,20 +22,17 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public int insert(Board board) throws Exception {
 		try (Connection con = dataSource.getConnection();
-				Statement stmt = con.createStatement()){
-
-			int result = stmt.executeUpdate("insert into mytrip_board(conts) values('"
-					+ board.getText() + "')");
-
-			return result;
+				PreparedStatement stmt = con.prepareStatement("insert into mytrip_board(conts) values(?)")){
+			stmt.setString(1, board.getText());
+			return stmt.executeUpdate();
 		}
 	}
 
 	@Override
 	public List<Board> findAll() throws Exception {
 		try (Connection con = dataSource.getConnection();
-				Statement stmt = con.createStatement()){
-			ResultSet rs = stmt.executeQuery("select * from mytrip_board");
+				PreparedStatement stmt = con.prepareStatement("select * from mytrip_board")){
+			ResultSet rs = stmt.executeQuery();
 
 			ArrayList<Board> list = new ArrayList<>();
 
@@ -55,19 +52,20 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public Board findByNo(int no) throws Exception {
 		try (Connection con = dataSource.getConnection();
-				Statement stmt = con.createStatement()){
+				PreparedStatement stmt = con.prepareStatement("select * from mytrip_board where board_id=?")){
+				stmt.setInt(1, no);
+			try (ResultSet rs = stmt.executeQuery()){
 
-			ResultSet rs = stmt.executeQuery("select * from mytrip_board where board_id=" + no );
-
-			if (rs.next()) {
-				Board board = new Board();
-				board.setNo(rs.getInt("board_id"));
-				board.setText(rs.getString("conts"));
-				board.setDate(rs.getDate("cdt"));
-				board.setViewCount(rs.getInt("vw_cnt"));
-				return board;
-			} else {
-				return null;
+				if (rs.next()) {
+					Board board = new Board();
+					board.setNo(rs.getInt("board_id"));
+					board.setText(rs.getString("conts"));
+					board.setDate(rs.getDate("cdt"));
+					board.setViewCount(rs.getInt("vw_cnt"));
+					return board;
+				} else {
+					return null;
+				}
 			}
 		}
 	}
@@ -75,24 +73,21 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public int update(Board board) throws Exception {
 		try (Connection con = dataSource.getConnection();
-				Statement stmt = con.createStatement()){
-
-			int result = stmt.executeUpdate("update mytrip_board set conts='"
-					+ board.getText() +"' where board_id='"
-							+ board.getNo() + "'");
-			
-			return result;
+				PreparedStatement stmt = con.prepareStatement("update mytrip_board set conts=? where board_id=?")){
+				stmt.setString(1, board.getText());
+				stmt.setInt(2, board.getNo());
+				
+			return stmt.executeUpdate();
 		}
 	}
 
 	@Override
 	public int delete(int no) throws Exception {
 		try (Connection con = dataSource.getConnection();
-				Statement stmt = con.createStatement()){
-
-			int result = stmt.executeUpdate("delete from mytrip_board where board_id=" + no);
-
-			return result;
+				PreparedStatement stmt = con.prepareStatement("delete from mytrip_board where board_id=?")){
+				stmt.setInt(1, no);
+				
+				return stmt.executeUpdate();
 		}
 	}
 
