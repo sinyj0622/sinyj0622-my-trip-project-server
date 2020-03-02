@@ -42,9 +42,9 @@ import sinyj0622.mytrip.servlet.PlanDetailServlet;
 import sinyj0622.mytrip.servlet.PlanListServlet;
 import sinyj0622.mytrip.servlet.PlanUpdateServlet;
 import sinyj0622.mytrip.servlet.Servlet;
+import sinyj0622.sql.DataSource;
 import sinyj0622.sql.ConnectionProxy;
 import sinyj0622.sql.PlatformTransactionManager;
-import sinyj0622.util.ConnectionFactory;
 
 public class ServerApp {
 
@@ -82,7 +82,7 @@ public class ServerApp {
 
 		notifyApplicationInitialized();
 
-		ConnectionFactory conFactory = (ConnectionFactory) context.get("conFactory");
+		DataSource dataSource = (DataSource) context.get("dataSource");
 		PlatformTransactionManager txManager = (PlatformTransactionManager) context.get("txManager");
 
 		BoardDao boardDao = (BoardDao) context.get("boardDao");
@@ -128,15 +128,7 @@ public class ServerApp {
 				executorService.submit(() -> {
 					processRequest(socket);
 
-					// 스레드에 보관된 커넥션 제거
-					ConnectionProxy con = (ConnectionProxy) conFactory.removeConnection();
-					if (con != null) {
-						try {
-							con.realClose();
-						} catch (SQLException e) {
-							//
-						}
-					}
+				dataSource.removeConnection();
 				});
 
 			}

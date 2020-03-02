@@ -9,8 +9,8 @@ import sinyj0622.mytrip.dao.mariadb.MemberDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PhotoBoardDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PhotoFileDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PlanDaoImpl;
+import sinyj0622.sql.DataSource;
 import sinyj0622.sql.PlatformTransactionManager;
-import sinyj0622.util.ConnectionFactory;
 
 public class DataLoaderListener implements ApplicationContextListener {
 	// 다른 클래스에서 커넥션을 사용할 수 있도록 공개
@@ -20,17 +20,16 @@ public class DataLoaderListener implements ApplicationContextListener {
 	public void contextInitialized(Map<String, Object> context) {
 
 		try {
-			ConnectionFactory conFactory = 
-					new ConnectionFactory("jdbc:mariadb://localhost:3306/studydb","study","1111");
+			DataSource dataSource = 
+					new DataSource("jdbc:mariadb://localhost:3306/studydb","study","1111");
 
-			context.put("txManager", new PlatformTransactionManager(conFactory));
-			context.put("boardDao", new BoardDaoImpl(conFactory));
-			context.put("memberDao", new MemberDaoImpl(conFactory));
-			context.put("planDao", new PlanDaoImpl(conFactory));
-			context.put("photoBoardDao", new PhotoBoardDaoImpl(conFactory));
-			context.put("photoFileDao", new PhotoFileDaoImpl(conFactory));
-			context.put("conFactory", conFactory);
-
+			context.put("txManager", new PlatformTransactionManager(dataSource));
+			context.put("boardDao", new BoardDaoImpl(dataSource));
+			context.put("memberDao", new MemberDaoImpl(dataSource));
+			context.put("planDao", new PlanDaoImpl(dataSource));
+			context.put("photoBoardDao", new PhotoBoardDaoImpl(dataSource));
+			context.put("photoFileDao", new PhotoFileDaoImpl(dataSource));
+			context.put("dataSource", dataSource);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,12 +39,9 @@ public class DataLoaderListener implements ApplicationContextListener {
 
 	@Override
 	public void contextDestroyed(Map<String, Object> context) {
-
-		try{
-			con.close();
-		} catch	(Exception e) {
-
-		}
+		DataSource dataSource = (DataSource) context.get("dataSource");
+		dataSource.clean();
+		
 	}
 
 }

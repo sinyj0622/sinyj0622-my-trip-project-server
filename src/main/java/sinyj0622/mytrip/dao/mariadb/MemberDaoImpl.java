@@ -9,19 +9,19 @@ import java.util.List;
 
 import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.domain.Member;
-import sinyj0622.util.ConnectionFactory;
+import sinyj0622.sql.DataSource;
 
 public class MemberDaoImpl implements MemberDao {
 
-	ConnectionFactory conFactory;
+	DataSource dataSource;
 	
-	public MemberDaoImpl(ConnectionFactory conFactory) {
-		this.conFactory = conFactory;
+	public MemberDaoImpl(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	@Override
 	public int insert(Member member) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_member(name, nick, email, pwd, "
 					+ "photo, tel, cdt) values('" + member.getName()
@@ -39,7 +39,7 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public List<Member> findAll() throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_member");
 
@@ -60,7 +60,7 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public Member findByNo(int no) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_member where member_id=" + no );
 
@@ -82,7 +82,7 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int update(Member member) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("update mytrip_member set name='" + member.getName()
@@ -99,7 +99,7 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int delete(int no) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("delete from mytrip_member where member_id=" + no);
 			return result;
@@ -108,7 +108,7 @@ public class MemberDaoImpl implements MemberDao {
 	
 	@Override
 	public List<Member> findByKeyword(String keyword) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select *"
 					+ " from mytrip_member"

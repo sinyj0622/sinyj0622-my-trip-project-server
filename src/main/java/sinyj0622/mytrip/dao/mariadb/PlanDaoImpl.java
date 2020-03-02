@@ -12,19 +12,19 @@ import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.Board;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.domain.Plan;
-import sinyj0622.util.ConnectionFactory;
+import sinyj0622.sql.DataSource;
 
 public class PlanDaoImpl implements PlanDao {
 
-	ConnectionFactory conFactory;
+	DataSource dataSource;
 	
-	public PlanDaoImpl(ConnectionFactory conFactory) {
-		this.conFactory = conFactory;
+	public PlanDaoImpl(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
  
 	@Override
 	public int insert(Plan plan) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("insert into mytrip_plan(spot, titl, person, sdt, edt, money) values('" 
 					+ plan.getDestnation() //
@@ -41,7 +41,7 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public List<Plan> findAll() throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_plan");
 
@@ -64,7 +64,7 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public Plan findByNo(int no) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_plan where plan_id=" + no );
 
@@ -86,7 +86,7 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public int update(Plan plan) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("update mytrip_plan set titl='" + plan.getTravelTitle()
@@ -103,7 +103,7 @@ public class PlanDaoImpl implements PlanDao {
 
 	@Override
 	public int delete(int no) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			int result = stmt.executeUpdate("delete from mytrip_plan where plan_id=" + no);
 			return result;

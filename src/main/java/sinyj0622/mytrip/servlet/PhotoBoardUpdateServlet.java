@@ -11,8 +11,8 @@ import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
+import sinyj0622.sql.DataSource;
 import sinyj0622.sql.PlatformTransactionManager;
-import sinyj0622.util.ConnectionFactory;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {

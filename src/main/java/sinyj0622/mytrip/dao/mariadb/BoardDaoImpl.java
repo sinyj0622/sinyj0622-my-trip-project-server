@@ -9,19 +9,19 @@ import java.util.List;
 
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.domain.Board;
-import sinyj0622.util.ConnectionFactory;
+import sinyj0622.sql.DataSource;
 
 public class BoardDaoImpl implements BoardDao {
 
-	ConnectionFactory conFactory;
+	DataSource dataSource;
 	
-	public BoardDaoImpl(ConnectionFactory conFactory) {
-		this.conFactory = conFactory;
+	public BoardDaoImpl(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	@Override
 	public int insert(Board board) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("insert into mytrip_board(conts) values('"
@@ -33,7 +33,7 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public List<Board> findAll() throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 			ResultSet rs = stmt.executeQuery("select * from mytrip_board");
 
@@ -54,7 +54,7 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public Board findByNo(int no) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 
 			ResultSet rs = stmt.executeQuery("select * from mytrip_board where board_id=" + no );
@@ -74,7 +74,7 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public int update(Board board) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("update mytrip_board set conts='"
@@ -87,7 +87,7 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public int delete(int no) throws Exception {
-		try (Connection con = conFactory.getConnection();
+		try (Connection con = dataSource.getConnection();
 				Statement stmt = con.createStatement()){
 
 			int result = stmt.executeUpdate("delete from mytrip_board where board_id=" + no);
