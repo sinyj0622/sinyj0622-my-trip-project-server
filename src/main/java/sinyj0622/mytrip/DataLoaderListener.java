@@ -12,8 +12,8 @@ import sinyj0622.mytrip.dao.mariadb.PhotoFileDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PlanDaoImpl;
 
 public class DataLoaderListener implements ApplicationContextListener {
-
-	Connection con;
+	// 다른 클래스에서 커넥션을 사용할 수 있도록 공개
+	public static Connection con;
 
 	@Override
 	public void contextInitialized(Map<String, Object> context) {
