@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,16 +11,20 @@ import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
+import sinyj0622.util.ConnectionFactory;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
 	PhotoBoardDao photoBoardDao;
 	PhotoFileDao photoFileDao;
+	ConnectionFactory conFactory;
 
-	public PhotoBoardUpdateServlet(PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao) {
+	public PhotoBoardUpdateServlet(PhotoBoardDao photoBoardDao, 
+			PhotoFileDao photoFileDao,ConnectionFactory conFactory) {
 		this.photoBoardDao = photoBoardDao;
 		this.photoFileDao = photoFileDao;
+		this.conFactory = conFactory;
 	}
 
 
@@ -39,7 +44,8 @@ public class PhotoBoardUpdateServlet implements Servlet {
 		newPhotoBoard.setTitle(Prompt.getString(in, out,
 				String.format("제목(%s)? ",old.getTitle()), old.getTitle()));
 
-		//DataLoaderListener.con.setAutoCommit(false);
+		Connection con = conFactory.getConnection();
+		con.setAutoCommit(false);
 		try {
 			if (photoBoardDao.update(newPhotoBoard) > 0) { 
 				out.println("사진 파일:");
@@ -64,14 +70,14 @@ public class PhotoBoardUpdateServlet implements Servlet {
 				} 
 
 				out.println("사진 게시글을 변경했습니다!");
-				//DataLoaderListener.con.commit();
+				con.commit();
 			}
 		} catch (Exception e) {
 			out.println(e.getMessage());
-			//DataLoaderListener.con.rollback();
+			con.rollback();
 			
 		} finally {
-			//DataLoaderListener.con.setAutoCommit(true);
+			con.setAutoCommit(true);
 		}
 	}
 

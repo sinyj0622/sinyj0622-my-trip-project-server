@@ -82,6 +82,7 @@ public class ServerApp {
 		notifyApplicationInitialized();
 
 		ConnectionFactory conFactory = (ConnectionFactory) context.get("conFactory");
+
 		BoardDao boardDao = (BoardDao) context.get("boardDao");
 		MemberDao memberDao = (MemberDao) context.get("memberDao");
 		PlanDao planDao = (PlanDao) context.get("planDao");
@@ -108,10 +109,10 @@ public class ServerApp {
 		servlets.put("/plan/update", new PlanUpdateServlet(planDao));
 
 		servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao,photoBoardDao));
-		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao));
+		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao,conFactory));
 		servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao,photoFileDao));
-		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao,photoFileDao));
-		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao,photoFileDao));
+		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao,photoFileDao,conFactory));
+		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao,photoFileDao,conFactory));
 
 		try (
 				// 서버쪽 연결 준비
@@ -131,7 +132,7 @@ public class ServerApp {
 						try {
 							con.realClose();
 						} catch (SQLException e) {
-						//
+							//
 						}
 					}
 				});

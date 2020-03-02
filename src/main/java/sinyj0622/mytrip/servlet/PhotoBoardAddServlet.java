@@ -1,16 +1,17 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import sinyj0622.mytrip.DataLoaderListener;
 import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.util.ConnectionFactory;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardAddServlet implements Servlet {
@@ -18,11 +19,14 @@ public class PhotoBoardAddServlet implements Servlet {
 	PlanDao planDao;
 	PhotoBoardDao photoBoardDao;
 	PhotoFileDao photoFileDao;
+	ConnectionFactory conFactory;
 
-	public PhotoBoardAddServlet(PlanDao planDao, PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao) {
+	public PhotoBoardAddServlet(PlanDao planDao, 
+			PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao,ConnectionFactory conFactory) {
 		this.planDao = planDao;
 		this.photoBoardDao = photoBoardDao;
 		this.photoFileDao = photoFileDao;
+		this.conFactory = conFactory;
 	}
 
 
@@ -39,7 +43,8 @@ public class PhotoBoardAddServlet implements Servlet {
 		photoBoard.setTitle(Prompt.getString(in, out, "내용? "));
 		photoBoard.setPlan(plan);
 
-		//DataLoaderListener.con.setAutoCommit(false);
+		Connection con = conFactory.getConnection();
+		con.setAutoCommit(false);
 
 		try {
 			if (photoBoardDao.insert(photoBoard) > 0) {
@@ -51,15 +56,15 @@ public class PhotoBoardAddServlet implements Servlet {
 				}
 
 				out.println("사진 게시글을 등록했습니다!");
-				//DataLoaderListener.con.commit();
+				con.commit();
 			} 
 
 		} catch (Exception e) {
 			out.println(e.getMessage());
-			//DataLoaderListener.con.rollback();
+			con.rollback();
 			
 		} finally {
-			//DataLoaderListener.con.setAutoCommit(true);
+			con.setAutoCommit(true);
 		}
 	}
 
