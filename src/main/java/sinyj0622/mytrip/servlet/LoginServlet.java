@@ -17,8 +17,8 @@ public class LoginServlet implements Servlet {
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-		String password = Prompt.getString(in, out, "암호: ");
 		String email = Prompt.getString(in, out, "이메일: ");
+		String password = Prompt.getString(in, out, "암호: ");
 
 		Member member = memberDao.findByEmailAndPassword(email, password);
 

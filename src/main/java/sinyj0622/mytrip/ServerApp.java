@@ -57,6 +57,9 @@ public class ServerApp {
 
 	// 스레드풀
 	ExecutorService executorService = Executors.newCachedThreadPool();
+	
+	// 서버 멈춤 여부
+	boolean serverStop = false;
 
 	public void addApplicationContextListener(ApplicationContextListener listener) {
 		listeners.add(listener);
@@ -133,8 +136,11 @@ public class ServerApp {
 				dataSource.removeConnection();
 				});
 
+				// 서버가 true(멈춤)
+				if (serverStop) {
+					break;
+				}
 			}
-
 		} catch (Exception e) {
 			System.out.println("서버 준비 중 오류 발생!");
 		}
@@ -161,7 +167,7 @@ public class ServerApp {
 	} // service()
 
 	@SuppressWarnings("unchecked")
-	int processRequest(Socket clientSocket) {
+	void processRequest(Socket clientSocket) {
 		try (Socket socket = clientSocket;
 				Scanner in = new Scanner(socket.getInputStream());
 				PrintStream out = new PrintStream(socket.getOutputStream())) {
@@ -169,6 +175,10 @@ public class ServerApp {
 			String request = in.nextLine();
 			System.out.printf("=>%s\n", request);
 
+			if (request.equalsIgnoreCase("/server/stop")) {
+				quit(out);
+				return;
+			}
 
 			Servlet servlet = servlets.get(request);
 
@@ -191,12 +201,10 @@ public class ServerApp {
 			out.flush();
 			System.out.println("클라이언트에게 응답하였음!");
 			System.out.println("-------------------------------");
-			return 0;
 
 		} catch (Exception e) {
 			System.out.println("예외 발생:");
 			e.printStackTrace();
-			return -1;
 		}
 
 
@@ -206,9 +214,11 @@ public class ServerApp {
 		out.println("요청한 명령을 처리할 수 없습니다.");
 	}
 
-	private void quit(ObjectOutputStream out) throws IOException {
-		out.writeUTF("OK");
-		out.flush();
+	private void quit(PrintStream out) throws IOException {
+		serverStop = true;
+	    out.println("OK");
+	    out.println("!end!");
+	    out.flush();
 	}
 
 

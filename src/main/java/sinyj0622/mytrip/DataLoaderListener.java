@@ -1,7 +1,12 @@
 package sinyj0622.mytrip;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.Map;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import sinyj0622.mytrip.context.ApplicationContextListener;
 import sinyj0622.mytrip.dao.mariadb.BoardDaoImpl;
@@ -23,9 +28,16 @@ public class DataLoaderListener implements ApplicationContextListener {
 			DataSource dataSource = 
 					new DataSource("jdbc:mariadb://localhost:3306/studydb","study","1111");
 
+			// Mabatis 객체 준비
+		      InputStream inputStream = Resources.getResourceAsStream(//
+		          "sinyj0622/mytrip/conf/mybatis-config.xml");
+		      SqlSessionFactory sqlSessionFactory = //
+		          new SqlSessionFactoryBuilder().build(inputStream);
+		      
+		      
 			context.put("txManager", new PlatformTransactionManager(dataSource));
-			context.put("boardDao", new BoardDaoImpl(dataSource));
-			context.put("memberDao", new MemberDaoImpl(dataSource));
+			context.put("boardDao", new BoardDaoImpl(sqlSessionFactory));
+			context.put("memberDao", new MemberDaoImpl(sqlSessionFactory));
 			context.put("planDao", new PlanDaoImpl(dataSource));
 			context.put("photoBoardDao", new PhotoBoardDaoImpl(dataSource));
 			context.put("photoFileDao", new PhotoFileDaoImpl(dataSource));
