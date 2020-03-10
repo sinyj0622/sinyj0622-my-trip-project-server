@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PlanMapper">
+
+	<resultMap type="Plan" id="PlanMap">
+		<id column="plan_id" property="no" />
+		<result column="spot" property="Destnation" />
+		<result column="titl" property="travelTitle" />
+		<result column="person" property="person" />
+		<result column="sdt" property="startDate" />
+		<result column="edt" property="endDate" />
+		<result column="money" property="travelMoney" />
+	</resultMap>
+
+
+	<select id="selectPlan" resultMap="PlanMap">
+		select
+		plan_id,
+		spot,
+		titl,
+		person,
+		sdt,
+		edt,
+		money
+		from mytrip_plan
+	</select>
+
+	<insert id="insertPlan" parameterType="Plan">
+		insert
+		 into mytrip_plan(spot, titl, person, sdt, edt, money)
+		  values(#{Destnation},#{travelTitle},#{person},#{startDate},#{endDate},#{travelMoney})
+	</insert>
+
+	<select id="detailPlan" resultMap="PlanMap" parameterType="int">
+		select
+		plan_id,
+    spot,
+    titl,
+    person,
+    sdt,
+    edt,
+    money 
+		 from mytrip_plan
+		  where plan_id=#{no}
+	</select>
+
+	<update id="updatePlan" parameterType="Plan">
+		update
+		 mytrip_plan
+		  set
+		   titl=#{travelTitle},
+		   spot=#{Destnation},
+		   person=#{person},
+		   sdt=#{startDate},
+		   edt=#{endDate},
+		   money=#{travelMoney}
+		    where plan_id=#{no}
+	</update>
+	<delete id="deletePlan" parameterType="int">
+		delete
+		 from mytrip_plan
+		  where plan_id=#{no}
+	</delete>
+	
+</mapper>
+
+
+
+
+
+
+

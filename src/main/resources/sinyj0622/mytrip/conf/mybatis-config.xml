@@ -8,6 +8,9 @@
   <typeAliases>
    <typeAlias type="sinyj0622.mytrip.domain.Board" alias="Board"/>
    <typeAlias type="sinyj0622.mytrip.domain.Member" alias="Member"/>
+   <typeAlias type="sinyj0622.mytrip.domain.Plan" alias="Plan"/>
+   <typeAlias type="sinyj0622.mytrip.domain.PhotoFile" alias="PhotoFile"/>
+   <typeAlias type="sinyj0622.mytrip.domain.PhotoBoard" alias="PhotoBoard"/>
                    
   </typeAliases>  
 
@@ -26,6 +29,9 @@
   <mappers>
     <mapper resource="sinyj0622/mytrip/mapper/BoardMapper.xml"/>
     <mapper resource="sinyj0622/mytrip/mapper/MemberMapper.xml"/>
+    <mapper resource="sinyj0622/mytrip/mapper/PlanMapper.xml"/>
+    <mapper resource="sinyj0622/mytrip/mapper/PhotoFileMapper.xml"/>
+    <mapper resource="sinyj0622/mytrip/mapper/PhotoBoardMapper.xml"/>
   </mappers>
 </configuration>
 

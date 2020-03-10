@@ -2,6 +2,7 @@ package sinyj0622.mytrip.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class PhotoBoard implements Serializable {
 
@@ -12,14 +13,28 @@ public class PhotoBoard implements Serializable {
 	Date createdDate;
 	int viewCount;
 	Plan plan;
+	List<PhotoFile> files;
 
 
+
+	
 	@Override
 	public String toString() {
 		return "PhotoBoard [no=" + no + ", title=" + title + ", createdDate=" + createdDate + ", viewCount=" + viewCount
-				+ ", plan=" + plan + "]";
+				+ ", plan=" + plan + ", files=" + files + "]";
 	}
-	
+
+
+	public List<PhotoFile> getFiles() {
+		return files;
+	}
+
+
+	public void setFiles(List<PhotoFile> files) {
+		this.files = files;
+	}
+
+
 	public int getNo() {
 		return no;
 	}
