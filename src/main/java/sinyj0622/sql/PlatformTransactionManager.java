@@ -1,31 +1,32 @@
 package sinyj0622.sql;
 
-import java.sql.Connection;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 public class PlatformTransactionManager {
 
-	DataSource dataSource;
+  SqlSessionFactory sqlSessionFactory;
 
-	public PlatformTransactionManager(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+  public PlatformTransactionManager(SqlSessionFactory sqlSessionFactory) {
+    this.sqlSessionFactory = sqlSessionFactory;
+  }
 
-	public void beginTransaction() throws Exception {
-		Connection con = dataSource.getConnection();
-		con.setAutoCommit(false);
+  public void beginTransaction() throws Exception {
+    // 기존에 존재하는 sqlSession 객체를 지운다
+    ((SqlSessionFactoryProxy) sqlSessionFactory).closeSession();
+    // 수동커밋으로 변경
+    sqlSessionFactory.openSession(false);
 
-	}
+  }
 
-	public void commit() throws Exception {
-		Connection con = dataSource.getConnection();
-		con.commit();
-		con.setAutoCommit(true);
-	}
+  public void commit() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    sqlSession.commit();
+  }
 
-	public void rollback() throws Exception {
-		Connection con = dataSource.getConnection();
-		con.rollback();
-		con.setAutoCommit(true);
-	}
+  public void rollback() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    sqlSession.rollback();
+  }
 
 }

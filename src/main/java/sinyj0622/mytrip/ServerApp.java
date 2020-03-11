@@ -1,11 +1,9 @@
 package sinyj0622.mytrip;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,7 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import org.apache.ibatis.session.SqlSessionFactory;
 import sinyj0622.mytrip.context.ApplicationContextListener;
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.dao.MemberDao;
@@ -43,191 +41,193 @@ import sinyj0622.mytrip.servlet.PlanDetailServlet;
 import sinyj0622.mytrip.servlet.PlanListServlet;
 import sinyj0622.mytrip.servlet.PlanUpdateServlet;
 import sinyj0622.mytrip.servlet.Servlet;
-import sinyj0622.sql.DataSource;
-import sinyj0622.sql.ConnectionProxy;
 import sinyj0622.sql.PlatformTransactionManager;
+import sinyj0622.sql.SqlSessionFactoryProxy;
 
 public class ServerApp {
 
-	// 옵저버 관련 코드 
-	Set<ApplicationContextListener> listeners = new HashSet<>();
-	Map<String, Object> context = new HashMap<>();
+  // 옵저버 관련 코드
+  Set<ApplicationContextListener> listeners = new HashSet<>();
+  Map<String, Object> context = new HashMap<>();
 
-	Map<String, Servlet> servlets = new HashMap<>(); // 서블릿객체저장
+  Map<String, Servlet> servlets = new HashMap<>(); // 서블릿객체저장
 
-	// 스레드풀
-	ExecutorService executorService = Executors.newCachedThreadPool();
-	
-	// 서버 멈춤 여부
-	boolean serverStop = false;
+  // 스레드풀
+  ExecutorService executorService = Executors.newCachedThreadPool();
 
-	public void addApplicationContextListener(ApplicationContextListener listener) {
-		listeners.add(listener);
-	}
+  // 서버 멈춤 여부
+  boolean serverStop = false;
 
-	public void removeApplicationContextListener(ApplicationContextListener listener) {
-		listeners.remove(listener);
-	}
+  public void addApplicationContextListener(ApplicationContextListener listener) {
+    listeners.add(listener);
+  }
 
-	private void notifyApplicationInitialized() {
-		for (ApplicationContextListener listener : listeners) {
-			listener.contextInitialized(context);
-		}
-	}
+  public void removeApplicationContextListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
 
-	private void notifyApplicationDestroyed() {
-		for (ApplicationContextListener listener : listeners) {
-			listener.contextDestroyed(context);
-		}
-	}
+  private void notifyApplicationInitialized() {
+    for (ApplicationContextListener listener : listeners) {
+      listener.contextInitialized(context);
+    }
+  }
 
-	@SuppressWarnings("unchecked")
-	public void service() {
+  private void notifyApplicationDestroyed() {
+    for (ApplicationContextListener listener : listeners) {
+      listener.contextDestroyed(context);
+    }
+  }
 
-		notifyApplicationInitialized();
+  @SuppressWarnings("unchecked")
+  public void service() {
 
-		DataSource dataSource = (DataSource) context.get("dataSource");
-		PlatformTransactionManager txManager = (PlatformTransactionManager) context.get("txManager");
+    notifyApplicationInitialized();
 
-		BoardDao boardDao = (BoardDao) context.get("boardDao");
-		MemberDao memberDao = (MemberDao) context.get("memberDao");
-		PlanDao planDao = (PlanDao) context.get("planDao");
-		PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
-		PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
+    SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
+    PlatformTransactionManager txManager = (PlatformTransactionManager) context.get("txManager");
 
-		servlets.put("/board/list", new BoardListServlet(boardDao));
-		servlets.put("/board/add", new BoardAddServlet(boardDao));
-		servlets.put("/board/detail", new BoardDetailServlet(boardDao));
-		servlets.put("/board/delete", new BoardDeleteServlet(boardDao));
-		servlets.put("/board/update", new BoardUpdateServlet(boardDao));
+    BoardDao boardDao = (BoardDao) context.get("boardDao");
+    MemberDao memberDao = (MemberDao) context.get("memberDao");
+    PlanDao planDao = (PlanDao) context.get("planDao");
+    PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
+    PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
 
-		servlets.put("/member/list", new MemberListServlet(memberDao));
-		servlets.put("/member/add", new MemberAddServlet(memberDao));
-		servlets.put("/member/detail", new MemberDetailServlet(memberDao));
-		servlets.put("/member/delete", new MemberDeleteServlet(memberDao));
-		servlets.put("/member/update", new MemberUpdateServlet(memberDao));
-		servlets.put("/member/search", new MemberSearchServlet(memberDao));
-		servlets.put("/member/login", new LoginServlet(memberDao));
+    servlets.put("/board/list", new BoardListServlet(boardDao));
+    servlets.put("/board/add", new BoardAddServlet(boardDao));
+    servlets.put("/board/detail", new BoardDetailServlet(boardDao));
+    servlets.put("/board/delete", new BoardDeleteServlet(boardDao));
+    servlets.put("/board/update", new BoardUpdateServlet(boardDao));
 
-		servlets.put("/plan/list", new PlanListServlet(planDao));
-		servlets.put("/plan/add", new PlanAddServlet(planDao));
-		servlets.put("/plan/detail", new PlanDetailServlet(planDao));
-		servlets.put("/plan/delete", new PlanDeleteServlet(planDao));
-		servlets.put("/plan/update", new PlanUpdateServlet(planDao));
+    servlets.put("/member/list", new MemberListServlet(memberDao));
+    servlets.put("/member/add", new MemberAddServlet(memberDao));
+    servlets.put("/member/detail", new MemberDetailServlet(memberDao));
+    servlets.put("/member/delete", new MemberDeleteServlet(memberDao));
+    servlets.put("/member/update", new MemberUpdateServlet(memberDao));
+    servlets.put("/member/search", new MemberSearchServlet(memberDao));
+    servlets.put("/member/login", new LoginServlet(memberDao));
 
-		servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao,photoBoardDao));
-		servlets.put("/photoBoard/add", new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao,txManager));
-		servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao,photoFileDao));
-		servlets.put("/photoBoard/delete", new PhotoBoardDeleteServlet(photoBoardDao,photoFileDao,txManager));
-		servlets.put("/photoBoard/update", new PhotoBoardUpdateServlet(photoBoardDao,photoFileDao,txManager));
+    servlets.put("/plan/list", new PlanListServlet(planDao));
+    servlets.put("/plan/add", new PlanAddServlet(planDao));
+    servlets.put("/plan/detail", new PlanDetailServlet(planDao));
+    servlets.put("/plan/delete", new PlanDeleteServlet(planDao));
+    servlets.put("/plan/update", new PlanUpdateServlet(planDao));
 
-		try (
-				// 서버쪽 연결 준비
-				ServerSocket serverSocket = new ServerSocket(7777)) {
+    servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao, photoBoardDao));
+    servlets.put("/photoBoard/add",
+        new PhotoBoardAddServlet(planDao, photoBoardDao, photoFileDao, txManager));
+    servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardDao, photoFileDao));
+    servlets.put("/photoBoard/delete",
+        new PhotoBoardDeleteServlet(photoBoardDao, photoFileDao, txManager));
+    servlets.put("/photoBoard/update",
+        new PhotoBoardUpdateServlet(photoBoardDao, photoFileDao, txManager));
 
-
-			while (true) {
-				Socket socket = serverSocket.accept();
-				System.out.println("클라이언트와 연결되었음!");
-
-				executorService.submit(() -> {
-					processRequest(socket);
-
-				dataSource.removeConnection();
-				});
-
-				// 서버가 true(멈춤)
-				if (serverStop) {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("서버 준비 중 오류 발생!");
-		}
-
-		// 스레드풀 종료
-		executorService.shutdown();
+    try (
+        // 서버쪽 연결 준비
+        ServerSocket serverSocket = new ServerSocket(7777)) {
 
 
-		while(true) {
-			if (executorService.isTerminated()) {
-				break;	
-			} 
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		notifyApplicationDestroyed();
+      while (true) {
+        Socket socket = serverSocket.accept();
+        System.out.println("클라이언트와 연결되었음!");
 
-		// 스레드풀 종료
-		executorService.shutdown();
+        executorService.submit(() -> {
+          processRequest(socket);
 
-	} // service()
+          ((SqlSessionFactoryProxy) sqlSessionFactory).closeSession();
+        });
 
-	@SuppressWarnings("unchecked")
-	void processRequest(Socket clientSocket) {
-		try (Socket socket = clientSocket;
-				Scanner in = new Scanner(socket.getInputStream());
-				PrintStream out = new PrintStream(socket.getOutputStream())) {
+        // 서버가 true(멈춤)
+        if (serverStop) {
+          break;
+        }
+      }
+    } catch (Exception e) {
+      System.out.println("서버 준비 중 오류 발생!");
+    }
 
-			String request = in.nextLine();
-			System.out.printf("=>%s\n", request);
-
-			if (request.equalsIgnoreCase("/server/stop")) {
-				quit(out);
-				return;
-			}
-
-			Servlet servlet = servlets.get(request);
-
-			if (servlet != null) {
-				try {
-					servlet.service(in, out);
-
-				} catch (Exception e) { 
-					out.println("요청 처리 중 오류 발생!");
-					out.println(e.getMessage());
-
-					// 서버쪽 화면
-					System.out.println("클라이언트 요청 처리 중 오류 발생:");
-					e.printStackTrace();
-				}
-			} else {
-				notFound(out);
-			}
-			out.println("!end!");
-			out.flush();
-			System.out.println("클라이언트에게 응답하였음!");
-			System.out.println("-------------------------------");
-
-		} catch (Exception e) {
-			System.out.println("예외 발생:");
-			e.printStackTrace();
-		}
+    // 스레드풀 종료
+    executorService.shutdown();
 
 
-	}
+    while (true) {
+      if (executorService.isTerminated()) {
+        break;
+      }
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    notifyApplicationDestroyed();
 
-	private void notFound(PrintStream out) throws IOException {
-		out.println("요청한 명령을 처리할 수 없습니다.");
-	}
+    // 스레드풀 종료
+    executorService.shutdown();
 
-	private void quit(PrintStream out) throws IOException {
-		serverStop = true;
-	    out.println("OK");
-	    out.println("!end!");
-	    out.flush();
-	}
+  } // service()
+
+  @SuppressWarnings("unchecked")
+  void processRequest(Socket clientSocket) {
+    try (Socket socket = clientSocket;
+        Scanner in = new Scanner(socket.getInputStream());
+        PrintStream out = new PrintStream(socket.getOutputStream())) {
+
+      String request = in.nextLine();
+      System.out.printf("=>%s\n", request);
+
+      if (request.equalsIgnoreCase("/server/stop")) {
+        quit(out);
+        return;
+      }
+
+      Servlet servlet = servlets.get(request);
+
+      if (servlet != null) {
+        try {
+          servlet.service(in, out);
+
+        } catch (Exception e) {
+          out.println("요청 처리 중 오류 발생!");
+          out.println(e.getMessage());
+
+          // 서버쪽 화면
+          System.out.println("클라이언트 요청 처리 중 오류 발생:");
+          e.printStackTrace();
+        }
+      } else {
+        notFound(out);
+      }
+      out.println("!end!");
+      out.flush();
+      System.out.println("클라이언트에게 응답하였음!");
+      System.out.println("-------------------------------");
+
+    } catch (Exception e) {
+      System.out.println("예외 발생:");
+      e.printStackTrace();
+    }
 
 
-	public static void main(String[] args) {
-		System.out.println("서버 여행 관리 시스템입니다");
+  }
 
-		ServerApp app = new ServerApp();
-		app.addApplicationContextListener(new DataLoaderListener());
-		app.service();
+  private void notFound(PrintStream out) throws IOException {
+    out.println("요청한 명령을 처리할 수 없습니다.");
+  }
 
-	}
+  private void quit(PrintStream out) throws IOException {
+    serverStop = true;
+    out.println("OK");
+    out.println("!end!");
+    out.flush();
+  }
+
+
+  public static void main(String[] args) {
+    System.out.println("서버 여행 관리 시스템입니다");
+
+    ServerApp app = new ServerApp();
+    app.addApplicationContextListener(new DataLoaderListener());
+    app.service();
+
+  }
 }

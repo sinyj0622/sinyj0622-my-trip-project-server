@@ -39,7 +39,7 @@
 	useGeneratedKeys="true" keyColumn="photo_id" keyProperty="no">
 		insert 
 		into mytrip_photo(titl,plan_id)
-		 values(#{title},#{plan_no})
+		 values(#{title},#{plan.no})
 	</insert>
 
 	<select id="detailPhotoBoard" resultMap="PhotoBoardMap" parameterType="int">
@@ -49,7 +49,7 @@
 		p.cdt,
 		p.vw_cnt,
 		n.plan_id,
-		n.titl plan_title
+		n.titl plan_titl
 		  from mytrip_photo p
 		  inner join mytrip_plan n on p.plan_id=n.plan_id
 		   where photo_id=#{no}
