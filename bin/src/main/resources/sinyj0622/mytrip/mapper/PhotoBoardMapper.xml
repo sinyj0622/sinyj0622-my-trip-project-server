@@ -21,8 +21,9 @@
 		<id column="photo_file_id" property="no" />
     <result column="file_path" property="filepath" />
 		</collection>
+		
 	</resultMap>
-	
+
 
 	<select id="selectPhotoBoard" resultMap="PhotoBoardMap" parameterType="int">
 		select

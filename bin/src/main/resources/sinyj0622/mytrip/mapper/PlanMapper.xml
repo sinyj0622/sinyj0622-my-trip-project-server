@@ -14,21 +14,18 @@
 		<result column="edt" property="endDate" />
 		<result column="money" property="travelMoney" />
 	</resultMap>
-	
-  <sql id="select1">
-      select
-    plan_id,
-    spot,
-    titl,
-    person,
-    sdt,
-    edt,
-    money
-    from mytrip_plan
-  </sql>
+
 
 	<select id="selectPlan" resultMap="PlanMap">
-  <include refid="select1"/>
+		select
+		plan_id,
+		spot,
+		titl,
+		person,
+		sdt,
+		edt,
+		money
+		from mytrip_plan
 	</select>
 
 	<insert id="insertPlan" parameterType="Plan">
@@ -38,7 +35,15 @@
 	</insert>
 
 	<select id="detailPlan" resultMap="PlanMap" parameterType="int">
-		<include refid="select1"/>
+		select
+		plan_id,
+    spot,
+    titl,
+    person,
+    sdt,
+    edt,
+    money 
+		 from mytrip_plan
 		  where plan_id=#{no}
 	</select>
 

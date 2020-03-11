@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
+import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
 import sinyj0622.mytrip.dao.PhotoBoardDao;
@@ -27,7 +28,7 @@ public class PhotoBoardDetailServlet implements Servlet {
     if (photoBoard != null) {
       out.printf("번호: %d\n", photoBoard.getNo());
       out.printf("제목: %s\n", photoBoard.getTitle());
-      out.printf("등록일: %s\n", photoBoard.getCreatedDate().toString());
+      out.printf("등록일: %s\n", photoBoard.getCreatedDate());
       out.printf("조회수: %d\n", photoBoard.getViewCount());
 
       out.println("사진파일: ");

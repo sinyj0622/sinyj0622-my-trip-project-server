@@ -11,16 +11,14 @@
 		<result column="cdt" property="date" />
 		<result column="vw_cnt" property="viewCount" />
 	</resultMap>
-  <sql id="select1">
-  select 
+
+
+	<select id="selectBoard" resultMap="BoardMap">
+    select 
     board_id,
     conts,
     cdt,
     vw_cnt 
-  </sql>
-
-	<select id="selectBoard" resultMap="BoardMap">
-    <include refid="select1"/>
     from mytrip_board
 	</select>
 
@@ -31,7 +29,11 @@
 	</insert>
 
 	<select id="detailBoard" resultMap="BoardMap" parameterType="int">
- <include refid="select1"/>
+  select 
+    board_id,
+    conts,
+    cdt,
+    vw_cnt 
   from mytrip_board
    where board_id=#{no}
 	</select>
