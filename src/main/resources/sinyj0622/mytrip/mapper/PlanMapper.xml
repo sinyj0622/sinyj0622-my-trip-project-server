@@ -16,7 +16,7 @@
 	</resultMap>
 	
   <sql id="select1">
-      select
+    select
     plan_id,
     spot,
     titl,
@@ -27,8 +27,12 @@
     from mytrip_plan
   </sql>
 
-	<select id="selectPlan" resultMap="PlanMap">
+	<select id="selectPlan" resultMap="PlanMap" parameterType="map">
   <include refid="select1"/>
+    <where>
+    <if test="spot != null">spot like concat('%', #{spot},'%')</if>
+    <if test="title != null">or titl like concat('%', #{title},'%')</if>
+    </where>
 	</select>
 
 	<insert id="insertPlan" parameterType="Plan">

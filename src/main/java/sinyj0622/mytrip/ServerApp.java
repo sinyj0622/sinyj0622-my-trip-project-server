@@ -39,6 +39,7 @@ import sinyj0622.mytrip.servlet.PlanAddServlet;
 import sinyj0622.mytrip.servlet.PlanDeleteServlet;
 import sinyj0622.mytrip.servlet.PlanDetailServlet;
 import sinyj0622.mytrip.servlet.PlanListServlet;
+import sinyj0622.mytrip.servlet.PlanSearchServlet;
 import sinyj0622.mytrip.servlet.PlanUpdateServlet;
 import sinyj0622.mytrip.servlet.Servlet;
 import sinyj0622.sql.PlatformTransactionManager;
@@ -111,6 +112,7 @@ public class ServerApp {
     servlets.put("/plan/detail", new PlanDetailServlet(planDao));
     servlets.put("/plan/delete", new PlanDeleteServlet(planDao));
     servlets.put("/plan/update", new PlanUpdateServlet(planDao));
+    servlets.put("/plan/search", new PlanSearchServlet(planDao));
 
     servlets.put("/photoBoard/list", new PhotoBoardListServlet(planDao, photoBoardDao));
     servlets.put("/photoBoard/add",

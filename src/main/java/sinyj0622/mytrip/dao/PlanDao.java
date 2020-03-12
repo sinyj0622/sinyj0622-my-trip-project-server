@@ -1,18 +1,22 @@
 package sinyj0622.mytrip.dao;
 
 import java.util.List;
+import java.util.Map;
 import sinyj0622.mytrip.domain.Plan;
 
 public interface PlanDao {
 
-  public int insert(Plan plan) throws Exception;
+  int insert(Plan plan) throws Exception;
 
-  public List<Plan> findAll() throws Exception;
+  List<Plan> findAll() throws Exception;
 
-  public Plan findByNo(int no) throws Exception;
+  Plan findByNo(int no) throws Exception;
 
-  public int update(Plan plan) throws Exception;
+  int update(Plan plan) throws Exception;
 
-  public int delete(int no) throws Exception;
+  int delete(int no) throws Exception;
 
+  default List<Plan> findByKeyword(Map<String, Object> params) {
+    return null;
+  }
 }

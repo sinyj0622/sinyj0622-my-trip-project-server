@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.dao.mariadb;
 
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import sinyj0622.mytrip.dao.PlanDao;
@@ -55,5 +56,11 @@ public class PlanDaoImpl implements PlanDao {
     }
   }
 
+  @Override
+  public List<Plan> findByKeyword(Map<String, Object> params) {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      return sqlSession.selectList("PlanMapper.selectPlan", params);
+    }
+  }
 
 }
