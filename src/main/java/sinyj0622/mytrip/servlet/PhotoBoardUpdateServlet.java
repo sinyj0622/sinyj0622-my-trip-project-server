@@ -8,29 +8,26 @@ import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
+import sinyj0622.mytrip.service.PhotoBoardService;
+import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.sql.TransactionTemplate;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
-  PhotoBoardDao photoBoardDao;
-  PhotoFileDao photoFileDao;
-  TransactionTemplate transactionTemplate;
+	  PhotoBoardService photoBoardService;
 
-  public PhotoBoardUpdateServlet(PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao,
-      PlatformTransactionManager txManager) {
-    this.photoBoardDao = photoBoardDao;
-    this.photoFileDao = photoFileDao;
-    this.transactionTemplate = new TransactionTemplate(txManager);
-  }
+	  public PhotoBoardUpdateServlet(PhotoBoardService photoBoardService) {
+	    this.photoBoardService = photoBoardService;
+	  }
 
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "사진 게시글번호? ");
 
-    PhotoBoard old = photoBoardDao.findByNo(no);
+    PhotoBoard old = photoBoardService.get(no);
     PhotoBoard newPhotoBoard = new PhotoBoard();
 
     if (old == null) {
@@ -50,21 +47,9 @@ public class PhotoBoardUpdateServlet implements Servlet {
       newPhotoBoard.setFiles(inputPhotoFiles(in, out));
     }
 
-    transactionTemplate.execute(() -> {
+    photoBoardService.update(newPhotoBoard);
+    out.println("사진 게시글을 변경했습니다!");
 
-      if (photoBoardDao.update(newPhotoBoard) == 0) {
-        throw new Exception("사진 게시글 변경에 실패했습니다.");
-      }
-
-      if (newPhotoBoard.getFiles() != null) {
-        photoFileDao.deleteAll(no);
-        photoFileDao.insert(newPhotoBoard);
-      }
-
-      out.println("사진 게시글을 변경했습니다!");
-
-      return null;
-    });
 
   }
 

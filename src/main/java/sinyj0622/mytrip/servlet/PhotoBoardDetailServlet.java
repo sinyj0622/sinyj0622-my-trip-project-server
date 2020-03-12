@@ -8,33 +8,33 @@ import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
+import sinyj0622.mytrip.service.PhotoBoardService;
+import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardDetailServlet implements Servlet {
 
-  PhotoBoardDao photoBoardDao;
-  PhotoFileDao photoFileDao;
+	  PhotoBoardService photoBoardService;
 
-  public PhotoBoardDetailServlet(PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao) {
-    this.photoBoardDao = photoBoardDao;
-    this.photoFileDao = photoFileDao;
-  }
+	  public PhotoBoardDetailServlet(PhotoBoardService photoBoardService) {
+	    this.photoBoardService = photoBoardService;
+	  }
+
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 
-    PhotoBoard photoBoard = photoBoardDao.findByNo(no);
+    PhotoBoard photoBoard = photoBoardService.get(no);
     if (photoBoard != null) {
       out.printf("번호: %d\n", photoBoard.getNo());
       out.printf("제목: %s\n", photoBoard.getTitle());
       out.printf("등록일: %s\n", photoBoard.getCreatedDate());
       out.printf("조회수: %d\n", photoBoard.getViewCount());
-
+      
       out.println("사진파일: ");
-      List<PhotoFile> photoFiles = photoFileDao.findAll(photoBoard.getNo());
-      for (PhotoFile photoFile : photoFiles) {
-        out.printf("> %s\n", photoFile.getFilepath());
+      for (PhotoFile photoFile : photoBoard.getFiles()) {
+        out.printf("> %s\n", photoFile);
         out.flush();
       }
 

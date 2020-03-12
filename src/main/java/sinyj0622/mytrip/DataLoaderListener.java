@@ -3,15 +3,22 @@ package sinyj0622.mytrip;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.util.Map;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
 import sinyj0622.mytrip.context.ApplicationContextListener;
+import sinyj0622.mytrip.dao.PhotoBoardDao;
+import sinyj0622.mytrip.dao.PhotoFileDao;
+import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.dao.mariadb.BoardDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.MemberDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PhotoBoardDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PhotoFileDaoImpl;
 import sinyj0622.mytrip.dao.mariadb.PlanDaoImpl;
+import sinyj0622.mytrip.service.Impl.PhotoBoardServiceImpl;
+import sinyj0622.mytrip.service.Impl.PlanServiceImpl;
 import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.sql.SqlSessionFactoryProxy;
 
@@ -31,14 +38,17 @@ public class DataLoaderListener implements ApplicationContextListener {
 
 
       context.put("sqlSessionFactory", sqlSessionFactory);
-
-      context.put("txManager", new PlatformTransactionManager(sqlSessionFactory));
+      PlatformTransactionManager txManager = new PlatformTransactionManager(sqlSessionFactory);
+      
       context.put("boardDao", new BoardDaoImpl(sqlSessionFactory));
       context.put("memberDao", new MemberDaoImpl(sqlSessionFactory));
-      context.put("planDao", new PlanDaoImpl(sqlSessionFactory));
-      context.put("photoBoardDao", new PhotoBoardDaoImpl(sqlSessionFactory));
-      context.put("photoFileDao", new PhotoFileDaoImpl(sqlSessionFactory));
+      PlanDao planDao = new PlanDaoImpl(sqlSessionFactory);
+      PhotoBoardDao photoBoardDao = new PhotoBoardDaoImpl(sqlSessionFactory);
+      PhotoFileDao photoFileDao = new PhotoFileDaoImpl(sqlSessionFactory);
 
+      context.put("photoBoardService", new PhotoBoardServiceImpl(photoBoardDao,photoFileDao,txManager));
+      context.put("planService", new PlanServiceImpl(planDao));
+      context.put("planDao", planDao);
     } catch (Exception e) {
       e.printStackTrace();
     }

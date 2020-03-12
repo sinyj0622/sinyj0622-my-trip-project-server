@@ -9,23 +9,20 @@ import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.mytrip.service.PhotoBoardService;
+import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.sql.TransactionTemplate;
 import sinyj0622.util.Prompt;
 
 public class PhotoBoardAddServlet implements Servlet {
 
-  PlanDao planDao;
-  PhotoBoardDao photoBoardDao;
-  PhotoFileDao photoFileDao;
-  TransactionTemplate transactionTemplate;
+  PlanService planService;
+  PhotoBoardService photoBoardService;
 
-  public PhotoBoardAddServlet(PlanDao planDao, PhotoBoardDao photoBoardDao,
-      PhotoFileDao photoFileDao, PlatformTransactionManager txManager) {
-    this.planDao = planDao;
-    this.photoBoardDao = photoBoardDao;
-    this.photoFileDao = photoFileDao;
-    this.transactionTemplate = new TransactionTemplate(txManager);
+  public PhotoBoardAddServlet(PlanService planService, PhotoBoardService photoBoardService) {
+    this.planService = planService;
+    this.photoBoardService = photoBoardService;
   }
 
 
@@ -33,7 +30,7 @@ public class PhotoBoardAddServlet implements Servlet {
   public void service(Scanner in, PrintStream out) throws Exception {
     int planNo = Prompt.getInt(in, out, "플랜 번호? ");
 
-    Plan plan = planDao.findByNo(planNo);
+    Plan plan = planService.get(planNo);
     if (plan == null) {
       out.println("해당 번호의 플랜을 찾을 수 없습니다");
     }
@@ -45,14 +42,8 @@ public class PhotoBoardAddServlet implements Servlet {
     ArrayList<PhotoFile> photoFiles = inputPhotoFiles(in, out, photoBoard);
     photoBoard.setFiles(photoFiles);
 
-    transactionTemplate.execute(() -> {
-      if (photoBoardDao.insert(photoBoard) == 0) {
-        throw new Exception("사진 게시글 등록에 실패하였습니다.");
-      }
-      photoFileDao.insert(photoBoard);
-      out.println("사진 게시글을 등록했습니다!");
-      return null;
-    });
+    photoBoardService.add(photoBoard);
+	out.println("사진 게시글을 등록했습니다!");
   }
 
 

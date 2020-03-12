@@ -8,16 +8,19 @@ import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.mytrip.service.PhotoBoardService;
+import sinyj0622.mytrip.service.PlanService;
 
 public class PhotoBoardListServlet implements Servlet {
 
-	PlanDao planDao;
-	PhotoBoardDao photoBoardDao;
+	  PlanService planService;
+	  PhotoBoardService photoBoardService;
 
-	public PhotoBoardListServlet(PlanDao planDao, PhotoBoardDao photoBoardDao) {
-		this.planDao = planDao;
-		this.photoBoardDao = photoBoardDao;
-	}
+	  public PhotoBoardListServlet(PlanService planService, PhotoBoardService photoBoardService) {
+	    this.planService = planService;
+	    this.photoBoardService = photoBoardService;
+	  }
+
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
@@ -26,7 +29,7 @@ public class PhotoBoardListServlet implements Servlet {
 		out.println("!@#");
 		int planNo = Integer.parseInt(in.nextLine());
 
-		Plan plan = planDao.findByNo(planNo);
+		Plan plan = planService.get(planNo);
 		
 		if (plan == null) {
 			out.println("해당 번호의 플랜이 없습니다");
@@ -38,7 +41,7 @@ public class PhotoBoardListServlet implements Servlet {
 		out.println("---------------------------------------------");
 		out.flush();
 
-		List<PhotoBoard> photoBoards = photoBoardDao.findAllByPlanNo(plan.getNo());
+		List<PhotoBoard> photoBoards = photoBoardService.listPlanPhoto(plan.getNo());
 		for (PhotoBoard p : photoBoards) {
 			out.printf("%d, %s, %s, %d\n", p.getNo(), p.getTitle(), p.getCreatedDate(), p.getViewCount());
 		}

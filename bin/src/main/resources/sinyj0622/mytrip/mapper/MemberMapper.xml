@@ -55,13 +55,14 @@
 	<update id="updateMember" parameterType="Member">
 		update
 		 mytrip_member
-		  set
-		   name=#{name},
-		   nick=#{nickname},
-		   pwd=#{passWord},
-		   email=#{email},
-		   photo=#{myphoto},
-		   tel=#{phonenumber}
+		  <set>
+		   <if test="name != null and name != ''">name=#{name},</if>
+		   <if test="nickname != null and nickname != ''">nick=#{nickname},</if>
+		   <if test="passWord != null and passWord != ''">pwd=#{passWord},</if>
+		   <if test="email != null and email != ''">email=#{email},</if>
+		   <if test="myphoto != null and myphoto != ''">photo=#{myphoto},</if>
+		   <if test="phonenumber != null and phonenumber != ''"> tel=#{phonenumber}</if>
+		   </set>
 		    where member_id=#{no}
 	</update>
 	<delete id="deleteMember" parameterType="int">
