@@ -12,10 +12,13 @@
 	</resultMap>
 
 
-	<insert id="insertPhotoFile" parameterType="Plan">
+	<insert id="insertPhotoFile" parameterType="PhotoBoard">
 		    insert
      into mytrip_photo_file(photo_id,file_path)
-      values(#{boardNo},#{filepath})
+      values
+      <foreach collection="files" item="file" separator=",">
+      (#{boardNo},#{file.filepath})
+      </foreach>
 	</insert>
 
 	<select id="selectPhotoFile" resultMap="PhotoFileMap" parameterType="int">

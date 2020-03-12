@@ -16,18 +16,21 @@
 		<result column="cdt" property="registeredDate" />
 	</resultMap>
 
+  <sql id="select1">
+    member_id,
+    name,
+    nick,
+    email,
+    pwd,
+    photo,
+    tel,
+    cdt
+     from mytrip_member
+  </sql>
 
 	<select id="selectMember" resultMap="MemberMap">
-		select
-		member_id,
-		name,
-		nick,
-		email,
-		pwd,
-		photo,
-		tel,
-		cdt
-		 from mytrip_member
+	select
+		<include refid="select1"/>
 	</select>
 
 	<insert id="insertMember" parameterType="Member">
@@ -45,15 +48,7 @@
 
 	<select id="detailMember" resultMap="MemberMap" parameterType="int">
 		select
-		member_id,
-    name,
-    nick,
-    email,
-    pwd,
-    photo,
-    tel,
-    cdt
-		 from mytrip_member
+		<include refid="select1"/>
 		  where member_id=#{no}
 	</select>
 
@@ -78,15 +73,7 @@
 	<select id="findByKeyword" resultMap="MemberMap" parameterType="String">
 	<bind name="keywordPattern" value="'%' + _parameter + '%'"/>
 	 select
-    member_id,
-    name,
-    nick,
-    email,
-    pwd,
-    photo,
-    tel,
-    cdt
-     from mytrip_member
+    <include refid="select1"/>
       <where>
        name like #{keywordPattern}
         or nick like #{keywordPattern}
@@ -95,15 +82,7 @@
 	
 	<select id="findByEmailAndPassWord" resultMap="MemberMap" parameterType="map">
 	  select
-    member_id,
-    name,
-    nick,
-    email,
-    pwd,
-    photo,
-    tel,
-    cdt
-    from mytrip_member
+    <include refid="select1"/>
     where email=#{email} and pwd=#{password}
 	</select>
 </mapper>

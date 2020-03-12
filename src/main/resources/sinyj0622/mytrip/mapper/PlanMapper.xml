@@ -45,13 +45,14 @@
 	<update id="updatePlan" parameterType="Plan">
 		update
 		 mytrip_plan
-		  set
-		   titl=#{travelTitle},
-		   spot=#{Destnation},
-		   person=#{person},
-		   sdt=#{startDate},
-		   edt=#{endDate},
-		   money=#{travelMoney}
+		  <set>
+		   <if test="travelTitle != null and travelTitle != ''">titl=#{travelTitle},</if>
+		   <if test="Destnation != null and Destnation != ''">spot=#{Destnation},</if>
+		   <if test="person != null and person != ''">person=#{person},</if>
+		   <if test="startDate != null and startDate != ''">sdt=#{startDate},</if>
+		   <if test="endDate != null and endDate != ''">edt=#{endDate},</if>
+		   <if test="travelMoney != null and travelMoney != ''">money=#{travelMoney}</if>
+		   </set>
 		    where plan_id=#{no}
 	</update>
 	<delete id="deletePlan" parameterType="int">

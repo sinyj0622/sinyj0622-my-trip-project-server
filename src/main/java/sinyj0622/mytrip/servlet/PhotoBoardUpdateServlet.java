@@ -42,39 +42,42 @@ public class PhotoBoardUpdateServlet implements Servlet {
     newPhotoBoard.setTitle(
         Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle()), old.getTitle()));
 
+    printPhotoFiles(out, old);
+    out.println("사진은 일부만 변경할 수 없습니다.");
+    out.println("전체를 새로 등록해야 합니다.");
+    String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/N)");
+    if (response.equalsIgnoreCase("y")) {
+      newPhotoBoard.setFiles(inputPhotoFiles(in, out));
+    }
+
     transactionTemplate.execute(() -> {
 
-      if (photoBoardDao.update(newPhotoBoard) > 0) {
-        out.println("사진 파일:");
-        List<PhotoFile> oldPhotoFiles = photoFileDao.findAll(no);
-        for (PhotoFile photoFile : oldPhotoFiles) {
-          out.printf("> %s\n", photoFile.getFilepath());
-        }
-
-        out.println("사진은 일부만 변경할 수 없습니다.");
-        out.println("전체를 새로 등록해야 합니다.");
-        String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/N)");
-
-        if (response.equalsIgnoreCase("y")) {
-          photoFileDao.deleteAll(no);
-
-          ArrayList<PhotoFile> photoFiles = inputPhotoFiles(in, out, newPhotoBoard);
-
-          for (PhotoFile photoFile : photoFiles) {
-            photoFileDao.insert(photoFile);
-          }
-
-        }
-
-        out.println("사진 게시글을 변경했습니다!");
+      if (photoBoardDao.update(newPhotoBoard) == 0) {
+        throw new Exception("사진 게시글 변경에 실패했습니다.");
       }
+
+      if (newPhotoBoard.getFiles() != null) {
+        photoFileDao.deleteAll(no);
+        photoFileDao.insert(newPhotoBoard);
+      }
+
+      out.println("사진 게시글을 변경했습니다!");
+
       return null;
     });
+
+  }
+
+  private void printPhotoFiles(PrintStream out, PhotoBoard photoBoard) throws Exception {
+    out.println("사진 파일:");
+    List<PhotoFile> oldPhotoFiles = photoBoard.getFiles();
+    for (PhotoFile photoFile : oldPhotoFiles) {
+      out.printf("> %s\n", photoFile.getFilepath());
+    }
   }
 
 
-  private ArrayList<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out,
-      PhotoBoard newPhotoBoard) {
+  private ArrayList<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {
     out.println("최소 한 개의 사진파일을 등록해야 합니다.");
     out.println("파일명 입력없이 그냥 엔터를 치면 파일 추가를 마칩니다..");
 
@@ -92,8 +95,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
       }
 
       photoFiles.add(new PhotoFile() //
-          .setFilepath(filepath)//
-          .setBoardNo(newPhotoBoard.getNo())); //
+          .setFilepath(filepath));
     }
     return photoFiles;
   }
