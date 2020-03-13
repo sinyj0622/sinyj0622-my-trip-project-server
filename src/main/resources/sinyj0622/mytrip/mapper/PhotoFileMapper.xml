@@ -17,7 +17,7 @@
      into mytrip_photo_file(photo_id,file_path)
       values
       <foreach collection="files" item="file" separator=",">
-      (#{boardNo},#{file.filepath})
+      (#{no},#{file.filepath})
       </foreach>
 	</insert>
 

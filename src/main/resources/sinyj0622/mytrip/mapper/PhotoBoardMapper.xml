@@ -20,6 +20,7 @@
 		<collection property="files" ofType="PhotoFile">
 		<id column="photo_file_id" property="no" />
     <result column="file_path" property="filepath" />
+    <result column="photo_id" property="boardNo" />
 		</collection>
 	</resultMap>
 	
@@ -47,10 +48,11 @@
 		p.titl,
 		p.cdt,
 		p.vw_cnt,
-		n.plan_id,
-		n.titl plan_titl
+		n.titl plan_titl,
+		f.file_path 
 		  from mytrip_photo p
 		  inner join mytrip_plan n on p.plan_id=n.plan_id
+      left outer join mytrip_photo_file f on p.photo_id=f.photo_id
 		   where photo_id=#{no}
 	</select>
 
