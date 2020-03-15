@@ -7,21 +7,22 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Prompt;
 
 public class PlanDetailServlet implements Servlet {
 
-	PlanDao planDao;
+	  PlanService planService;
 
-	public PlanDetailServlet(PlanDao planDao) {
-		this.planDao = planDao;
-	}
+	  public PlanDetailServlet(PlanService planService) {
+	    this.planService = planService;
+	  }
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
 		int no = Prompt.getInt(in, out, "번호? ");
 
-		Plan p = planDao.findByNo(no);
+		Plan p = planService.get(no);
 		if (p != null) {
 			out.printf("번호: %d\n", p.getNo());
 			out.printf("여행 제목: %s\n", p.getTravelTitle());

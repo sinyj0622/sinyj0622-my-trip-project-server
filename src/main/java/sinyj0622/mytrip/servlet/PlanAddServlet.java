@@ -2,16 +2,17 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import sinyj0622.mytrip.dao.PlanDao;
+
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Prompt;
 
 public class PlanAddServlet implements Servlet {
 
-  PlanDao planDao;
+  PlanService planService;
 
-  public PlanAddServlet(PlanDao planDao) {
-    this.planDao = planDao;
+  public PlanAddServlet(PlanService planService) {
+    this.planService = planService;
   }
 
   @Override
@@ -24,7 +25,7 @@ public class PlanAddServlet implements Servlet {
     plan.setEndDate(Prompt.getString(in, out, "여행 종료일? "));
     plan.setTravelMoney(Prompt.getString(in, out, "예상 경비? "));
 
-    if (planDao.insert(plan) > 0) {
+    if (planService.add(plan) > 0) {
       out.println("신규 여행일정 등록완료!^^");
 
     } else {

@@ -7,21 +7,22 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.domain.Board;
+import sinyj0622.mytrip.service.BoardService;
 import sinyj0622.util.Prompt;
 
 public class BoardDetailServlet implements Servlet {
 
-	BoardDao boardDao;
+	BoardService boardService;
 
-	public BoardDetailServlet(BoardDao boardDao) {
-		this.boardDao = boardDao;
+	public BoardDetailServlet(BoardService boardService) {
+		this.boardService = boardService;
 	}
 
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
 		int no = Prompt.getInt(in, out, "번호? ");
 		
-		Board board = boardDao.findByNo(no);
+		Board board = boardService.get(no);
 
 		if (board != null) {
 			out.printf("번호: %d\n", board.getNo());

@@ -4,22 +4,23 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.domain.Member;
+import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Prompt;
 
 public class MemberUpdateServlet implements Servlet {
 
-  MemberDao memberDao;
+	MemberService memberService;
 
-  public MemberUpdateServlet(MemberDao memberDao) {
-    this.memberDao = memberDao;
-  }
+	public MemberUpdateServlet(MemberService memberService) {
+		this.memberService = memberService;
+	}
 
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 
-    Member oldMember = memberDao.findByNo(no);
+    Member oldMember = memberService.get(no);
     Member newMember = new Member();
 
     if (oldMember == null) {
@@ -39,7 +40,7 @@ public class MemberUpdateServlet implements Servlet {
         Prompt.getString(in, out, String.format("전화(%s)? ", oldMember.getPhonenumber())));
 
 
-    if (memberDao.update(newMember) > 0) {
+    if (memberService.update(newMember) > 0) {
       out.println("회원 정보를 수정하였습니다.");
     } else {
       out.println("해당 번호의 게시물이 없습니다.");

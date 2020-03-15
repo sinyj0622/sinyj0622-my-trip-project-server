@@ -34,7 +34,7 @@ public class PhotoBoardDetailServlet implements Servlet {
       
       out.println("사진파일: ");
       for (PhotoFile photoFile : photoBoard.getFiles()) {
-        out.printf("> %s\n", photoFile);
+        out.printf("> %s\n", photoFile.getFilepath());
         out.flush();
       }
 

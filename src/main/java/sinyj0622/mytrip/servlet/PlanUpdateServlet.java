@@ -4,22 +4,23 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Prompt;
 
 public class PlanUpdateServlet implements Servlet {
 
-  PlanDao planDao;
+	PlanService planService;
 
-  public PlanUpdateServlet(PlanDao planDao) {
-    this.planDao = planDao;
-  }
+	public PlanUpdateServlet(PlanService planService) {
+		this.planService = planService;
+	}
 
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 
-    Plan oldPlan = planDao.findByNo(no);
+    Plan oldPlan = planService.get(no);
 
     if (oldPlan == null) {
       out.println("해당 번호의 게시물이 없습니다.");
@@ -40,7 +41,7 @@ public class PlanUpdateServlet implements Servlet {
     newPlan.setTravelMoney(
         Prompt.getString(in, out, String.format("예상 경비(%s)? ", oldPlan.getTravelMoney())));
 
-    if (planDao.update(newPlan) > 0) {
+    if (planService.update(newPlan) > 0) {
       out.println("여행일정 수정완료");
     } else {
       out.println("해당 번호의 게시물이 없습니다.");

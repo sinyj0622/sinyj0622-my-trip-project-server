@@ -7,14 +7,15 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.domain.Board;
+import sinyj0622.mytrip.service.BoardService;
 import sinyj0622.util.Prompt;
 
 public class BoardAddServlet implements Servlet {
 
-	BoardDao boardDao;
+	BoardService boardService;
 
-	public BoardAddServlet(BoardDao boardDao) {
-		this.boardDao = boardDao;
+	public BoardAddServlet(BoardService boardService) {
+		this.boardService = boardService;
 	}
 
 	@Override
@@ -23,7 +24,7 @@ public class BoardAddServlet implements Servlet {
 		Board board = new Board();
 		board.setText(Prompt.getString(in, out, "내용: "));
 
-	    if (boardDao.insert(board) > 0) {
+	    if (boardService.add(board) > 0) {
 	        out.println("새 게시글을 등록했습니다.");
 
 	      } else {

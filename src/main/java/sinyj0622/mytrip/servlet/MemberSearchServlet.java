@@ -6,20 +6,21 @@ import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.domain.Member;
+import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Prompt;
 
 public class MemberSearchServlet implements Servlet {
 
-  MemberDao memberDao;
+	MemberService memberService;
 
-  public MemberSearchServlet(MemberDao memberDao) {
-    this.memberDao = memberDao;
-  }
+	public MemberSearchServlet(MemberService memberService) {
+		this.memberService = memberService;
+	}
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
 	String response = Prompt.getString(in, out, "검색어? ");
-    List<Member> members = memberDao.findByKeyword(response);
+    List<Member> members = memberService.findByKeyword(response);
 
     	for (Member m : members) {
 			out.printf("%d, %s, %s, %s, %s, %s\n", m.getNo(), m.getName(), m.getNickname(), m.getEmail(),

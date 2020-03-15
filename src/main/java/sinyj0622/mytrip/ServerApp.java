@@ -16,9 +16,10 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import sinyj0622.mytrip.context.ApplicationContextListener;
 import sinyj0622.mytrip.dao.BoardDao;
-import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.dao.PlanDao;
+import sinyj0622.mytrip.service.BoardService;
+import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.mytrip.servlet.BoardAddServlet;
@@ -90,33 +91,32 @@ public class ServerApp {
     SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
     PlatformTransactionManager txManager = (PlatformTransactionManager) context.get("txManager");
 
-    PlanDao planDao = (PlanDao) context.get("planDao");
-    BoardDao boardDao = (BoardDao) context.get("boardDao");
-    MemberDao memberDao = (MemberDao) context.get("memberDao");
+    BoardService boardService = (BoardService) context.get("boardService");
+    MemberService memberService = (MemberService) context.get("memberService");
     PlanService planService = (PlanService) context.get("planService");
     PhotoBoardService photoBoardService = (PhotoBoardService) context.get("photoBoardService");
     PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
 
-    servlets.put("/board/list", new BoardListServlet(boardDao));
-    servlets.put("/board/add", new BoardAddServlet(boardDao));
-    servlets.put("/board/detail", new BoardDetailServlet(boardDao));
-    servlets.put("/board/delete", new BoardDeleteServlet(boardDao));
-    servlets.put("/board/update", new BoardUpdateServlet(boardDao));
+    servlets.put("/board/list", new BoardListServlet(boardService));
+    servlets.put("/board/add", new BoardAddServlet(boardService));
+    servlets.put("/board/detail", new BoardDetailServlet(boardService));
+    servlets.put("/board/delete", new BoardDeleteServlet(boardService));
+    servlets.put("/board/update", new BoardUpdateServlet(boardService));
 
-    servlets.put("/member/list", new MemberListServlet(memberDao));
-    servlets.put("/member/add", new MemberAddServlet(memberDao));
-    servlets.put("/member/detail", new MemberDetailServlet(memberDao));
-    servlets.put("/member/delete", new MemberDeleteServlet(memberDao));
-    servlets.put("/member/update", new MemberUpdateServlet(memberDao));
-    servlets.put("/member/search", new MemberSearchServlet(memberDao));
-    servlets.put("/member/login", new LoginServlet(memberDao));
+    servlets.put("/member/list", new MemberListServlet(memberService));
+    servlets.put("/member/add", new MemberAddServlet(memberService));
+    servlets.put("/member/detail", new MemberDetailServlet(memberService));
+    servlets.put("/member/delete", new MemberDeleteServlet(memberService));
+    servlets.put("/member/update", new MemberUpdateServlet(memberService));
+    servlets.put("/member/search", new MemberSearchServlet(memberService));
+    servlets.put("/member/login", new LoginServlet(memberService));
 
-    servlets.put("/plan/list", new PlanListServlet(planDao));
-    servlets.put("/plan/add", new PlanAddServlet(planDao));
-    servlets.put("/plan/detail", new PlanDetailServlet(planDao));
-    servlets.put("/plan/delete", new PlanDeleteServlet(planDao));
-    servlets.put("/plan/update", new PlanUpdateServlet(planDao));
-    servlets.put("/plan/search", new PlanSearchServlet(planDao));
+    servlets.put("/plan/list", new PlanListServlet(planService));
+    servlets.put("/plan/add", new PlanAddServlet(planService));
+    servlets.put("/plan/detail", new PlanDetailServlet(planService));
+    servlets.put("/plan/delete", new PlanDeleteServlet(planService));
+    servlets.put("/plan/update", new PlanUpdateServlet(planService));
+    servlets.put("/plan/search", new PlanSearchServlet(planService));
 
     servlets.put("/photoBoard/list", new PhotoBoardListServlet(planService,photoBoardService));
     servlets.put("/photoBoard/add",

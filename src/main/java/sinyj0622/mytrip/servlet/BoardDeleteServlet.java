@@ -6,14 +6,15 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 import sinyj0622.mytrip.dao.BoardDao;
+import sinyj0622.mytrip.service.BoardService;
 import sinyj0622.util.Prompt;
 
 public class BoardDeleteServlet implements Servlet {
 
-	BoardDao boardDao;
+	BoardService boardService;
 
-	public BoardDeleteServlet(BoardDao boardDao) {
-		this.boardDao = boardDao;
+	public BoardDeleteServlet(BoardService boardService) {
+		this.boardService = boardService;
 	}
 
 	@Override
@@ -21,7 +22,7 @@ public class BoardDeleteServlet implements Servlet {
 		
 	    int no = Prompt.getInt(in, out, "번호? ");
 
-		if (boardDao.delete(no) > 0) {
+		if (boardService.delete(no) > 0) {
 			out.println("해당 번호의 게시물을 삭제하였습니다.");
 
 		} else {
