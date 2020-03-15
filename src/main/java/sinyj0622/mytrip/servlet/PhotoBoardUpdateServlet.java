@@ -37,7 +37,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
 
     newPhotoBoard.setNo(old.getNo());
     newPhotoBoard.setTitle(
-        Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle()), old.getTitle()));
+        Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle())));
 
     printPhotoFiles(out, old);
     out.println("사진은 일부만 변경할 수 없습니다.");

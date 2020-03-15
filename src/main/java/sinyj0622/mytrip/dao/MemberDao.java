@@ -1,6 +1,8 @@
 package sinyj0622.mytrip.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import sinyj0622.mytrip.domain.Member;
 
 public interface MemberDao {
@@ -19,7 +21,7 @@ public interface MemberDao {
 	   return null;
    }
    
-   default Member findByEmailAndPassword(String email, String password) throws Exception {
+   default Member findByEmailAndPassword(Map<String,Object> params) throws Exception {
 	   return null;
    }
   

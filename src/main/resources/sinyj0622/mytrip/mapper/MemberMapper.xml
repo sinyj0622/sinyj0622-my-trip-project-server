@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="MemberMapper">
+<mapper namespace="sinyj0622.mytrip.dao.MemberDao">
 
 	<resultMap type="Member" id="MemberMap">
 		<id column="member_id" property="no" />
@@ -28,12 +28,12 @@
      from mytrip_member
   </sql>
 
-	<select id="selectMember" resultMap="MemberMap">
+	<select id="findAll" resultMap="MemberMap">
 	select
 		<include refid="select1"/>
 	</select>
 
-	<insert id="insertMember" parameterType="Member">
+	<insert id="insert" parameterType="Member">
 		insert 
 		into
 		 mytrip_member(name, nick, email, pwd, photo, tel, cdt)
@@ -46,13 +46,13 @@
 		 #{registeredDate})
 	</insert>
 
-	<select id="detailMember" resultMap="MemberMap" parameterType="int">
+	<select id="findByNo" resultMap="MemberMap" parameterType="int">
 		select
 		<include refid="select1"/>
 		  where member_id=#{no}
 	</select>
 
-	<update id="updateMember" parameterType="Member">
+	<update id="update" parameterType="Member">
 		update
 		 mytrip_member
 		  <set>
@@ -65,7 +65,7 @@
 		   </set>
 		    where member_id=#{no}
 	</update>
-	<delete id="deleteMember" parameterType="int">
+	<delete id="delete" parameterType="int">
 		delete
 		 from mytrip_member
 		  where member_id=#{no}

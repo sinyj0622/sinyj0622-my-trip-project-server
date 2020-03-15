@@ -89,7 +89,6 @@ public class ServerApp {
     notifyApplicationInitialized();
 
     SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
-    PlatformTransactionManager txManager = (PlatformTransactionManager) context.get("txManager");
 
     BoardService boardService = (BoardService) context.get("boardService");
     MemberService memberService = (MemberService) context.get("memberService");

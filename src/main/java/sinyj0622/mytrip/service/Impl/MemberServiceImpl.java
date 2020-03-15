@@ -1,5 +1,6 @@
 package sinyj0622.mytrip.service.Impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import sinyj0622.mytrip.dao.MemberDao;
@@ -47,9 +48,13 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public Member findByEmailAndPassword(String email, String password) throws Exception {
-		return memberDao.findByEmailAndPassword(email, password);
+		HashMap<String,Object> params = new HashMap<>();
+		params.put("email", email);
+		params.put("password", password);
+		return memberDao.findByEmailAndPassword(params);
 	}
 
 
 
 }
+

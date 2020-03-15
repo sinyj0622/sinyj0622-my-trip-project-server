@@ -31,7 +31,7 @@ public class BoardUpdateServlet implements Servlet {
 		
 		newBoard.setNo(oldBoard.getNo());
 		newBoard.setText(Prompt.getString(in, out,
-				String.format("내용(%s):", oldBoard.getText()), oldBoard.getText()));
+				String.format("내용(%s):", oldBoard.getText())));
 		
 		if (boardService.update(newBoard) > 0) {
 			out.println("게시글을 수정하였습니다.");
