@@ -6,7 +6,7 @@ import sinyj0622.mytrip.domain.Board;
 
 public interface BoardService {
 
-	int add(Board board) throws Exception;
+	void add(Board board) throws Exception;
 
 	int delete(int no) throws Exception;
 

@@ -17,6 +17,7 @@ import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.service.Impl.BoardServiceImpl;
+import sinyj0622.mytrip.service.Impl.BoardServiceImpl2;
 import sinyj0622.mytrip.service.Impl.MemberServiceImpl;
 import sinyj0622.mytrip.service.Impl.PhotoBoardServiceImpl;
 import sinyj0622.mytrip.service.Impl.PlanServiceImpl;
@@ -56,7 +57,7 @@ public class DataLoaderListener implements ApplicationContextListener {
       context.put("photoBoardService", new PhotoBoardServiceImpl(photoBoardDao,photoFileDao,txManager));
       context.put("planService", new PlanServiceImpl(planDao));
       context.put("memberService", new MemberServiceImpl(memberDao));
-      context.put("boardService", new BoardServiceImpl(boardDao));
+      context.put("boardService", new BoardServiceImpl2(sqlSessionFactory));
       
       
     } catch (Exception e) {

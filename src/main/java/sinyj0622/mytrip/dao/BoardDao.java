@@ -5,7 +5,7 @@ import sinyj0622.mytrip.domain.Board;
 
 public interface BoardDao {
 
-  public int insert(Board board) throws Exception;
+  public void insert(Board board) throws Exception;
 
   public List<Board> findAll() throws Exception;
 
