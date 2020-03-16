@@ -38,7 +38,7 @@ public class SqlSessionFactoryProxy implements SqlSessionFactory {
     SqlSession sqlSession = threadLocal.get();
     // 스레드에 보관된 객체가 없다면 생성한다
     if (sqlSession == null) {
-      sqlSession = new SqlSessionProxy(originalFactory.openSession());
+      sqlSession = new SqlSessionProxy(originalFactory.openSession(autoCommit));
       // 스레드에 보관한다
       threadLocal.set(sqlSession);
     }
