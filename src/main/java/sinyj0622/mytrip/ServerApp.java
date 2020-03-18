@@ -11,43 +11,11 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.ibatis.session.SqlSessionFactory;
-
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.mytrip.dao.BoardDao;
-import sinyj0622.mytrip.dao.PhotoFileDao;
-import sinyj0622.mytrip.dao.PlanDao;
-import sinyj0622.mytrip.service.BoardService;
-import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.mytrip.service.PhotoBoardService;
-import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.mytrip.servlet.BoardAddServlet;
-import sinyj0622.mytrip.servlet.BoardDeleteServlet;
-import sinyj0622.mytrip.servlet.BoardDetailServlet;
-import sinyj0622.mytrip.servlet.BoardListServlet;
-import sinyj0622.mytrip.servlet.BoardUpdateServlet;
-import sinyj0622.mytrip.servlet.LoginServlet;
-import sinyj0622.mytrip.servlet.MemberAddServlet;
-import sinyj0622.mytrip.servlet.MemberDeleteServlet;
-import sinyj0622.mytrip.servlet.MemberDetailServlet;
-import sinyj0622.mytrip.servlet.MemberListServlet;
-import sinyj0622.mytrip.servlet.MemberSearchServlet;
-import sinyj0622.mytrip.servlet.MemberUpdateServlet;
-import sinyj0622.mytrip.servlet.PhotoBoardAddServlet;
-import sinyj0622.mytrip.servlet.PhotoBoardDeleteServlet;
-import sinyj0622.mytrip.servlet.PhotoBoardDetailServlet;
-import sinyj0622.mytrip.servlet.PhotoBoardListServlet;
-import sinyj0622.mytrip.servlet.PhotoBoardUpdateServlet;
-import sinyj0622.mytrip.servlet.PlanAddServlet;
-import sinyj0622.mytrip.servlet.PlanDeleteServlet;
-import sinyj0622.mytrip.servlet.PlanDetailServlet;
-import sinyj0622.mytrip.servlet.PlanListServlet;
-import sinyj0622.mytrip.servlet.PlanSearchServlet;
-import sinyj0622.mytrip.servlet.PlanUpdateServlet;
 import sinyj0622.mytrip.servlet.Servlet;
-import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.sql.SqlSessionFactoryProxy;
+import sinyj0622.util.ApplicationContext;
 
 public class ServerApp {
 
@@ -55,13 +23,14 @@ public class ServerApp {
   Set<ApplicationContextListener> listeners = new HashSet<>();
   Map<String, Object> context = new HashMap<>();
 
-  Map<String, Servlet> servlets = new HashMap<>(); // 서블릿객체저장
-
   // 스레드풀
   ExecutorService executorService = Executors.newCachedThreadPool();
 
   // 서버 멈춤 여부
   boolean serverStop = false;
+
+  // IoC 컨테이너 준비
+  ApplicationContext iocContainer;
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -88,43 +57,13 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
-    SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
+    // IocContainer
+    iocContainer = (ApplicationContext) context.get("iocContainer");
 
-    BoardService boardService = (BoardService) context.get("boardService");
-    MemberService memberService = (MemberService) context.get("memberService");
-    PlanService planService = (PlanService) context.get("planService");
-    PhotoBoardService photoBoardService = (PhotoBoardService) context.get("photoBoardService");
-    PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
+    // IocContainer에서 SqlSessionFactory 객체 꺼내기
+    SqlSessionFactory sqlSessionFactory =
+        (SqlSessionFactory) iocContainer.getBean("sqlSessionFactory");
 
-    servlets.put("/board/list", new BoardListServlet(boardService));
-    servlets.put("/board/add", new BoardAddServlet(boardService));
-    servlets.put("/board/detail", new BoardDetailServlet(boardService));
-    servlets.put("/board/delete", new BoardDeleteServlet(boardService));
-    servlets.put("/board/update", new BoardUpdateServlet(boardService));
-
-    servlets.put("/member/list", new MemberListServlet(memberService));
-    servlets.put("/member/add", new MemberAddServlet(memberService));
-    servlets.put("/member/detail", new MemberDetailServlet(memberService));
-    servlets.put("/member/delete", new MemberDeleteServlet(memberService));
-    servlets.put("/member/update", new MemberUpdateServlet(memberService));
-    servlets.put("/member/search", new MemberSearchServlet(memberService));
-    servlets.put("/member/login", new LoginServlet(memberService));
-
-    servlets.put("/plan/list", new PlanListServlet(planService));
-    servlets.put("/plan/add", new PlanAddServlet(planService));
-    servlets.put("/plan/detail", new PlanDetailServlet(planService));
-    servlets.put("/plan/delete", new PlanDeleteServlet(planService));
-    servlets.put("/plan/update", new PlanUpdateServlet(planService));
-    servlets.put("/plan/search", new PlanSearchServlet(planService));
-
-    servlets.put("/photoBoard/list", new PhotoBoardListServlet(planService,photoBoardService));
-    servlets.put("/photoBoard/add",
-        new PhotoBoardAddServlet(planService,photoBoardService));
-    servlets.put("/photoBoard/detail", new PhotoBoardDetailServlet(photoBoardService));
-    servlets.put("/photoBoard/delete",
-        new PhotoBoardDeleteServlet(photoBoardService));
-    servlets.put("/photoBoard/update",
-        new PhotoBoardUpdateServlet(photoBoardService));
 
     try (
         // 서버쪽 연결 준비
@@ -185,7 +124,7 @@ public class ServerApp {
         return;
       }
 
-      Servlet servlet = servlets.get(request);
+      Servlet servlet = (Servlet) iocContainer.getBean(request);
 
       if (servlet != null) {
         try {
@@ -231,7 +170,7 @@ public class ServerApp {
     System.out.println("서버 여행 관리 시스템입니다");
 
     ServerApp app = new ServerApp();
-    app.addApplicationContextListener(new DataLoaderListener());
+    app.addApplicationContextListener(new ContextLoaderListener());
     app.service();
 
   }

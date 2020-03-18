@@ -2,18 +2,19 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
+import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 
+@Component("/plan/update")
 public class PlanUpdateServlet implements Servlet {
 
-	PlanService planService;
+  PlanService planService;
 
-	public PlanUpdateServlet(PlanService planService) {
-		this.planService = planService;
-	}
+  public PlanUpdateServlet(PlanService planService) {
+    this.planService = planService;
+  }
 
 
   @Override

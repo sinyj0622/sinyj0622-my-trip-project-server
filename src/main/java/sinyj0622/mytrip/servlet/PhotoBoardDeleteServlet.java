@@ -2,21 +2,18 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import sinyj0622.mytrip.dao.PhotoBoardDao;
-import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.service.PhotoBoardService;
-import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.sql.PlatformTransactionManager;
-import sinyj0622.sql.TransactionTemplate;
+import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 
+@Component("/photoboard/delete")
 public class PhotoBoardDeleteServlet implements Servlet {
 
-	  PhotoBoardService photoBoardService;
+  PhotoBoardService photoBoardService;
 
-	  public PhotoBoardDeleteServlet(PhotoBoardService photoBoardService) {
-	    this.photoBoardService = photoBoardService;
-	  }
+  public PhotoBoardDeleteServlet(PhotoBoardService photoBoardService) {
+    this.photoBoardService = photoBoardService;
+  }
 
 
 

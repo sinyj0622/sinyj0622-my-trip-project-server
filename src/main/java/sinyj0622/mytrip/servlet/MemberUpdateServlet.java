@@ -2,18 +2,19 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
+import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 
+@Component("/member/update")
 public class MemberUpdateServlet implements Servlet {
 
-	MemberService memberService;
+  MemberService memberService;
 
-	public MemberUpdateServlet(MemberService memberService) {
-		this.memberService = memberService;
-	}
+  public MemberUpdateServlet(MemberService memberService) {
+    this.memberService = memberService;
+  }
 
 
   @Override

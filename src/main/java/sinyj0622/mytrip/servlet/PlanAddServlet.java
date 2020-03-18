@@ -2,11 +2,12 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
+import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 
+@Component("/plan/add")
 public class PlanAddServlet implements Servlet {
 
   PlanService planService;

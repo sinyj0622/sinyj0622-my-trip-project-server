@@ -3,48 +3,47 @@ package sinyj0622.mytrip.servlet;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
-
-import sinyj0622.mytrip.dao.PhotoBoardDao;
-import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
+import sinyj0622.util.Component;
 
+@Component("/photoboard/list")
 public class PhotoBoardListServlet implements Servlet {
 
-	  PlanService planService;
-	  PhotoBoardService photoBoardService;
+  PlanService planService;
+  PhotoBoardService photoBoardService;
 
-	  public PhotoBoardListServlet(PlanService planService, PhotoBoardService photoBoardService) {
-	    this.planService = planService;
-	    this.photoBoardService = photoBoardService;
-	  }
+  public PhotoBoardListServlet(PlanService planService, PhotoBoardService photoBoardService) {
+    this.planService = planService;
+    this.photoBoardService = photoBoardService;
+  }
 
 
-	@Override
-	public void service(Scanner in, PrintStream out) throws Exception {
+  @Override
+  public void service(Scanner in, PrintStream out) throws Exception {
 
-		out.println("플랜 번호? ");
-		out.println("!@#");
-		int planNo = Integer.parseInt(in.nextLine());
+    out.println("플랜 번호? ");
+    out.println("!@#");
+    int planNo = Integer.parseInt(in.nextLine());
 
-		Plan plan = planService.get(planNo);
-		
-		if (plan == null) {
-			out.println("해당 번호의 플랜이 없습니다");
-			out.flush();
-			return;
-		}
-		
-		out.printf("%s\n", plan.getTravelTitle());
-		out.println("---------------------------------------------");
-		out.flush();
+    Plan plan = planService.get(planNo);
 
-		List<PhotoBoard> photoBoards = photoBoardService.listPlanPhoto(plan.getNo());
-		for (PhotoBoard p : photoBoards) {
-			out.printf("%d, %s, %s, %d\n", p.getNo(), p.getTitle(), p.getCreatedDate(), p.getViewCount());
-		}
-	}
+    if (plan == null) {
+      out.println("해당 번호의 플랜이 없습니다");
+      out.flush();
+      return;
+    }
+
+    out.printf("%s\n", plan.getTravelTitle());
+    out.println("---------------------------------------------");
+    out.flush();
+
+    List<PhotoBoard> photoBoards = photoBoardService.listPlanPhoto(plan.getNo());
+    for (PhotoBoard p : photoBoards) {
+      out.printf("%d, %s, %s, %d\n", p.getNo(), p.getTitle(), p.getCreatedDate(), p.getViewCount());
+    }
+  }
 
 }

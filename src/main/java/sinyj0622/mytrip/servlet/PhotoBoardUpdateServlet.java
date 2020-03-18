@@ -4,23 +4,20 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import sinyj0622.mytrip.dao.PhotoBoardDao;
-import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.service.PhotoBoardService;
-import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.sql.PlatformTransactionManager;
-import sinyj0622.sql.TransactionTemplate;
+import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 
+@Component("/photoboard/update")
 public class PhotoBoardUpdateServlet implements Servlet {
 
-	  PhotoBoardService photoBoardService;
+  PhotoBoardService photoBoardService;
 
-	  public PhotoBoardUpdateServlet(PhotoBoardService photoBoardService) {
-	    this.photoBoardService = photoBoardService;
-	  }
+  public PhotoBoardUpdateServlet(PhotoBoardService photoBoardService) {
+    this.photoBoardService = photoBoardService;
+  }
 
 
   @Override
@@ -36,8 +33,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
     }
 
     newPhotoBoard.setNo(old.getNo());
-    newPhotoBoard.setTitle(
-        Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle())));
+    newPhotoBoard.setTitle(Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle())));
 
     printPhotoFiles(out, old);
     out.println("사진은 일부만 변경할 수 없습니다.");

@@ -3,18 +3,15 @@ package sinyj0622.mytrip.servlet;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
-import sinyj0622.mytrip.dao.PhotoBoardDao;
-import sinyj0622.mytrip.dao.PhotoFileDao;
-import sinyj0622.mytrip.dao.PlanDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.sql.PlatformTransactionManager;
-import sinyj0622.sql.TransactionTemplate;
+import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 
+@Component("/photoboard/add")
 public class PhotoBoardAddServlet implements Servlet {
 
   PlanService planService;
@@ -43,7 +40,7 @@ public class PhotoBoardAddServlet implements Servlet {
     photoBoard.setFiles(photoFiles);
 
     photoBoardService.add(photoBoard);
-	out.println("사진 게시글을 등록했습니다!");
+    out.println("사진 게시글을 등록했습니다!");
   }
 
 

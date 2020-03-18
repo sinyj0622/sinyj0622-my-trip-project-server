@@ -1,24 +1,21 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
-import java.sql.Date;
-import java.util.List;
 import java.util.Scanner;
-import sinyj0622.mytrip.dao.PhotoBoardDao;
-import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.service.PhotoBoardService;
-import sinyj0622.mytrip.service.PlanService;
+import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 
+@Component("/photoboard/detail")
 public class PhotoBoardDetailServlet implements Servlet {
 
-	  PhotoBoardService photoBoardService;
+  PhotoBoardService photoBoardService;
 
-	  public PhotoBoardDetailServlet(PhotoBoardService photoBoardService) {
-	    this.photoBoardService = photoBoardService;
-	  }
+  public PhotoBoardDetailServlet(PhotoBoardService photoBoardService) {
+    this.photoBoardService = photoBoardService;
+  }
 
 
   @Override
@@ -31,7 +28,7 @@ public class PhotoBoardDetailServlet implements Servlet {
       out.printf("제목: %s\n", photoBoard.getTitle());
       out.printf("등록일: %s\n", photoBoard.getCreatedDate());
       out.printf("조회수: %d\n", photoBoard.getViewCount());
-      
+
       out.println("사진파일: ");
       for (PhotoFile photoFile : photoBoard.getFiles()) {
         out.printf("> %s\n", photoFile.getFilepath());
