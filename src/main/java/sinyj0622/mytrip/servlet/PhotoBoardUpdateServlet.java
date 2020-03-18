@@ -9,9 +9,10 @@ import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/photoboard/update")
-public class PhotoBoardUpdateServlet implements Servlet {
+@Component
+public class PhotoBoardUpdateServlet {
 
   PhotoBoardService photoBoardService;
 
@@ -20,7 +21,8 @@ public class PhotoBoardUpdateServlet implements Servlet {
   }
 
 
-  @Override
+
+  @RequestMapping("/photoboard/update")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "사진 게시글번호? ");
 

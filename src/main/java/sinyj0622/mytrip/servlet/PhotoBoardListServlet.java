@@ -8,9 +8,10 @@ import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Component;
+import sinyj0622.util.RequestMapping;
 
-@Component("/photoboard/list")
-public class PhotoBoardListServlet implements Servlet {
+@Component
+public class PhotoBoardListServlet {
 
   PlanService planService;
   PhotoBoardService photoBoardService;
@@ -21,7 +22,8 @@ public class PhotoBoardListServlet implements Servlet {
   }
 
 
-  @Override
+
+  @RequestMapping("/photoboard/list")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     out.println("플랜 번호? ");

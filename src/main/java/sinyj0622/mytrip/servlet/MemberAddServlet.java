@@ -7,9 +7,10 @@ import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/member/add")
-public class MemberAddServlet implements Servlet {
+@Component
+public class MemberAddServlet {
 
   MemberService memberService;
 
@@ -18,7 +19,7 @@ public class MemberAddServlet implements Servlet {
   }
 
 
-  @Override
+  @RequestMapping("/member/add")
   public void service(Scanner in, PrintStream out) throws Exception {
     Member member = new Member();
     member.setName(Prompt.getString(in, out, "이름? "));

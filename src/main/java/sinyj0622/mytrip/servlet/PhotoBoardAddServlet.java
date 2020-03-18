@@ -10,9 +10,10 @@ import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/photoboard/add")
-public class PhotoBoardAddServlet implements Servlet {
+@Component
+public class PhotoBoardAddServlet {
 
   PlanService planService;
   PhotoBoardService photoBoardService;
@@ -23,7 +24,8 @@ public class PhotoBoardAddServlet implements Servlet {
   }
 
 
-  @Override
+
+  @RequestMapping("/photoboard/add")
   public void service(Scanner in, PrintStream out) throws Exception {
     int planNo = Prompt.getInt(in, out, "플랜 번호? ");
 

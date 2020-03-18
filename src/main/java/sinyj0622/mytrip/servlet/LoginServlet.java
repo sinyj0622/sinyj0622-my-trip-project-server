@@ -6,9 +6,10 @@ import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/member/login")
-public class LoginServlet implements Servlet {
+@Component
+public class LoginServlet {
 
   MemberService memberService;
 
@@ -16,7 +17,7 @@ public class LoginServlet implements Servlet {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/login")
   public void service(Scanner in, PrintStream out) throws Exception {
     String email = Prompt.getString(in, out, "이메일: ");
     String password = Prompt.getString(in, out, "암호: ");

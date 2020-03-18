@@ -7,9 +7,10 @@ import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/member/search")
-public class MemberSearchServlet implements Servlet {
+@Component
+public class MemberSearchServlet {
 
   MemberService memberService;
 
@@ -17,7 +18,7 @@ public class MemberSearchServlet implements Servlet {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/search")
   public void service(Scanner in, PrintStream out) throws Exception {
     String response = Prompt.getString(in, out, "검색어? ");
     List<Member> members = memberService.findByKeyword(response);

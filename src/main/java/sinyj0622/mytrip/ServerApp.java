@@ -13,9 +13,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.ibatis.session.SqlSessionFactory;
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.mytrip.servlet.Servlet;
 import sinyj0622.sql.SqlSessionFactoryProxy;
 import sinyj0622.util.ApplicationContext;
+import sinyj0622.util.RequestHandler;
+import sinyj0622.util.RequestMappingHandlerMapping;
 
 public class ServerApp {
 
@@ -31,6 +32,8 @@ public class ServerApp {
 
   // IoC 컨테이너 준비
   ApplicationContext iocContainer;
+
+  RequestMappingHandlerMapping handlerMapper;
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -56,6 +59,8 @@ public class ServerApp {
   public void service() {
 
     notifyApplicationInitialized();
+
+    handlerMapper = (RequestMappingHandlerMapping) context.get("handlerMapper");
 
     // IocContainer
     iocContainer = (ApplicationContext) context.get("iocContainer");
@@ -124,11 +129,13 @@ public class ServerApp {
         return;
       }
 
-      Servlet servlet = (Servlet) iocContainer.getBean(request);
+      RequestHandler requestHandler = handlerMapper.getHandler(request);
 
-      if (servlet != null) {
+      if (requestHandler != null) {
         try {
-          servlet.service(in, out);
+          requestHandler.getMethod().invoke(//
+              requestHandler.getBean(), in, out);
+
 
         } catch (Exception e) {
           out.println("요청 처리 중 오류 발생!");

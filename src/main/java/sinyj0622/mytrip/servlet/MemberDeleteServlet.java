@@ -5,9 +5,10 @@ import java.util.Scanner;
 import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/member/delete")
-public class MemberDeleteServlet implements Servlet {
+@Component
+public class MemberDeleteServlet {
 
   MemberService memberService;
 
@@ -16,7 +17,7 @@ public class MemberDeleteServlet implements Servlet {
   }
 
 
-  @Override
+  @RequestMapping("/member/delete")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 

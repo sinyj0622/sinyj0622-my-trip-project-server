@@ -6,9 +6,10 @@ import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/plan/detail")
-public class PlanDetailServlet implements Servlet {
+@Component
+public class PlanDetailServlet {
 
   PlanService planService;
 
@@ -16,7 +17,7 @@ public class PlanDetailServlet implements Servlet {
     this.planService = planService;
   }
 
-  @Override
+  @RequestMapping("/plan/detail")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 

@@ -6,9 +6,10 @@ import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/member/detail")
-public class MemberDetailServlet implements Servlet {
+@Component
+public class MemberDetailServlet {
 
   MemberService memberService;
 
@@ -16,7 +17,7 @@ public class MemberDetailServlet implements Servlet {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/detail")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 

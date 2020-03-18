@@ -7,9 +7,10 @@ import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/photoboard/detail")
-public class PhotoBoardDetailServlet implements Servlet {
+@Component
+public class PhotoBoardDetailServlet {
 
   PhotoBoardService photoBoardService;
 
@@ -18,7 +19,8 @@ public class PhotoBoardDetailServlet implements Servlet {
   }
 
 
-  @Override
+
+  @RequestMapping("/photoboard/detail")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 

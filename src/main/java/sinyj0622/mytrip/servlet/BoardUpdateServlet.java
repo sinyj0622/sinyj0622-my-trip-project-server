@@ -6,9 +6,10 @@ import sinyj0622.mytrip.domain.Board;
 import sinyj0622.mytrip.service.BoardService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/board/update")
-public class BoardUpdateServlet implements Servlet {
+@Component
+public class BoardUpdateServlet {
 
   BoardService boardService;
 
@@ -17,7 +18,7 @@ public class BoardUpdateServlet implements Servlet {
   }
 
 
-  @Override
+  @RequestMapping("/board/update")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 

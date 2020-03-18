@@ -5,9 +5,10 @@ import java.util.Scanner;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
+import sinyj0622.util.RequestMapping;
 
-@Component("/photoboard/delete")
-public class PhotoBoardDeleteServlet implements Servlet {
+@Component
+public class PhotoBoardDeleteServlet {
 
   PhotoBoardService photoBoardService;
 
@@ -17,7 +18,7 @@ public class PhotoBoardDeleteServlet implements Servlet {
 
 
 
-  @Override
+  @RequestMapping("/photoboard/delete")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "사진 게시글번호? ");
 

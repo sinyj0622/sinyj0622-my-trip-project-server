@@ -6,9 +6,10 @@ import java.util.Scanner;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.Component;
+import sinyj0622.util.RequestMapping;
 
-@Component("/member/list")
-public class MemberListServlet implements Servlet {
+@Component
+public class MemberListServlet {
 
   MemberService memberService;
 
@@ -17,7 +18,7 @@ public class MemberListServlet implements Servlet {
   }
 
 
-  @Override
+  @RequestMapping("/member/list")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     List<Member> members = memberService.list();
