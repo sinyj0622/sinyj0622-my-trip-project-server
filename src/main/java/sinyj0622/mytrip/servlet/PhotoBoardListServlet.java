@@ -3,11 +3,13 @@ package sinyj0622.mytrip.servlet;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
+
+import org.springframework.stereotype.Component;
+
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.Component;
 import sinyj0622.util.RequestMapping;
 
 @Component

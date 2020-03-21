@@ -2,10 +2,12 @@ package sinyj0622.mytrip.service.Impl;
 
 import java.util.HashMap;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.Component;
 
 @Component
 public class MemberServiceImpl implements MemberService {

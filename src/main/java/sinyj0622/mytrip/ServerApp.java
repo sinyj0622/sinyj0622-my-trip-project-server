@@ -12,9 +12,10 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.context.ApplicationContext;
+
 import sinyj0622.mytrip.context.ApplicationContextListener;
 import sinyj0622.sql.SqlSessionFactoryProxy;
-import sinyj0622.util.ApplicationContext;
 import sinyj0622.util.RequestHandler;
 import sinyj0622.util.RequestMappingHandlerMapping;
 
@@ -65,10 +66,6 @@ public class ServerApp {
     // IocContainer
     iocContainer = (ApplicationContext) context.get("iocContainer");
 
-    // IocContainer에서 SqlSessionFactory 객체 꺼내기
-    SqlSessionFactory sqlSessionFactory =
-        (SqlSessionFactory) iocContainer.getBean("sqlSessionFactory");
-
 
     try (
         // 서버쪽 연결 준비
@@ -82,7 +79,6 @@ public class ServerApp {
         executorService.submit(() -> {
           processRequest(socket);
 
-          ((SqlSessionFactoryProxy) sqlSessionFactory).closeSession();
         });
 
         // 서버가 true(멈춤)

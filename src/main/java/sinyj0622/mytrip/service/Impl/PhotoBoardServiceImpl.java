@@ -1,13 +1,15 @@
 package sinyj0622.mytrip.service.Impl;
 
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import sinyj0622.mytrip.dao.PhotoBoardDao;
 import sinyj0622.mytrip.dao.PhotoFileDao;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.sql.PlatformTransactionManager;
 import sinyj0622.sql.TransactionTemplate;
-import sinyj0622.util.Component;
 
 @Component
 public class PhotoBoardServiceImpl implements PhotoBoardService {

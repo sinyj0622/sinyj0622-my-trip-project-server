@@ -3,9 +3,11 @@ package sinyj0622.mytrip.servlet;
 import java.io.PrintStream;
 import java.sql.Date;
 import java.util.Scanner;
+
+import org.springframework.stereotype.Component;
+
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.Component;
 import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 

@@ -1,10 +1,12 @@
 package sinyj0622.mytrip.service.Impl;
 
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import sinyj0622.mytrip.dao.BoardDao;
 import sinyj0622.mytrip.domain.Board;
 import sinyj0622.mytrip.service.BoardService;
-import sinyj0622.util.Component;
 
 @Component
 public class BoardServiceImpl implements BoardService {
