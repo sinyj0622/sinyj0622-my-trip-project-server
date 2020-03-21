@@ -11,11 +11,9 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.sql.SqlSessionFactoryProxy;
 import sinyj0622.util.RequestHandler;
 import sinyj0622.util.RequestMappingHandlerMapping;
 

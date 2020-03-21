@@ -1,26 +1,13 @@
 package sinyj0622.mytrip;
 
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Map;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.mytrip.dao.BoardDao;
-import sinyj0622.mytrip.dao.MemberDao;
-import sinyj0622.mytrip.dao.PhotoBoardDao;
-import sinyj0622.mytrip.dao.PhotoFileDao;
-import sinyj0622.mytrip.dao.PlanDao;
-import sinyj0622.sql.MybatisDaoFactory;
-import sinyj0622.sql.PlatformTransactionManager;
-import sinyj0622.sql.SqlSessionFactoryProxy;
 import sinyj0622.util.RequestHandler;
 import sinyj0622.util.RequestMapping;
 import sinyj0622.util.RequestMappingHandlerMapping;
