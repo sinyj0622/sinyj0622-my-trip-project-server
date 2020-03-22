@@ -1,7 +1,6 @@
 package sinyj0622.mytrip;
 
 import java.lang.reflect.Method;
-import java.sql.Connection;
 import java.util.Map;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -13,8 +12,6 @@ import sinyj0622.util.RequestMapping;
 import sinyj0622.util.RequestMappingHandlerMapping;
 
 public class ContextLoaderListener implements ApplicationContextListener {
-  // 다른 클래스에서 커넥션을 사용할 수 있도록 공개
-  public static Connection con;
 
   @Override
   public void contextInitialized(Map<String, Object> context) {
