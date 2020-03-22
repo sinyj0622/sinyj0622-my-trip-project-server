@@ -1,11 +1,17 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.springframework.stereotype.Component;
 
+
+import sinyj0622.mytrip.domain.PhotoBoard;
+import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
+import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
@@ -13,10 +19,10 @@ import sinyj0622.util.RequestMapping;
 @Component
 public class PlanUpdateServlet {
 
-  PlanService planService;
+	PhotoBoardService photoBoardService;
 
-  public PlanUpdateServlet(PlanService planService) {
-    this.planService = planService;
+  public PlanUpdateServlet(PhotoBoardService photoBoardService) {
+    this.photoBoardService = photoBoardService;
   }
 
 
@@ -24,31 +30,65 @@ public class PlanUpdateServlet {
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 
-    Plan oldPlan = planService.get(no);
+    PhotoBoard old = photoBoardService.get(no);
 
-    if (oldPlan == null) {
+    if (old == null) {
       out.println("해당 번호의 게시물이 없습니다.");
       return;
     }
 
-    Plan newPlan = new Plan();
-    newPlan.setNo(oldPlan.getNo());
-    newPlan.setTravelTitle(
-        Prompt.getString(in, out, String.format("여행제목(%s)? ", oldPlan.getTravelTitle())));
-    newPlan.setDestnation(
-        Prompt.getString(in, out, String.format("어디로 떠나세요(%s)? ", oldPlan.getDestnation())));
-    newPlan.setPerson(Prompt.getString(in, out, String.format("여행인원(%s)? ", oldPlan.getPerson())));
-    newPlan.setStartDate(
-        Prompt.getString(in, out, String.format("여행 시작일(%s)? ", oldPlan.getStartDate())));
-    newPlan.setEndDate(
-        Prompt.getString(in, out, String.format("여행 종료일 (%s)? ", oldPlan.getEndDate())));
-    newPlan.setTravelMoney(
-        Prompt.getString(in, out, String.format("예상 경비(%s)? ", oldPlan.getTravelMoney())));
+    PhotoBoard photoBoard = new PhotoBoard();
+    photoBoard.setNo(no);
+    photoBoard.setTitle(
+        Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle()), old.getTitle()));
 
-    if (planService.update(newPlan) > 0) {
-      out.println("여행일정 수정완료");
-    } else {
-      out.println("해당 번호의 게시물이 없습니다.");
+    printPhotoFiles(out, old);
+    out.println();
+    out.println("사진은 일부만 변경할 수 없습니다.");
+    out.println("전체를 새로 등록하세요.");
+
+    String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/N) ");
+    if (response.equalsIgnoreCase("y")) {
+      // 사용자가 입력한 파일 목록을 PhotoBoard 객체에 저장한다.
+      photoBoard.setFiles(inputPhotoFiles(in, out));
     }
+
+    photoBoardService.update(photoBoard);
+    out.println("사진 게시글을 변경했습니다!");
+  }
+
+  private void printPhotoFiles(PrintStream out, PhotoBoard photoBoard) throws Exception {
+    out.println("사진파일:");
+    List<PhotoFile> oldPhotoFiles = photoBoard.getFiles();
+    for (PhotoFile photoFile : oldPhotoFiles) {
+      out.printf("> %s\n", photoFile.getFilepath());
+    }
+
+  }
+
+  private List<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {
+    // 정상적으로 등록했다면 첨부파일 입력 받는다.
+    out.println("최소 한 개의 사진파일을 등록해야 합니다.");
+    out.println("파일명 입력없이 그냥 엔터를 치면 파일 추가를 마칩니다..");
+
+    ArrayList<PhotoFile> photoFiles = new ArrayList<>();
+    while (true) {
+      out.println("사진파일? \n!@#");
+      out.flush();
+      String filepath = in.nextLine();
+
+      if (filepath.length() == 0) {
+        if (photoFiles.size() > 0) {
+          break;
+        } else {
+          out.println("최소 한 개의 사진파일을 등록해야 합니다.");
+          continue;
+        }
+      }
+
+      photoFiles.add(new PhotoFile().setFilepath(filepath));
+    }
+
+    return photoFiles;
   }
 }

@@ -9,9 +9,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
+// 객체생성
 @Configuration
+// 트랜잭션 관리 애노테이션
+@EnableTransactionManagement
 //Spring IoC 컨테이너에서 사용할 Properties 파일을 로딩하기
 @PropertySource("classpath:sinyj0622/mytrip/conf/jdbc.properties")
 public class DatabaseConfig {
