@@ -3,6 +3,7 @@ package sinyj0622.mytrip.servlet;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.springframework.stereotype.Component;
@@ -25,64 +26,42 @@ public class PhotoBoardUpdateServlet {
 
 
   @RequestMapping("/photoboard/update")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    int no = Prompt.getInt(in, out, "사진 게시글번호? ");
+  public void service(Map<String,String> params, PrintStream out) throws Exception {
+	  int no = Integer.parseInt(params.get("no"));
+	    PhotoBoard photoBoard = photoBoardService.get(no);
+	    photoBoard.setTitle(params.get("title"));
 
-    PhotoBoard old = photoBoardService.get(no);
-    PhotoBoard newPhotoBoard = new PhotoBoard();
+	    ArrayList<PhotoFile> photoFiles = new ArrayList<>();
+	    for (int i = 1; i < 6; i++) {
+	      String filepath = params.get("file" + i);
+	      if (filepath.length() > 0) {
+	        photoFiles.add(new PhotoFile().setFilepath(filepath));
+	      }
+	    }
 
-    if (old == null) {
-      out.println("해당 번호의 게시물이 없습니다.");
-      return;
-    }
+	    if (photoFiles.size() > 0) {
+	      photoBoard.setFiles(photoFiles);
+	    } else {
+	      photoBoard.setFiles(null);
+	    }
 
-    newPhotoBoard.setNo(old.getNo());
-    newPhotoBoard.setTitle(Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle())));
+	    out.println("<!DOCTYPE html>");
+	    out.println("<html>");
+	    out.println("<head>");
+	    out.println("<meta charset='UTF-8'>");
+	    out.println("<title>사진 변경</title>");
+	    out.println("</head>");
+	    out.println("<body>");
+	    out.println("<h1>사진 변경 결과</h1>");
 
-    printPhotoFiles(out, old);
-    out.println("사진은 일부만 변경할 수 없습니다.");
-    out.println("전체를 새로 등록해야 합니다.");
-    String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/N)");
-    if (response.equalsIgnoreCase("y")) {
-      newPhotoBoard.setFiles(inputPhotoFiles(in, out));
-    }
-
-    photoBoardService.update(newPhotoBoard);
-    out.println("사진 게시글을 변경했습니다!");
-
-
-  }
-
-  private void printPhotoFiles(PrintStream out, PhotoBoard photoBoard) throws Exception {
-    out.println("사진 파일:");
-    List<PhotoFile> oldPhotoFiles = photoBoard.getFiles();
-    for (PhotoFile photoFile : oldPhotoFiles) {
-      out.printf("> %s\n", photoFile.getFilepath());
-    }
-  }
-
-
-  private ArrayList<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {
-    out.println("최소 한 개의 사진파일을 등록해야 합니다.");
-    out.println("파일명 입력없이 그냥 엔터를 치면 파일 추가를 마칩니다..");
-
-    ArrayList<PhotoFile> photoFiles = new ArrayList<>();
-    while (true) {
-      String filepath = Prompt.getString(in, out, "사진파일? ");
-
-      if (filepath.length() == 0) {
-        if (photoFiles.size() > 0) {
-          break;
-        } else {
-          out.println("최소 한 개의 사진파일을 등록해야 합니다.");
-          continue;
-        }
-      }
-
-      photoFiles.add(new PhotoFile() //
-          .setFilepath(filepath));
-    }
-    return photoFiles;
-  }
-
+	    try {
+	      photoBoardService.update(photoBoard);
+	      out.println("<p>사진을 변경했습니다.</p>");
+	    } catch (Exception e) {
+	      out.println("<p>해당 사진 게시물이 존재하지 않습니다.</p>");
+	    }
+		out.printf("  <a href='/photoboard/list?planNo=%d'>목록</a>",photoBoard.getPlan().getNo());
+	    out.println("</body>");
+	    out.println("</html>");
+	  }
 }

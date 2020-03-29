@@ -2,6 +2,7 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.springframework.stereotype.Component;
@@ -26,28 +27,45 @@ public class PhotoBoardListServlet {
 
 
   @RequestMapping("/photoboard/list")
-  public void service(Scanner in, PrintStream out) throws Exception {
+  public void service(Map<String,String> params, PrintStream out) throws Exception {
+	  int planNo = Integer.parseInt(params.get("planNo"));
 
-    out.println("플랜 번호? ");
-    out.println("!@#");
-    int planNo = Integer.parseInt(in.nextLine());
+		out.println("<!DOCTYPE html>");
+		out.println("<html>");
+		out.println("<head>");
+		out.println("  <meta charset='UTF-8'>");
+		out.println("  <title>여행 사진 목록</title>");
+		out.println("</head>");
+		out.println("<body>");
+		out.println("  <h1>여행 사진 목록</h1>");
+		out.printf("  <a href='/photoboard/addForm?planNo=%d'>새 사진</a><br>", planNo);
+		out.println("  <table border='1'>");
+		out.println("  <tr>");
+		out.println("    <th>번호</th>");
+		out.println("    <th>제목</th>");
+		out.println("    <th>등록일</th>");
+		out.println("    <th>조회수</th>");
+		out.println("  </tr>");
 
-    Plan plan = planService.get(planNo);
+		List<PhotoBoard> photoBoards = photoBoardService.listPlanPhoto(planNo);
+		for (PhotoBoard photoBoard : photoBoards) {
+			out.printf("  <tr>"//
+					+ "<td>%d</td> "//
+					+ "<td><a href='/photoboard/detail?no=%d&planNo=%d'>%s</a></td> "//
+					+ "<td>%s</td> "//
+					+ "<td>%d</td> "//
+					+ "</tr>\n", //
+					photoBoard.getNo(),
+					photoBoard.getNo(),
+					planNo,//
+					photoBoard.getTitle(),
+					photoBoard.getCreatedDate(),
+					photoBoard.getViewCount()
+					);
+		}  out.println("</table>");
 
-    if (plan == null) {
-      out.println("해당 번호의 플랜이 없습니다");
-      out.flush();
-      return;
-    }
-
-    out.printf("%s\n", plan.getTravelTitle());
-    out.println("---------------------------------------------");
-    out.flush();
-
-    List<PhotoBoard> photoBoards = photoBoardService.listPlanPhoto(plan.getNo());
-    for (PhotoBoard p : photoBoards) {
-      out.printf("%d, %s, %s, %d\n", p.getNo(), p.getTitle(), p.getCreatedDate(), p.getViewCount());
-    }
-  }
+		out.println("</body>");
+		out.println("</html>");
+	}
 
 }

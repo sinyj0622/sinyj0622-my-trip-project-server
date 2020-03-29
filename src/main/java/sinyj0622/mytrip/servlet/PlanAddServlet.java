@@ -1,13 +1,12 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
-import java.util.Scanner;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
@@ -20,22 +19,34 @@ public class PlanAddServlet {
   }
 
   @RequestMapping("/plan/add")
-  public void service(Scanner in, PrintStream out) throws Exception {
+  public void service(Map<String,String> params, PrintStream out) throws Exception {
     Plan plan = new Plan();
-    plan.setTravelTitle(Prompt.getString(in, out, "여행 제목? "));
-    plan.setDestnation(Prompt.getString(in, out, "여행지? "));
-    plan.setPerson(Prompt.getString(in, out, "여행 인원? "));
-    plan.setStartDate(Prompt.getString(in, out, "여행 시작일? "));
-    plan.setEndDate(Prompt.getString(in, out, "여행 종료일? "));
-    plan.setTravelMoney(Prompt.getString(in, out, "예상 경비? "));
-
+    plan.setTravelTitle(params.get("title"));
+    plan.setDestnation(params.get("place"));
+    plan.setPerson(params.get("person"));
+    plan.setStartDate(params.get("sdt"));
+    plan.setEndDate(params.get("edt"));
+    plan.setTravelMoney(params.get("money"));
+    
+    out.println("<!DOCTYPE html>");
+	out.println("<html>");
+	out.println("<head>");
+	out.println("<meta charset='UTF-8'>");
+	out.println("<title>여행 플랜 작성</title>");
+	out.println("</head>");
+	out.println("<body>");
+	out.println("<h1>여행 플랜 작성</h1>");
+	out.println("  <a href='/plan/list'>목록</a><br>");
+	
     if (planService.add(plan) > 0) {
-      out.println("신규 여행일정 등록완료!^^");
+      out.println("<p>여행 플랜 등록완료</p>");
 
     } else {
-      out.println("같은 번호의 게시글이 있습니다.");
+      out.println("<p>등록실패</p>");
 
     }
+    out.println("</body>");
+	out.println("</html>");	
   }
 
 }

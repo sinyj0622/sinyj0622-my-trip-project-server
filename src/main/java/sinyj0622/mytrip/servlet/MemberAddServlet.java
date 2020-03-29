@@ -1,14 +1,11 @@
 package sinyj0622.mytrip.servlet;
-
-import java.io.PrintStream;
-import java.sql.Date;
-import java.util.Scanner;
+import java.io.PrintWriter;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
@@ -20,26 +17,28 @@ public class MemberAddServlet {
     this.memberService = memberService;
   }
 
-
   @RequestMapping("/member/add")
-  public void service(Scanner in, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintWriter out) throws Exception {
     Member member = new Member();
-    member.setName(Prompt.getString(in, out, "이름? "));
-    member.setNickname(Prompt.getString(in, out, "별명? "));
-    member.setPassWord(Prompt.getString(in, out, "암호? "));
-    member.setEmail(Prompt.getString(in, out, "이메일? "));
-    member.setMyphoto(Prompt.getString(in, out, "사진? "));
-    member.setPhonenumber(Prompt.getString(in, out, "전화? "));
-    member.setRegisteredDate(new Date(System.currentTimeMillis()));
+    member.setName(params.get("name"));
+    member.setEmail(params.get("email"));
+    member.setPassWord(params.get("password"));
+    member.setMyphoto(params.get("photo"));
+    member.setPhonenumber(params.get("tel"));
 
+    memberService.add(member);
 
-    if (memberService.add(member) > 0) {
-      out.println("회원을 등록하였습니다.");
-    } else {
-      out.println("같은 번호의 회원이 있습니다.");
-
-    }
-
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<meta charset='UTF-8'>");
+    out.println("<meta http-equiv='refresh' content='2;url=/member/list'>");
+    out.println("<title>회원 입력</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>회원 입력 결과</h1>");
+    out.println("<p>새 회원을 등록했습니다.</p>");
+    out.println("</body>");
+    out.println("</html>");
   }
-
 }

@@ -1,13 +1,11 @@
 package sinyj0622.mytrip.servlet;
-
-import java.io.PrintStream;
-import java.util.Scanner;
+import java.io.PrintWriter;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
@@ -19,37 +17,34 @@ public class MemberUpdateServlet {
     this.memberService = memberService;
   }
 
-
   @RequestMapping("/member/update")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    int no = Prompt.getInt(in, out, "번호? ");
+  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+    Member member = new Member();
+    member.setNo(Integer.parseInt(params.get("no")));
+    member.setName(params.get("name"));
+    member.setEmail(params.get("email"));
+    member.setPassWord(params.get("password"));
+    member.setMyphoto(params.get("photo"));
+    member.setPhonenumber(params.get("tel"));
 
-    Member oldMember = memberService.get(no);
-    Member newMember = new Member();
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<meta charset='UTF-8'>");
+    out.println("<meta http-equiv='refresh' content='2;url=/member/list'>");
+    out.println("<title>회원 변경</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>회원 변경 결과</h1>");
 
-    if (oldMember == null) {
-      out.println("해당 번호의 게시물이 없습니다.");
-      return;
-    }
+    if (memberService.update(member) > 0) {
+      out.println("<p>회원을 변경했습니다.</p>");
 
-    newMember.setNo(oldMember.getNo());
-    newMember.setName(Prompt.getString(in, out, String.format("이름(%s)? ", oldMember.getName())));
-    newMember
-        .setNickname(Prompt.getString(in, out, String.format("별명(%s)? ", oldMember.getNickname())));
-    newMember.setPassWord(Prompt.getString(in, out, "암호? ", oldMember.getPassWord()));
-    newMember.setEmail(Prompt.getString(in, out, String.format("이메일(%s)? ", oldMember.getEmail())));
-    newMember
-        .setMyphoto(Prompt.getString(in, out, String.format("사진(%s)? ", oldMember.getMyphoto())));
-    newMember.setPhonenumber(
-        Prompt.getString(in, out, String.format("전화(%s)? ", oldMember.getPhonenumber())));
-
-
-    if (memberService.update(newMember) > 0) {
-      out.println("회원 정보를 수정하였습니다.");
     } else {
-      out.println("해당 번호의 게시물이 없습니다.");
-      out.flush();
+      out.println("<p>변경에 실패했습니다.</p>");
     }
-  }
 
+    out.println("</body>");
+    out.println("</html>");
+  }
 }

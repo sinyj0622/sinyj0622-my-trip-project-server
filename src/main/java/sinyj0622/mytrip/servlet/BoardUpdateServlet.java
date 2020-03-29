@@ -1,6 +1,7 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.springframework.stereotype.Component;
@@ -13,35 +14,38 @@ import sinyj0622.util.RequestMapping;
 @Component
 public class BoardUpdateServlet {
 
-  BoardService boardService;
+	BoardService boardService;
 
-  public BoardUpdateServlet(BoardService boardService) {
-    this.boardService = boardService;
-  }
+	public BoardUpdateServlet(BoardService boardService) {
+		this.boardService = boardService;
+	}
 
 
-  @RequestMapping("/board/update")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    int no = Prompt.getInt(in, out, "번호? ");
+	@RequestMapping("/board/update")
+	public void service(Map<String,String> params, PrintStream out) throws Exception {
+		Board board = new Board();
+		board.setNo(Integer.parseInt(params.get("no")));
+		board.setText(params.get("text"));
 
-    Board oldBoard = boardService.get(no);
-    Board newBoard = new Board();
+		out.println("<!DOCTYPE html>");
+		out.println("<html>");
+		out.println("<head>");
+		out.println("<meta charset='UTF-8'>");
+		out.println("<meta http-equiv='refresh' content='2;url=/board/list'>");
+		out.println("<title>게시글 변경</title>");
+		out.println("</head>");
+		out.println("<body>");
+		out.println("<h1>게시물 변경 결과</h1>");
 
-    if (oldBoard == null) {
-      out.println("해당 번호의 게시물이 없습니다.");
-      return;
-    }
+		if (boardService.update(board) > 0) { // 변경했다면,
+			out.println("<p>게시글을 변경했습니다.</p>");
 
-    newBoard.setNo(oldBoard.getNo());
-    newBoard.setText(Prompt.getString(in, out, String.format("내용(%s):", oldBoard.getText())));
+		} else {
+			out.println("<p>해당 번호의 게시글이 없습니다.</p>");
+		}
 
-    if (boardService.update(newBoard) > 0) {
-      out.println("게시글을 수정하였습니다.");
-    } else {
-      out.println("해당 번호의 게시물이 없습니다.");
-
-    }
-
-  }
+		out.println("</body>");
+		out.println("</html>");
+	}
 
 }

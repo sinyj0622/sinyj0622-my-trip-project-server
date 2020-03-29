@@ -1,13 +1,12 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.PrintStream;
-import java.util.Scanner;
+import java.io.PrintWriter;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
@@ -19,19 +18,34 @@ public class LoginServlet {
     this.memberService = memberService;
   }
 
-  @RequestMapping("/member/login")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    String email = Prompt.getString(in, out, "이메일: ");
-    String password = Prompt.getString(in, out, "암호: ");
+  @RequestMapping("/auth/login")
+  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+    String email = params.get("email");
+    String password = params.get("password");
 
     Member member = memberService.findByEmailAndPassword(email, password);
 
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<meta charset='UTF-8'>");
     if (member != null) {
-      out.printf("'%s' 님 로그인 완료\n", member.getName());
-      out.flush();
+      out.println("<meta http-equiv='refresh' content='2;url=/board/list'>");
     } else {
-      out.println("로그인 실패");
+      out.println("<meta http-equiv='refresh' content='2;url=/auth/loginForm'>");
     }
-  }
+    out.println("<title>로그인</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>로그인 결과</h1>");
 
+    if (member != null) {
+      out.printf("<p>'%s'님 환영합니다.</p>\n", member.getName());
+    } else {
+      out.println("<p>사용자 정보가 유효하지 않습니다.</p>");
+    }
+
+    out.println("</body>");
+    out.println("</html>");
+  }
 }

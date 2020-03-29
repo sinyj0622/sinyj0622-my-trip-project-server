@@ -2,7 +2,7 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -11,66 +11,65 @@ import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
 public class PhotoBoardAddServlet {
 
-  PlanService planService;
-  PhotoBoardService photoBoardService;
+	PlanService planService;
+	PhotoBoardService photoBoardService;
 
-  public PhotoBoardAddServlet(PlanService planService, PhotoBoardService photoBoardService) {
-    this.planService = planService;
-    this.photoBoardService = photoBoardService;
-  }
-
-
-
-  @RequestMapping("/photoboard/add")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    int planNo = Prompt.getInt(in, out, "플랜 번호? ");
-
-    Plan plan = planService.get(planNo);
-    if (plan == null) {
-      out.println("해당 번호의 플랜을 찾을 수 없습니다");
-    }
-
-    PhotoBoard photoBoard = new PhotoBoard();
-    photoBoard.setTitle(Prompt.getString(in, out, "내용? "));
-    photoBoard.setPlan(plan);
-
-    ArrayList<PhotoFile> photoFiles = inputPhotoFiles(in, out, photoBoard);
-    photoBoard.setFiles(photoFiles);
-
-    photoBoardService.add(photoBoard);
-    out.println("사진 게시글을 등록했습니다!");
-  }
+	public PhotoBoardAddServlet(PlanService planService, PhotoBoardService photoBoardService) {
+		this.planService = planService;
+		this.photoBoardService = photoBoardService;
+	}
 
 
-  private ArrayList<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out, PhotoBoard photoBoard) {
-    out.println("최소 한 개의 사진파일을 등록해야 합니다.");
-    out.println("파일명 입력없이 그냥 엔터를 치면 파일 추가를 마칩니다..");
 
-    ArrayList<PhotoFile> photoFiles = new ArrayList<>();
-    while (true) {
-      String filepath = Prompt.getString(in, out, "사진파일? ");
+	@RequestMapping("/photoboard/add")
+	public void service(Map<String,String> params, PrintStream out) throws Exception {
+		int planNo = Integer.parseInt(params.get("planNo"));
+	    out.println("<!DOCTYPE html>");
+	    out.println("<html>");
+	    out.println("<head>");
+	    out.println("<meta charset='UTF-8'>");
+	    out.println("<meta http-equiv='refresh'" //
+	        + " content='2;url=/photoboard/list?planNo=" + planNo + "'>");
+	    out.println("<title>사진 입력</title>");
+	    out.println("</head>");
+	    out.println("<body>");
+	    out.println("<h1>사진 입력 결과</h1>");
 
-      if (filepath.length() == 0) {
-        if (photoFiles.size() > 0) {
-          break;
-        } else {
-          out.println("최소 한 개의 사진파일을 등록해야 합니다.");
-          continue;
-        }
-      }
+		try {
+			Plan plan = planService.get(planNo);
+			PhotoBoard photoBoard = new PhotoBoard();
+			photoBoard.setTitle(params.get("title"));
+			photoBoard.setPlan(plan);
 
-      photoFiles.add(new PhotoFile() //
-          .setFilepath(filepath)//
-          .setBoardNo(photoBoard.getNo())); //
-    }
-    return photoFiles;
-  }
+			ArrayList<PhotoFile> photoFiles = new ArrayList<>();
+			for (int i = 1; i < 6; i++) {
+				String filepath = params.get("file" + i);
+				if (filepath.length() > 0) {
+					photoFiles.add(new PhotoFile().setFilepath(filepath));
+				}
+			}
+
+
+			if (photoFiles.size() == 0) {
+				throw new Exception("최소 한 개의 사진 파일을 등록해야 합니다.");
+			}
+			photoBoard.setFiles(photoFiles);
+
+			photoBoardService.add(photoBoard);
+			out.println("<p>사진 게시글을 등록했습니다!</p>");
+		}catch (Exception e) {
+			out.printf("<p>%s</p>\n", e.getMessage());
+
+		}
+		out.println("</body>");
+		out.println("</html>");
+
+	}
 
 }
 
