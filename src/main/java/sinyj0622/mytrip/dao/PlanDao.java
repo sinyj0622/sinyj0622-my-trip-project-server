@@ -16,7 +16,5 @@ public interface PlanDao {
 
   int delete(int no) throws Exception;
 
-  default List<Plan> findByKeyword(Map<String, Object> params) {
-    return null;
-  }
+  List<Plan> findByKeyword(Map<String, Object> params) throws Exception;
 }

@@ -3,13 +3,10 @@ package sinyj0622.mytrip.servlet;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
-
+import java.util.Map;
 import org.springframework.stereotype.Component;
-
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
@@ -22,26 +19,58 @@ public class PlanSearchServlet {
   }
 
   @RequestMapping("/plan/search")
-  public void service(Scanner in, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintStream out) throws Exception {
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("  <meta charset='UTF-8'>");
+    out.println("  <title>플랜 검색 결과</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("  <h1>플랜 검색 결과</h1>");
+    out.println("  <a href='/plan/list'>목록</a><br>");
 
-    HashMap<String, Object> params = new HashMap<>();
-    String keyword = Prompt.getString(in, out, "여행 제목 검색: ");
+    HashMap<String, Object> searchParams = new HashMap<>();
+    String keyword = params.get("title");
     if (keyword.length() > 0) {
-      params.put("title", keyword);
+      searchParams.put("title", keyword);
     }
-    keyword = Prompt.getString(in, out, "여행지 검색: ");
+    keyword = params.get("spot");
     if (keyword.length() > 0) {
-      params.put("spot", keyword);
+      searchParams.put("spot", keyword);
     }
 
+    List<Plan> plans = planService.findByKeyword(searchParams);
+    if (plans == null) {
+      out.println("    <p>검색 결과가 없습니다</p>");
+    } else {
+      out.println("  <table border='1'>");
+      out.println("  <tr>");
+      out.println("    <th>번호</th>");
+      out.println("    <th>여행 주제</th>");
+      out.println("    <th>여행지</th>");
+      out.println("    <th>시작일</th>");
+      out.println("    <th>종료일</th>");
+      out.println("  </tr>");
 
-    out.println("------------------------------");
-    out.println("[검색 결과]");
-    List<Plan> plans = planService.findByKeyword(params);
-    for (Plan p : plans) {
-      out.printf("%d, %s, %s, %s ~ %s\n", p.getNo(), p.getTravelTitle(), p.getDestnation(),
-          p.getStartDate(), p.getEndDate());
+      for (Plan p : plans) {
+        out.printf("  <tr>"//
+            + "<td>%d</td> "//
+            + "<td>%s</td> "//
+            + "<td>%s</td> "//
+            + "<td>%s</td> "//
+            + "<td>%s</td>"//
+            + "</tr>\n", //
+            p.getNo(), //
+            p.getTravelTitle(), p.getDestnation(), //
+            p.getStartDate(), //
+            p.getEndDate() //
+        );
+      }
+      out.println("</table>");
     }
+    out.println("</body>");
+    out.println("</html>");
   }
 
 }
