@@ -1,9 +1,8 @@
 package sinyj0622.mytrip.servlet;
-import java.io.PrintWriter;
+
+import java.io.PrintStream;
 import java.util.Map;
-
 import org.springframework.stereotype.Component;
-
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
 import sinyj0622.util.RequestMapping;
@@ -18,13 +17,14 @@ public class MemberAddServlet {
   }
 
   @RequestMapping("/member/add")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+  public void service(Map<String, String> params, PrintStream out) throws Exception {
     Member member = new Member();
     member.setName(params.get("name"));
+    member.setNickname(params.get("nickname"));
     member.setEmail(params.get("email"));
-    member.setPassWord(params.get("password"));
-    member.setMyphoto(params.get("photo"));
-    member.setPhonenumber(params.get("tel"));
+    member.setPassWord(params.get("passWord"));
+    member.setMyphoto(params.get("myphoto"));
+    member.setPhonenumber(params.get("phonenumber"));
 
     memberService.add(member);
 

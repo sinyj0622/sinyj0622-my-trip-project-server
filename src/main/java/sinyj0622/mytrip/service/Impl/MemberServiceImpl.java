@@ -2,9 +2,7 @@ package sinyj0622.mytrip.service.Impl;
 
 import java.util.HashMap;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
-
 import sinyj0622.mytrip.dao.MemberDao;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
@@ -50,10 +48,10 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public Member findByEmailAndPassword(String email, String password) throws Exception {
+  public Member get(String email, String password) throws Exception {
     HashMap<String, Object> params = new HashMap<>();
     params.put("email", email);
-    params.put("password", password);
+    params.put("passWord", password);
     return memberDao.findByEmailAndPassword(params);
   }
 
