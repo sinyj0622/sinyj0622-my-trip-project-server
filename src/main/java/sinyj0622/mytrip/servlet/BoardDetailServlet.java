@@ -1,14 +1,12 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.springframework.stereotype.Component;
 
 import sinyj0622.mytrip.domain.Board;
 import sinyj0622.mytrip.service.BoardService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
@@ -21,7 +19,7 @@ public class BoardDetailServlet {
   }
 
   @RequestMapping("/board/detail")
-  public void service(Map<String,String> params, PrintStream out) throws Exception {
+  public void service(Map<String,String> params, PrintWriter out) throws Exception {
     int no = Integer.parseInt(params.get("no"));
     Board board = boardService.get(no);
 

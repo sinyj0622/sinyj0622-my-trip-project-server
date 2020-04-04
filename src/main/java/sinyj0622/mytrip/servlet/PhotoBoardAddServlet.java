@@ -1,6 +1,6 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class PhotoBoardAddServlet {
 
 
 	@RequestMapping("/photoboard/add")
-	public void service(Map<String,String> params, PrintStream out) throws Exception {
+	public void service(Map<String,String> params, PrintWriter out) throws Exception {
 		int planNo = Integer.parseInt(params.get("planNo"));
 	    out.println("<!DOCTYPE html>");
 	    out.println("<html>");

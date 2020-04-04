@@ -1,6 +1,6 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class PlanDetailServlet {
 	}
 
 	@RequestMapping("/plan/detail")
-	public void service(Map<String,String> params, PrintStream out) throws Exception {
+	public void service(Map<String,String> params, PrintWriter out) throws Exception {
 		int no = Integer.parseInt(params.get("no"));
 		Plan p = planService.get(no);
 

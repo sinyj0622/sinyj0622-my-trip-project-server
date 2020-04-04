@@ -1,20 +1,12 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.PrintWriter;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.springframework.stereotype.Component;
 
-
-import sinyj0622.mytrip.domain.PhotoBoard;
-import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
-import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.Prompt;
 import sinyj0622.util.RequestMapping;
 
 @Component
@@ -28,7 +20,7 @@ public class PlanUpdateFormServlet {
 
 
 	@RequestMapping("/plan/updateForm")
-	public void service(Map<String,String> params, PrintStream out) throws Exception {
+	public void service(Map<String,String> params, PrintWriter out) throws Exception {
 		int no = Integer.parseInt(params.get("no"));
 		Plan plan = planService.get(no);
 

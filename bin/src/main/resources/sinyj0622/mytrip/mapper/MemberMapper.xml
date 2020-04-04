@@ -36,14 +36,13 @@
 	<insert id="insert" parameterType="Member">
 		insert 
 		into
-		 mytrip_member(name, nick, email, pwd, photo, tel, cdt)
+		 mytrip_member(name, nick, email, pwd, photo, tel)
 		 values(#{name},
 		 #{nickname},
 		 #{email},
 		 #{passWord},
 		 #{myphoto},
-		 #{phonenumber},
-		 #{registeredDate})
+		 #{phonenumber})
 	</insert>
 
 	<select id="findByNo" resultMap="MemberMap" parameterType="int">
@@ -81,10 +80,10 @@
        </where>
 	</select>
 	
-	<select id="findByEmailAndPassWord" resultMap="MemberMap" parameterType="map">
+	<select id="findByEmailAndPassword" resultMap="MemberMap" parameterType="map">
 	  select
     <include refid="select1"/>
-    where email=#{email} and pwd=#{password}
+    where email=#{email} and pwd=#{passWord}
 	</select>
 </mapper>
 

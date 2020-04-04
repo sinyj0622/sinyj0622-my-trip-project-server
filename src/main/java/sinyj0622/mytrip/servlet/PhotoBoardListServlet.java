@@ -1,14 +1,12 @@
 package sinyj0622.mytrip.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.springframework.stereotype.Component;
 
 import sinyj0622.mytrip.domain.PhotoBoard;
-import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
 import sinyj0622.util.RequestMapping;
@@ -27,7 +25,7 @@ public class PhotoBoardListServlet {
 
 
   @RequestMapping("/photoboard/list")
-  public void service(Map<String,String> params, PrintStream out) throws Exception {
+  public void service(Map<String,String> params, PrintWriter out) throws Exception {
 	  int planNo = Integer.parseInt(params.get("planNo"));
 
 		out.println("<!DOCTYPE html>");
