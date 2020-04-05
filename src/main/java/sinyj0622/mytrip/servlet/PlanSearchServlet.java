@@ -1,27 +1,35 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class PlanSearchServlet {
+@WebServlet("/plan/search")
+public class PlanSearchServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-  PlanService planService;
-
-  public PlanSearchServlet(PlanService planService) {
-    this.planService = planService;
-  }
-
-  @RequestMapping("/plan/search")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	PlanService  planService = iocContainer.getBean(PlanService.class);
+	
     out.println("<!DOCTYPE html>");
     out.println("<html>");
     out.println("<head>");
@@ -30,14 +38,14 @@ public class PlanSearchServlet {
     out.println("</head>");
     out.println("<body>");
     out.println("  <h1>플랜 검색 결과</h1>");
-    out.println("  <a href='/plan/list'>목록</a><br>");
+    out.println("  <a href='list'>목록</a><br>");
 
     HashMap<String, Object> searchParams = new HashMap<>();
-    String keyword = params.get("title");
+    String keyword = req.getParameter("title");
     if (keyword.length() > 0) {
       searchParams.put("title", keyword);
     }
-    keyword = params.get("spot");
+    keyword = req.getParameter("spot");
     if (keyword.length() > 0) {
       searchParams.put("spot", keyword);
     }
@@ -73,6 +81,9 @@ public class PlanSearchServlet {
     }
     out.println("</body>");
     out.println("</html>");
+	} catch (Exception e) {
+		throw new ServletException(e);
+	}
   }
 
 }

@@ -1,27 +1,34 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.RequestMapping;
+@WebServlet("/plan/updateForm")
+public class PlanUpdateFormServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-@Component
-public class PlanUpdateFormServlet {
-
-	PlanService planService;
-
-	public PlanUpdateFormServlet(PlanService planService) {
-		this.planService = planService;
-	}
-
-
-	@RequestMapping("/plan/updateForm")
-	public void service(Map<String,String> params, PrintWriter out) throws Exception {
-		int no = Integer.parseInt(params.get("no"));
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	PlanService  planService = iocContainer.getBean(PlanService.class);
+	
+		int no = Integer.parseInt(req.getParameter("no"));
 		Plan plan = planService.get(no);
 
 		out.println("<!DOCTYPE html>");
@@ -37,7 +44,7 @@ public class PlanUpdateFormServlet {
 		if (plan == null) {
 			out.println("<p>해당 번호의 플랜이 없습니다.</p>");
 		} else {
-			out.println("<form action='/plan/update'>"); 
+			out.println("<form action='update'>"); 
 			out.printf("번호: <input name='no' readonly type='text' value='%d'><br>\n",plan.getNo());
 			out.printf("여행 주제: <input name='title'  type='text' value=%s><br>\n", plan.getTravelTitle());
 			out.printf("여행지: <input name='place'  type='text' value=%s><br>\n", plan.getDestnation());
@@ -50,5 +57,8 @@ public class PlanUpdateFormServlet {
 
 		out.println("</body>");
 		out.println("</html>");	
+	} catch (Exception e) {
+		throw new ServletException(e);
+  }
 	}
 }

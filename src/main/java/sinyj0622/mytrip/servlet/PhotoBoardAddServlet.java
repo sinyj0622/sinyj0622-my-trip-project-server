@@ -1,40 +1,45 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class PhotoBoardAddServlet {
+@WebServlet("/photoboard/add")
+public class PhotoBoardAddServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-	PlanService planService;
-	PhotoBoardService photoBoardService;
-
-	public PhotoBoardAddServlet(PlanService planService, PhotoBoardService photoBoardService) {
-		this.planService = planService;
-		this.photoBoardService = photoBoardService;
-	}
-
-
-
-	@RequestMapping("/photoboard/add")
-	public void service(Map<String,String> params, PrintWriter out) throws Exception {
-		int planNo = Integer.parseInt(params.get("planNo"));
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	PlanService  planService = iocContainer.getBean(PlanService.class);
+	PhotoBoardService  photoBoardService = iocContainer.getBean(PhotoBoardService.class);
+	
+		int planNo = Integer.parseInt(req.getParameter("planNo"));
 	    out.println("<!DOCTYPE html>");
 	    out.println("<html>");
 	    out.println("<head>");
 	    out.println("<meta charset='UTF-8'>");
 	    out.println("<meta http-equiv='refresh'" //
-	        + " content='2;url=/photoboard/list?planNo=" + planNo + "'>");
+	        + " content='2;url=list?planNo=" + planNo + "'>");
 	    out.println("<title>사진 입력</title>");
 	    out.println("</head>");
 	    out.println("<body>");
@@ -43,12 +48,12 @@ public class PhotoBoardAddServlet {
 		try {
 			Plan plan = planService.get(planNo);
 			PhotoBoard photoBoard = new PhotoBoard();
-			photoBoard.setTitle(params.get("title"));
+			photoBoard.setTitle(req.getParameter("title"));
 			photoBoard.setPlan(plan);
 
 			ArrayList<PhotoFile> photoFiles = new ArrayList<>();
 			for (int i = 1; i < 6; i++) {
-				String filepath = params.get("file" + i);
+				String filepath = req.getParameter("file" + i);
 				if (filepath.length() > 0) {
 					photoFiles.add(new PhotoFile().setFilepath(filepath));
 				}
@@ -68,7 +73,9 @@ public class PhotoBoardAddServlet {
 		}
 		out.println("</body>");
 		out.println("</html>");
-
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
 	}
 
 }

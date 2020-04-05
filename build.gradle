@@ -2,7 +2,8 @@
 
 plugins {
     id 'java'
-    id 'eclipse'
+    id 'eclipse-wtp'
+    id 'war'
 }
 
 tasks.withType(JavaCompile) {
@@ -22,6 +23,7 @@ repositories {
 }
 
 dependencies {
+  compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
   // Apache Http Components 라이브러리
   implementation 'org.apache.httpcomponents.client5:httpclient5:5.0'
   // log4j 2.x 라이브러리

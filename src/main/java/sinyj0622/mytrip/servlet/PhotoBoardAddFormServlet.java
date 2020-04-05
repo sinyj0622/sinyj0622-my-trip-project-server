@@ -1,25 +1,34 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PlanService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class PhotoBoardAddFormServlet {
-	  PlanService planService;
+@WebServlet("/photoboard/addForm")
+public class PhotoBoardAddFormServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-	  public PhotoBoardAddFormServlet( PlanService planService) {
-	    this.planService = planService;
-	  }
-
-  @RequestMapping("/photoboard/addForm")
-  public void service(Map<String,String> params, PrintWriter out) throws Exception {
-		int planNo = Integer.parseInt(params.get("planNo"));
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	PlanService  planService = iocContainer.getBean(PlanService.class);
+	
+		int planNo = Integer.parseInt(req.getParameter("planNo"));
 		Plan plan = planService.get(planNo);
 		out.println("<!DOCTYPE html>");
 		out.println("<html>");
@@ -29,7 +38,7 @@ public class PhotoBoardAddFormServlet {
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h1>여행사진 등록</h1>");
-	    out.println("<form action='/photoboard/add'>");
+	    out.println("<form action='add'>");
 		out.printf("플랜번호: <input name='planNo'  type='text' value='%d' readonly><br>\n", + 
 				plan.getNo());
 		out.println("제목: <input name='title'  type='text' ><br>\n");
@@ -42,6 +51,9 @@ public class PhotoBoardAddFormServlet {
 		out.println("</form>");
 		out.println("</body>");
 		out.println("</html>");
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
   }
 
 }

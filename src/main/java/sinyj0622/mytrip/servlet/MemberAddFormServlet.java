@@ -1,17 +1,25 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
 
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class MemberAddFormServlet {
+@WebServlet("/member/addForm")
+public class MemberAddFormServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-  @RequestMapping("/member/addForm")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	
     out.println("<!DOCTYPE html>");
     out.println("<html>");
     out.println("<head>");
@@ -20,7 +28,7 @@ public class MemberAddFormServlet {
     out.println("</head>");
     out.println("<body>");
     out.println("<h1>회원 입력</h1>");
-    out.println("<form action='/member/add'>");
+    out.println("<form action='add'>");
     out.println("이름: <input name='name' type='text'><br>");
     out.println("별명: <input name='nickname' type='text'><br>");
     out.println("이메일: <input name='email' type='text'><br>");
@@ -31,5 +39,8 @@ public class MemberAddFormServlet {
     out.println("</form>");
     out.println("</body>");
     out.println("</html>");
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
   }
 }

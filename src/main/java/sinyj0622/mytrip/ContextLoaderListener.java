@@ -1,59 +1,34 @@
 package sinyj0622.mytrip;
 
-import java.lang.reflect.Method;
-import java.util.Map;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
-import sinyj0622.mytrip.context.ApplicationContextListener;
-import sinyj0622.util.RequestHandler;
-import sinyj0622.util.RequestMapping;
-import sinyj0622.util.RequestMappingHandlerMapping;
-
-public class ContextLoaderListener implements ApplicationContextListener {
+@WebListener
+public class ContextLoaderListener implements ServletContextListener {
 
   static Logger logger = LogManager.getLogger(ContextLoaderListener.class);
 
   @Override
-  public void contextInitialized(Map<String, Object> context) {
+	public void contextInitialized(ServletContextEvent sce) {
 
+	  // 준비할 객체를 담을 바구니 준비
+	  ServletContext servletContext = sce.getServletContext();
+	  
     try {
       // Spring IoC 컨테이너 준비
-      ApplicationContext appCtx = new AnnotationConfigApplicationContext(AppConfig.class);
-      printBeans(appCtx);
+      ApplicationContext iocContainer = new AnnotationConfigApplicationContext(AppConfig.class);
+      printBeans(iocContainer);
 
-      // ServerApp이 사용할 수 있게 context 맵에 보관
-      context.put("iocContainer", appCtx);
+      servletContext.setAttribute("iocContainer", iocContainer);
 
-      logger.debug("---------------------------------------");
-
-      // @Component 애노테이션이 붙은 객체를 찾는다.
-      RequestMappingHandlerMapping handlerMapper = //
-          new RequestMappingHandlerMapping();
-
-      String[] beanNames = appCtx.getBeanNamesForAnnotation(Component.class);
-      for (String beanName : beanNames) {
-        Object component = appCtx.getBean(beanName);
-
-        // @RequestHandler가 붙은 메서드를 찾는다.
-        Method method = getRequestHandler(component.getClass());
-        if (method != null) {
-          // 클라이언트 명령을 처리하는 메서드 정보를 준비한다.
-          RequestHandler requestHandler = new RequestHandler(method, component);
-
-          // 명령을 처리할 메서드를 찾을 수 있도록
-          // 명령 이름으로 메서드 정보를 저장한다.
-          handlerMapper.addHandler(requestHandler.getPath(), requestHandler);
-        }
-      }
-
-      // ServerApp 에서 request handler를 사용할 수 있도록 공유한다.
-      context.put("handlerMapper", handlerMapper);
-
-
+      // 서블릿 객체는 Spring IoC 컨테이너에서 관리하지 않는다
+      
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -71,24 +46,10 @@ public class ContextLoaderListener implements ApplicationContextListener {
   }
 
 
-  private Method getRequestHandler(Class<?> type) {
-    // 클라이언트 명령을 처리할 메서드는 public 이기 때문에
-    // 클래스에서 public 메서드만 조사한다.
-    Method[] methods = type.getMethods();
-    for (Method m : methods) {
-      // 메서드에 @RequestMapping 애노테이션이 붙었는지 검사한다.
-      RequestMapping anno = m.getAnnotation(RequestMapping.class);
-      if (anno != null) {
-        return m;
-      }
-    }
-
-    return null;
-  }
-
-  @Override
-  public void contextDestroyed(Map<String, Object> context) {
-
+@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+	// 서블릿 컨테이너가 종료되기 직전에 호출
+	// 주로 서블릿이 사용한 자원을 해제시키는 코드를 둔다
   }
 
 }

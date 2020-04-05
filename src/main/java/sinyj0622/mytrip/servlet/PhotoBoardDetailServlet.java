@@ -1,30 +1,36 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.service.PhotoBoardService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class PhotoBoardDetailServlet {
+@WebServlet("/photoboard/detail")
+public class PhotoBoardDetailServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-  PhotoBoardService photoBoardService;
-
-  public PhotoBoardDetailServlet(PhotoBoardService photoBoardService) {
-    this.photoBoardService = photoBoardService;
-  }
-
-
-
-  @RequestMapping("/photoboard/detail")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
-    int no = Integer.parseInt(params.get("no"));
-    int planNo = Integer.parseInt(params.get("planNo"));
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	PhotoBoardService  photoBoardService = iocContainer.getBean(PhotoBoardService.class);
+	
+    int no = Integer.parseInt(req.getParameter("no"));
+    int planNo = Integer.parseInt(req.getParameter("planNo"));
     PhotoBoard photoBoard = photoBoardService.get(no);
 
     out.println("<!DOCTYPE html>");
@@ -35,12 +41,12 @@ public class PhotoBoardDetailServlet {
     out.println("</head>");
     out.println("<body>");
     out.println("  <h1>여행 사진</h1>");
-    out.println("  <a href='/photoboard/list'>목록</a><br>");
+    out.println("  <a href='list'>목록</a><br>");
 
     if (photoBoard == null) {
       out.println("<p>사진 없음</p>");
     } else {
-      out.println("<form action='/photoboard/update'>");
+      out.println("<form action='update'>");
       out.printf("플랜번호: <input name='planNo' type='text' readonly value='%d'><br>\n", //
           planNo);
       out.printf("사진번호: <input name='no' type='text' readonly value='%d'><br>\n", //
@@ -63,10 +69,13 @@ public class PhotoBoardDetailServlet {
 
       out.println("<p><button>변경</button>");
       out.println("</form>");
-      out.printf("  <a href='/photoboard/delete?no=%d&planNo=%d'>삭제</a>", photoBoard.getNo(),
+      out.printf("  <a href='delete?no=%d&planNo=%d'>삭제</a>", photoBoard.getNo(),
           planNo);
       out.println("</body>");
       out.println("</html>");
-    }
-  }
+	}
+	} catch (Exception e) {
+		throw new ServletException(e);
+	}
+	}
 }

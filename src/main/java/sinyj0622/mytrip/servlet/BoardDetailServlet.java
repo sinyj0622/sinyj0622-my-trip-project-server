@@ -1,26 +1,34 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Board;
 import sinyj0622.mytrip.service.BoardService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class BoardDetailServlet {
+@WebServlet("/board/detail")
+public class BoardDetailServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-  BoardService boardService;
-
-  public BoardDetailServlet(BoardService boardService) {
-    this.boardService = boardService;
-  }
-
-  @RequestMapping("/board/detail")
-  public void service(Map<String,String> params, PrintWriter out) throws Exception {
-    int no = Integer.parseInt(params.get("no"));
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	BoardService  boardService = iocContainer.getBean(BoardService.class);
+	
+    int no = Integer.parseInt(req.getParameter("no"));
     Board board = boardService.get(no);
 
     out.println("<!DOCTYPE html>");
@@ -36,15 +44,18 @@ public class BoardDetailServlet {
       out.printf("내용: %s<br>\n", board.getText());
       out.printf("등록일: %s<br>\n", board.getDate());
       out.printf("조회수: %d<br>\n", board.getViewCount());
-      out.printf("<p><a href='/board/delete?no=%d'>삭제</a>\n", //
+      out.printf("<p><a href='delete?no=%d'>삭제</a>\n", //
               board.getNo());
-          out.printf("<a href='/board/updateForm?no=%d'>변경</a></p>\n", //
+          out.printf("<a href='updateForm?no=%d'>변경</a></p>\n", //
               board.getNo());
     } else {
       out.println("<p>해당 번호의 게시물이 없습니다.</p>");
     }
     out.println("</body>");
     out.println("</html>");
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
   }
 
 }

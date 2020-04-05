@@ -1,35 +1,42 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Board;
 import sinyj0622.mytrip.service.BoardService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class BoardUpdateServlet {
+@WebServlet("/board/update")
+public class BoardUpdateServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-	BoardService boardService;
-
-	public BoardUpdateServlet(BoardService boardService) {
-		this.boardService = boardService;
-	}
-
-
-	@RequestMapping("/board/update")
-	public void service(Map<String,String> params, PrintWriter out) throws Exception {
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	BoardService  boardService = iocContainer.getBean(BoardService.class);
+	
 		Board board = new Board();
-		board.setNo(Integer.parseInt(params.get("no")));
-		board.setText(params.get("text"));
+		board.setNo(Integer.parseInt(req.getParameter("no")));
+		board.setText(req.getParameter("text"));
 
 		out.println("<!DOCTYPE html>");
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<meta charset='UTF-8'>");
-		out.println("<meta http-equiv='refresh' content='2;url=/board/list'>");
+		out.println("<meta http-equiv='refresh' content='2;url=list'>");
 		out.println("<title>게시글 변경</title>");
 		out.println("</head>");
 		out.println("<body>");
@@ -44,6 +51,9 @@ public class BoardUpdateServlet {
 
 		out.println("</body>");
 		out.println("</html>");
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
 	}
 
 }

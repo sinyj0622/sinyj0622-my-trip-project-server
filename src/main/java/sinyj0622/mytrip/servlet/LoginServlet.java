@@ -1,27 +1,35 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class LoginServlet {
+@WebServlet("/auth/login")
+public class LoginServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-  MemberService memberService;
-
-  public LoginServlet(MemberService memberService) {
-    this.memberService = memberService;
-  }
-
-  @RequestMapping("/auth/login")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
-    String email = params.get("email");
-    String password = params.get("passWord");
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	MemberService  memberService = iocContainer.getBean(MemberService.class);
+	
+    String email = req.getParameter("email");
+    String password = req.getParameter("passWord");
 
     Member member = memberService.get(email, password);
 
@@ -30,9 +38,9 @@ public class LoginServlet {
     out.println("<head>");
     out.println("<meta charset='UTF-8'>");
     if (member != null) {
-      out.println("<meta http-equiv='refresh' content='2;url=/board/list'>");
+      out.println("<meta http-equiv='refresh' content='2;url=..board/list'>");
     } else {
-      out.println("<meta http-equiv='refresh' content='2;url=/auth/loginForm'>");
+      out.println("<meta http-equiv='refresh' content='2;url=loginForm'>");
     }
     out.println("<title>로그인</title>");
     out.println("</head>");
@@ -47,5 +55,8 @@ public class LoginServlet {
 
     out.println("</body>");
     out.println("</html>");
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
   }
 }

@@ -1,18 +1,24 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
-import sinyj0622.util.RequestMapping;
-
-@Component
-public class LoginFormServlet {
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
 
 
-  @RequestMapping("/auth/loginForm")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+@WebServlet("/auth/loginForm")
+public class LoginFormServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
+
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
     out.println("<!DOCTYPE html>");
     out.println("<html>");
     out.println("<head>");
@@ -21,12 +27,15 @@ public class LoginFormServlet {
     out.println("</head>");
     out.println("<body>");
     out.println("<h1>로그인</h1>");
-    out.println("<form action='/auth/login'>");
+    out.println("<form action='login'>");
     out.println("이메일: <input name='email' type='email'><br>");
     out.println("암호: <input name='password' type='passWord'><br>");
     out.println("<button>로그인</button>");
     out.println("</form>");
     out.println("</body>");
     out.println("</html>");
+    } catch (Exception e) {
+	      throw new ServletException(e);
+	}
   }
 }

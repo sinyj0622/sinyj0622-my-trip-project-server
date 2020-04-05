@@ -1,18 +1,25 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
-import sinyj0622.util.RequestMapping;
-
-@Component
-public class PlanAddFormServlet {
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
 
 
-  @RequestMapping("/plan/addForm")
-  public void service(Map<String,String> params, PrintWriter out) throws Exception {
+@WebServlet("/plan/addForm")
+public class PlanAddFormServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
+
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	
 	  	out.println("<!DOCTYPE html>");
 		out.println("<html>");
 		out.println("<head>");
@@ -21,7 +28,7 @@ public class PlanAddFormServlet {
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h1>여행 플랜 작성</h1>");
-		out.println("<form action='/plan/add'>"); 
+		out.println("<form action='add'>"); 
 		out.println("여행 주제: <input name='title'  type='text' ><br>\n");
 		out.println("여행지: <input name='place'  type='text' ><br>\n");
 		out.println("여행인원: <input name='person'  type='number' >명<br>\n");
@@ -32,6 +39,9 @@ public class PlanAddFormServlet {
 		out.println("</form>");
 		out.println("</body>");
 		out.println("</html>");	
+	} catch (Exception e) {
+		throw new ServletException(e);
+	}
 	  
   }
 

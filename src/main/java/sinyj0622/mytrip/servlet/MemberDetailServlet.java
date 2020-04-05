@@ -1,26 +1,34 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class MemberDetailServlet {
+@WebServlet("/member/detail")
+public class MemberDetailServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-  MemberService memberService;
-
-  public MemberDetailServlet(MemberService memberService) {
-    this.memberService = memberService;
-  }
-
-  @RequestMapping("/member/detail")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
-    int no = Integer.parseInt(params.get("no"));
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	MemberService  memberService = iocContainer.getBean(MemberService.class);
+	
+    int no = Integer.parseInt(req.getParameter("no"));
 
     Member member = memberService.get(no);
 
@@ -34,7 +42,7 @@ public class MemberDetailServlet {
     out.println("<h1>회원 상세정보</h1>");
 
     if (member != null) {
-      out.println("<form action='/member/update'>");
+      out.println("<form action='update'>");
       out.printf("번호: <input name='no' type='text' readonly value='%d'><br>\n", //
           member.getNo());
       out.printf("이름: <input name='name' type='text' value='%s'><br>\n", //
@@ -47,7 +55,7 @@ public class MemberDetailServlet {
       out.printf("전화: <input name='tel' type='tel' value='%s'><br>\n", //
           member.getPhonenumber());
       out.println("<p><button>변경</button>");
-      out.printf("<a href='/member/delete?no=%d'>삭제</a></p>\n", //
+      out.printf("<a href='delete?no=%d'>삭제</a></p>\n", //
           member.getNo());
       out.println("</form>");
     } else {
@@ -55,5 +63,8 @@ public class MemberDetailServlet {
     }
     out.println("</body>");
     out.println("</html>");
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
   }
 }

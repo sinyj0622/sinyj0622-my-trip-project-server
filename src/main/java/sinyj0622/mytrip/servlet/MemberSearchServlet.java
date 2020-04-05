@@ -1,26 +1,34 @@
 package sinyj0622.mytrip.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+import org.springframework.context.ApplicationContext;
 
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-import sinyj0622.util.RequestMapping;
 
-@Component
-public class MemberSearchServlet {
+@WebServlet("/member/search")
+public class MemberSearchServlet extends GenericServlet {
+	private static final long serialVersionUID = 1L;
 
-  MemberService memberService;
-
-  public MemberSearchServlet(MemberService memberService) {
-    this.memberService = memberService;
-  }
-
-  @RequestMapping("/member/search")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+	try {
+	res.setContentType("text/html;charset=UTF-8");
+	PrintWriter out = res.getWriter();
+	ServletContext servletContext = req.getServletContext();
+	ApplicationContext iocContainer = (ApplicationContext) servletContext.getAttribute("iocContainer");
+	MemberService  memberService = iocContainer.getBean(MemberService.class);
+	
     out.println("<!DOCTYPE html>");
     out.println("<html>");
     out.println("<head>");
@@ -38,12 +46,12 @@ public class MemberSearchServlet {
     out.println("    <th>등록일</th>");
     out.println("  </tr>");
 
-    String keyword = params.get("keyword");
+    String keyword = req.getParameter("keyword");
     List<Member> members = memberService.findByKeyword(keyword);
     for (Member m : members) {
       out.printf("  <tr>"//
           + "<td>%d</td> "//
-          + "<td><a href='/member/detail?no=%d'>%s</a></td> "//
+          + "<td><a href='detail?no=%d'>%s</a></td> "//
           + "<td>%s</td> "//
           + "<td>%s</td>"//
           + "<td>%s</td>"//
@@ -59,5 +67,8 @@ public class MemberSearchServlet {
     out.println("</table>");
     out.println("</body>");
     out.println("</html>");
+	} catch (Exception e) {
+	      throw new ServletException(e);
+	}
   }
 }
