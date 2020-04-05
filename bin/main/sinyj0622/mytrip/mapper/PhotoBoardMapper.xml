@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sinyj0622.mytrip.dao.PhotoBoardDao">
+
+	<resultMap type="PhotoBoard" id="PhotoBoardMap">
+		<id column="photo_id" property="no" />
+		<result column="titl" property="title" />
+		<result column="cdt" property="createdDate" />
+		<result column="vw_cnt" property="viewCount" />
+		
+		<association property="plan" javaType="Plan">
+			<id column="plan_id" property="no" />
+			<result column="plan_spot" property="Destnation" />
+			<result column="plan_titl" property="travelTitle" />
+		</association>
+		
+		<collection property="files" ofType="PhotoFile">
+		<id column="photo_file_id" property="no" />
+    <result column="file_path" property="filepath" />
+    <result column="file_photo_id" property="boardNo" />
+		</collection>
+	</resultMap>
+	
+
+	<select id="findAllByPlanNo" resultMap="PhotoBoardMap" parameterType="int">
+		select
+		photo_id,
+		titl,
+		cdt,
+		vw_cnt
+		from mytrip_photo
+		 where plan_id=#{no}
+	</select>
+
+	<insert id="insert" parameterType="PhotoBoard"
+	useGeneratedKeys="true" keyColumn="photo_id" keyProperty="no">
+		insert 
+		into mytrip_photo(titl,plan_id)
+		 values(#{title},#{plan.no})
+	</insert>
+
+	<select id="findByNo" resultMap="PhotoBoardMap" parameterType="int">
+		select
+		p.photo_id,
+		p.titl,
+		p.cdt,
+		p.vw_cnt,
+		n.titl,
+		f.photo_id file_photo_id,
+		f.file_path 
+		  from mytrip_photo p
+		  inner join mytrip_plan n on p.plan_id=n.plan_id
+      left outer join mytrip_photo_file f on p.photo_id=f.photo_id
+		   where p.photo_id=#{no}
+	</select>
+
+	<update id="update" parameterType="PhotoBoard">
+		update
+		 mytrip_photo
+		  set
+		   titl=#{title}
+		    where photo_id=#{no}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete
+		 from mytrip_photo
+		  where photo_id=#{no}
+		  	</delete>
+</mapper>
+
+
+
+
+
+
+
