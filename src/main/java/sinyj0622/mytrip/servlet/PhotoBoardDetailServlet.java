@@ -32,13 +32,10 @@ public class PhotoBoardDetailServlet extends HttpServlet {
       int planNo = Integer.parseInt(request.getParameter("planNo"));
       PhotoBoard photoBoard = photoBoardService.get(no);
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("  <meta charset='UTF-8'>");
-      out.println("  <title>여행 사진</title>");
-      out.println("</head>");
-      out.println("<body>");
+
+      request.getRequestDispatcher("/header").include(request, response);
+
+
       out.println("  <h1>여행 사진</h1>");
       out.println("  <a href='list'>목록</a><br>");
 
@@ -69,8 +66,9 @@ public class PhotoBoardDetailServlet extends HttpServlet {
         out.println("<p><button>변경</button>");
         out.println("</form>");
         out.printf("  <a href='delete?no=%d&planNo=%d'>삭제</a>", photoBoard.getNo(), planNo);
-        out.println("</body>");
-        out.println("</html>");
+
+        request.getRequestDispatcher("/footer").include(request, response);
+
       }
     } catch (Exception e) {
       throw new ServletException(e);

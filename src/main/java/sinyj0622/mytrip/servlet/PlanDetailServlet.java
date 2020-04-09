@@ -30,13 +30,7 @@ public class PlanDetailServlet extends HttpServlet {
       int no = Integer.parseInt(request.getParameter("no"));
       Plan p = planService.get(no);
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("  <meta charset='UTF-8'>");
-      out.println("  <title>여행 플랜 목록</title>");
-      out.println("</head>");
-      out.println("<body>");
+      request.getRequestDispatcher("/header").include(request, response);
       out.println("  <h1>여행 플랜 목록</h1>");
       out.println("  <a href='list'>목록</a><br>");
 
@@ -54,8 +48,8 @@ public class PlanDetailServlet extends HttpServlet {
       } else {
         out.println("<p>해당 번호의 게시물이 없습니다.</p>");
       }
-      out.println("</body>");
-      out.println("</html>");
+
+      request.getRequestDispatcher("/footer").include(request, response);
     } catch (Exception e) {
       throw new ServletException(e);
     }

@@ -30,13 +30,8 @@ public class PhotoBoardListServlet extends HttpServlet {
 
       int planNo = Integer.parseInt(request.getParameter("planNo"));
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("  <meta charset='UTF-8'>");
-      out.println("  <title>여행 사진 목록</title>");
-      out.println("</head>");
-      out.println("<body>");
+      request.getRequestDispatcher("/header").include(request, response);
+
       out.println("  <h1>여행 사진 목록</h1>");
       out.printf("  <a href='add?planNo=%d'>새 사진</a><br>", planNo);
       out.println("  <table border='1'>");
@@ -59,9 +54,8 @@ public class PhotoBoardListServlet extends HttpServlet {
             photoBoard.getTitle(), photoBoard.getCreatedDate(), photoBoard.getViewCount());
       }
       out.println("</table>");
+      request.getRequestDispatcher("/footer").include(request, response);
 
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

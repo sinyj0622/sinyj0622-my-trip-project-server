@@ -22,21 +22,16 @@ public class LoginServlet extends HttpServlet {
     try {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>로그인</title>");
-      out.println("</head>");
-      out.println("<body>");
+
+      request.getRequestDispatcher("/header").include(request, response);
       out.println("<h1>로그인</h1>");
       out.println("<form action='login' method='post'>");
       out.println("이메일: <input name='email' type='email'><br>");
       out.println("암호: <input name='password' type='passWord'><br>");
       out.println("<button>로그인</button>");
       out.println("</form>");
-      out.println("</body>");
-      out.println("</html>");
+      request.getRequestDispatcher("/footer").include(request, response);
+
     } catch (Exception e) {
       throw new ServletException(e);
     }
@@ -57,15 +52,16 @@ public class LoginServlet extends HttpServlet {
 
       Member member = memberService.get(email, password);
 
-      if (member == null) {
-        request.getSession().setAttribute("errorMessage", "로그인 오류");
-        response.sendRedirect("../error");
-      } else {
+      if (member != null) {
         response.sendRedirect("/sinyj0622-my-trip-project-server");
+      } else {
+        throw new Exception("로그인 실패");
       }
 
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "/sinyj0622-my-trip-project-server");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 }

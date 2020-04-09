@@ -53,9 +53,9 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
       response.sendRedirect("list?planNo=" + planNo);
 
     } catch (Exception e) {
-      request.getSession().setAttribute("errorMessage", "변경 오류");
-      request.getSession().setAttribute("url", "photoboard/list?planNo=" + planNo);
-      response.sendRedirect("../error");
+      request.setAttribute("error", e);
+      request.setAttribute("url", "list?planNo=" + planNo);
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 }

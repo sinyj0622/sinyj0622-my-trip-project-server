@@ -30,13 +30,7 @@ public class BoardUpdateServlet extends HttpServlet {
       int no = Integer.parseInt(request.getParameter("no"));
       Board board = boardService.get(no);
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>게시글 변경</title>");
-      out.println("</head>");
-      out.println("<body>");
+      request.getRequestDispatcher("/header").include(request, response);
       out.println("<h1>게시물 변경</h1>");
 
       if (board == null) {
@@ -55,10 +49,12 @@ public class BoardUpdateServlet extends HttpServlet {
         out.println("<button>변경</button>");
         out.println("</form>");
       }
-      out.println("</body>");
-      out.println("</html>");
+
+      request.getRequestDispatcher("/footer").include(request, response);
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "board/list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 
@@ -79,15 +75,14 @@ public class BoardUpdateServlet extends HttpServlet {
       if (boardService.update(board) > 0) {
         response.sendRedirect("list");
       } else {
-        request.getSession().setAttribute("errorMessage", "변경 오류");
-        request.getSession().setAttribute("url", "board/list");
-        response.sendRedirect("../error");
+        throw new Exception("변경 오류");
       }
 
 
-
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "board/list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 

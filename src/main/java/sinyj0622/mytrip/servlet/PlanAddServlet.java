@@ -23,13 +23,7 @@ public class PlanAddServlet extends HttpServlet {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>여행 플랜 작성</title>");
-      out.println("</head>");
-      out.println("<body>");
+      request.getRequestDispatcher("/header").include(request, response);
       out.println("<h1>여행 플랜 작성</h1>");
       out.println("<form action='add' method='post'>");
       out.println("여행 주제: <input name='title'  type='text' ><br>\n");
@@ -40,10 +34,12 @@ public class PlanAddServlet extends HttpServlet {
       out.println("예상 경비: <input name='money'  type='number'>만원<br>\n");
       out.println("<button>등록</button>");
       out.println("</form>");
-      out.println("</body>");
-      out.println("</html>");
+      request.getRequestDispatcher("/footer").include(request, response);
+
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
 
   }
@@ -66,12 +62,13 @@ public class PlanAddServlet extends HttpServlet {
       plan.setEndDate(request.getParameter("edt"));
       plan.setTravelMoney(request.getParameter("money"));
 
-
       planService.add(plan);
       response.sendRedirect("list");
 
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 

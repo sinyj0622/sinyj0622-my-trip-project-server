@@ -23,13 +23,7 @@ public class MemberAddServlet extends HttpServlet {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>회원 입력</title>");
-      out.println("</head>");
-      out.println("<body>");
+      request.getRequestDispatcher("/header").include(request, response);
       out.println("<h1>회원 입력</h1>");
       out.println("<form action='add' method='post'>");
       out.println("이름: <input name='name' type='text'><br>");
@@ -40,10 +34,12 @@ public class MemberAddServlet extends HttpServlet {
       out.println("전화: <input name='phonenumber' type='text'><br>");
       out.println("<button>제출</button>");
       out.println("</form>");
-      out.println("</body>");
-      out.println("</html>");
+
+      request.getRequestDispatcher("/footer").include(request, response);
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 
@@ -68,14 +64,13 @@ public class MemberAddServlet extends HttpServlet {
       if (memberService.add(member) > 0) {
         response.sendRedirect("list");
       } else {
-        request.getSession().setAttribute("errorMessaget", "회원을 추가할 수 없습니다.");
-        request.getSession().setAttribute("url", "member/list");
-        response.sendRedirect("../error");
+        throw new Exception("등록 오류");
       }
 
-
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 }

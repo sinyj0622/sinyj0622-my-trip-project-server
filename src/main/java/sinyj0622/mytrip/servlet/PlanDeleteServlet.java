@@ -25,13 +25,15 @@ public class PlanDeleteServlet extends HttpServlet {
 
       int no = Integer.parseInt(request.getParameter("no"));
 
-      planService.delete(no);
-      response.sendRedirect("list");
-
+      if (planService.delete(no) > 0) {
+        response.sendRedirect("list");
+      } else {
+        throw new Exception("삭제 오류");
+      }
     } catch (Exception e) {
-      request.getSession().setAttribute("errorMessage", "사진게시글이 존재하여 삭제가 불가합니다.");
-      request.getSession().setAttribute("url", "plan/list");
-      response.sendRedirect("../error");
+      request.setAttribute("error", e.getMessage());
+      request.setAttribute("url", "list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 

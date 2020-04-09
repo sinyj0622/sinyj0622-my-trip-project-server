@@ -17,18 +17,13 @@ public class ErrorServlet extends HttpServlet {
       throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<meta charset='UTF-8'>");
-    out.println("<title>오류 발생</title>");
-    out.println("</head>");
-    out.println("<body>");
-    out.println("<h1>오류 내용: </h1>");
-    out.printf("<p>%s</p>", (String) request.getSession().getAttribute("errorMessage"));
-    out.printf("<p><a href='%s'>뒤로가기</a></p>", (String) request.getSession().getAttribute("url"));
-    out.println("</body>");
-    out.println("</html>");
 
+    request.getRequestDispatcher("/header").include(request, response);
+
+    out.println("<h1>오류 내용</h1>");
+    out.printf("<p>%s</p>", (String) request.getAttribute("error"));
+    out.printf("<p><a href='%s'>뒤로가기</a></p>", (String) request.getAttribute("url"));
+
+    request.getRequestDispatcher("/footer").include(request, response);
   }
 }

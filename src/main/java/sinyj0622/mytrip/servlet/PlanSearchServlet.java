@@ -29,13 +29,7 @@ public class PlanSearchServlet extends HttpServlet {
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       PlanService planService = iocContainer.getBean(PlanService.class);
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("  <meta charset='UTF-8'>");
-      out.println("  <title>플랜 검색 결과</title>");
-      out.println("</head>");
-      out.println("<body>");
+      request.getRequestDispatcher("/header").include(request, response);
       out.println("  <h1>플랜 검색 결과</h1>");
       out.println("  <a href='list'>목록</a><br>");
 
@@ -78,8 +72,7 @@ public class PlanSearchServlet extends HttpServlet {
         }
         out.println("</table>");
       }
-      out.println("</body>");
-      out.println("</html>");
+      request.getRequestDispatcher("/footer").include(request, response);
     } catch (Exception e) {
       throw new ServletException(e);
     }
