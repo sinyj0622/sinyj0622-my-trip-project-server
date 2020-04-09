@@ -53,8 +53,6 @@ public class PlanAddServlet extends HttpServlet {
       throws ServletException, IOException {
     try {
       request.setCharacterEncoding("UTF-8");
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
@@ -68,25 +66,10 @@ public class PlanAddServlet extends HttpServlet {
       plan.setEndDate(request.getParameter("edt"));
       plan.setTravelMoney(request.getParameter("money"));
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>여행 플랜 작성</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>여행 플랜 작성</h1>");
-      out.println("  <a href='list'>목록</a><br>");
 
-      if (planService.add(plan) > 0) {
-        out.println("<p>여행 플랜 등록완료</p>");
+      planService.add(plan);
+      response.sendRedirect("list");
 
-      } else {
-        out.println("<p>등록실패</p>");
-
-      }
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

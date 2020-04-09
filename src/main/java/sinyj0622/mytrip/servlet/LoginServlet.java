@@ -47,8 +47,6 @@ public class LoginServlet extends HttpServlet {
       throws ServletException, IOException {
     try {
       request.setCharacterEncoding("UTF-8");
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
@@ -59,28 +57,13 @@ public class LoginServlet extends HttpServlet {
 
       Member member = memberService.get(email, password);
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      if (member != null) {
-        out.println("<meta http-equiv='refresh' content='2;url=..board/list'>");
+      if (member == null) {
+        request.getSession().setAttribute("errorMessage", "로그인 오류");
+        response.sendRedirect("../error");
       } else {
-        out.println("<meta http-equiv='refresh' content='2;url=login'>");
-      }
-      out.println("<title>로그인</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>로그인 결과</h1>");
-
-      if (member != null) {
-        out.printf("<p>'%s'님 환영합니다.</p>\n", member.getName());
-      } else {
-        out.println("<p>사용자 정보가 유효하지 않습니다.</p>");
+        response.sendRedirect("/sinyj0622-my-trip-project-server");
       }
 
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

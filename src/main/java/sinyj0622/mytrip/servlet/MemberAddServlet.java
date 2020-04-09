@@ -52,8 +52,6 @@ public class MemberAddServlet extends HttpServlet {
       throws ServletException, IOException {
     try {
       request.setCharacterEncoding("UTF-8");
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
@@ -67,20 +65,15 @@ public class MemberAddServlet extends HttpServlet {
       member.setMyphoto(request.getParameter("myphoto"));
       member.setPhonenumber(request.getParameter("phonenumber"));
 
-      memberService.add(member);
+      if (memberService.add(member) > 0) {
+        response.sendRedirect("list");
+      } else {
+        request.getSession().setAttribute("errorMessaget", "회원을 추가할 수 없습니다.");
+        request.getSession().setAttribute("url", "member/list");
+        response.sendRedirect("../error");
+      }
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=list'>");
-      out.println("<title>회원 입력</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>회원 입력 결과</h1>");
-      out.println("<p>새 회원을 등록했습니다.</p>");
-      out.println("</body>");
-      out.println("</html>");
+
     } catch (Exception e) {
       throw new ServletException(e);
     }

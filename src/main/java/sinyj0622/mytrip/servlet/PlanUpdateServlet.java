@@ -69,8 +69,6 @@ public class PlanUpdateServlet extends HttpServlet {
       throws ServletException, IOException {
     try {
       request.setCharacterEncoding("UTF-8");
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
@@ -85,25 +83,13 @@ public class PlanUpdateServlet extends HttpServlet {
       plan.setEndDate(request.getParameter("edt"));
       plan.setTravelMoney(request.getParameter("money"));
 
-
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=list'>");
-      out.println("<title>여행 플랜</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>여행 플랜 작성 결과</h1>");
-
       if (planService.update(plan) > 0) {
-        out.println("<p>플랜 변경완료</p>");
+        response.sendRedirect("list");
       } else {
-        out.println("<p>플랜 변경실패</p>");
+        request.getSession().setAttribute("errorMessage", "변경 오류");
+        request.getSession().setAttribute("url", "plan/list");
+        response.sendRedirect("../error");
       }
-
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

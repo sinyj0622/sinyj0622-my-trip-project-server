@@ -64,8 +64,6 @@ public class PhotoBoardAddServlet extends HttpServlet {
       throws ServletException, IOException {
     try {
       request.setCharacterEncoding("UTF-8");
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
@@ -73,16 +71,6 @@ public class PhotoBoardAddServlet extends HttpServlet {
       PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
 
       int planNo = Integer.parseInt(request.getParameter("planNo"));
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh'" //
-          + " content='2;url=list?planNo=" + planNo + "'>");
-      out.println("<title>사진 입력</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>사진 입력 결과</h1>");
 
       try {
         Plan plan = planService.get(planNo);
@@ -98,20 +86,18 @@ public class PhotoBoardAddServlet extends HttpServlet {
           }
         }
 
-
         if (photoFiles.size() == 0) {
           throw new Exception("최소 한 개의 사진 파일을 등록해야 합니다.");
         }
         photoBoard.setFiles(photoFiles);
-
         photoBoardService.add(photoBoard);
-        out.println("<p>사진 게시글을 등록했습니다!</p>");
-      } catch (Exception e) {
-        out.printf("<p>%s</p>\n", e.getMessage());
+        response.sendRedirect("list?planNo=" + planNo);
 
+      } catch (Exception e) {
+        request.getSession().setAttribute("errorMessage", "게시글을 등록할 수 없습니다.");
+        request.getSession().setAttribute("url", "photoboard/list?planNo=" + planNo);
+        response.sendRedirect("../error");
       }
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

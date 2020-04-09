@@ -1,7 +1,6 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,17 +20,17 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+
+    request.setCharacterEncoding("UTF-8");
+    int no = Integer.parseInt(request.getParameter("no"));
+    int planNo = 0;
     try {
-      request.setCharacterEncoding("UTF-8");
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
+
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
 
-      int no = Integer.parseInt(request.getParameter("no"));
-      int planNo = Integer.parseInt(request.getParameter("planNo"));
       PhotoBoard photoBoard = photoBoardService.get(no);
       photoBoard.setTitle(request.getParameter("title"));
 
@@ -49,26 +48,14 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
         photoBoard.setFiles(null);
       }
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>사진 변경</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>사진 변경 결과</h1>");
+      planNo = photoBoard.getPlan().getNo();
+      photoBoardService.update(photoBoard);
+      response.sendRedirect("list?planNo=" + planNo);
 
-      try {
-        photoBoardService.update(photoBoard);
-        out.println("<p>사진을 변경했습니다.</p>");
-      } catch (Exception e) {
-        out.println("<p>해당 사진 게시물이 존재하지 않습니다.</p>");
-      }
-      out.printf("  <a href='list?planNo=%d'>목록</a>", planNo);
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.getSession().setAttribute("errorMessage", "변경 오류");
+      request.getSession().setAttribute("url", "photoboard/list?planNo=" + planNo);
+      response.sendRedirect("../error");
     }
   }
 }
