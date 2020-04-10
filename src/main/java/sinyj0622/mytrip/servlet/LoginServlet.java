@@ -27,13 +27,15 @@ public class LoginServlet extends HttpServlet {
       out.println("<h1>로그인</h1>");
       out.println("<form action='login' method='post'>");
       out.println("이메일: <input name='email' type='email'><br>");
-      out.println("암호: <input name='password' type='passWord'><br>");
+      out.println("암호: <input name='password' type='password'><br>");
       out.println("<button>로그인</button>");
       out.println("</form>");
       request.getRequestDispatcher("/footer").include(request, response);
 
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e);
+      request.setAttribute("url", "list");
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 
@@ -41,23 +43,42 @@ public class LoginServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
-      request.setCharacterEncoding("UTF-8");
+      response.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = response.getWriter();
+
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       MemberService memberService = iocContainer.getBean(MemberService.class);
 
       String email = request.getParameter("email");
-      String password = request.getParameter("passWord");
+      String password = request.getParameter("password");
 
       Member member = memberService.get(email, password);
 
+      out.println("<!DOCTYPE html>");
+      out.println("<html>");
+      out.println("<head>");
+      out.println("<meta charset='UTF-8'>");
       if (member != null) {
-        response.sendRedirect("/sinyj0622-my-trip-project-server");
+        out.println("<meta http-equiv='refresh' content='2;url=../index.html'>");
       } else {
-        throw new Exception("로그인 실패");
+        out.println("<meta http-equiv='refresh' content='2;url=login'>");
+      }
+      out.println("<title>로그인</title>");
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>로그인 결과</h1>");
+
+      if (member != null) {
+        out.printf("<p>'%s'님 환영합니다.</p>\n", member.getName());
+        request.getSession().setAttribute("loginUser", member); // 사용자 로그인 정보 저장
+      } else {
+        out.println("<p>사용자 정보가 유효하지 않습니다.</p>");
       }
 
+      out.println("</body>");
+      out.println("</html>");
     } catch (Exception e) {
       request.setAttribute("error", e.getMessage());
       request.setAttribute("url", "/sinyj0622-my-trip-project-server");

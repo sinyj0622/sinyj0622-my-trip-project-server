@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sinyj0622.mytrip.domain.Member;
 
 @WebServlet("/header")
 public class HeaderServlet extends HttpServlet {
@@ -27,7 +28,7 @@ public class HeaderServlet extends HttpServlet {
         "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>");
     out.println("<style>");
     out.println("body {");
-    out.println("  background-color: Thistle;");
+    out.println("  background-color: light;");
     out.println("}");
 
     out.println("div.container {");
@@ -45,7 +46,7 @@ public class HeaderServlet extends HttpServlet {
     out.println("  <span class='navbar-toggler-icon'></span>");
     out.println("</button>");
     out.println("<div class='collapse navbar-collapse' id='navbarNav'>");
-    out.println("  <ul class='navbar-nav'>");
+    out.println("  <ul class='navbar-nav mr-auto'>");
     out.println("    <li class='nav-item'>");
     out.println("      <a class='nav-link' href='../board/list'>게시글</span></a>");
     out.println("    </li>");
@@ -55,10 +56,14 @@ public class HeaderServlet extends HttpServlet {
     out.println("    <li class='nav-item'>");
     out.println("      <a class='nav-link' href='../member/list'>회원</a>");
     out.println("    </li>");
-    out.println("    <li class='nav-item'>");
-    out.println("      <a class='nav-link' href='../auth/login'>로그인</a>");
-    out.println("    </li>");
     out.println("  </ul>");
+    Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+    if (loginUser != null) {
+      out.printf("   <span class='navbar-text'>%s</span>", loginUser.getName());
+      out.println("   <a href='../auth/logout' class='btn btn-info btn-sm'>로그아웃</a>");
+    } else {
+      out.println("   <a href='../auth/login' class='btn btn-info btn-sm'>로그인</a>");
+    }
     out.println("</div>");
     out.println("</nav>");
     out.println("<div class='container'>");
