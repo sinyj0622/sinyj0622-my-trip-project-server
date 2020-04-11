@@ -21,8 +21,8 @@ public class ErrorServlet extends HttpServlet {
     request.getRequestDispatcher("/header").include(request, response);
 
     out.println("<h1>오류 내용</h1>");
-    out.printf("<p>%s</p>", (String) request.getAttribute("error"));
-    out.printf("<p><a href='%s'>뒤로가기</a></p>", (String) request.getAttribute("url"));
+    out.printf("<p>%s</p>", request.getAttribute("error"));
+    out.printf("<p><a href='%s'>뒤로가기</a></p>", request.getAttribute("url"));
 
     request.getRequestDispatcher("/footer").include(request, response);
   }

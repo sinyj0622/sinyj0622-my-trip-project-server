@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.service.PhotoBoardService;
+
 
 @WebServlet("/photoboard/detail")
 public class PhotoBoardDetailServlet extends HttpServlet {
@@ -42,7 +44,7 @@ public class PhotoBoardDetailServlet extends HttpServlet {
       if (photoBoard == null) {
         out.println("<p>사진 없음</p>");
       } else {
-        out.println("<form action='update' method='post'>");
+        out.println("<form action='update' method='post' enctype='multipart/form-data'>");
         out.printf("플랜번호: <input name='planNo' type='text' readonly value='%d'><br>\n", //
             planNo);
         out.printf("사진번호: <input name='no' type='text' readonly value='%d'><br>\n", //
@@ -52,16 +54,17 @@ public class PhotoBoardDetailServlet extends HttpServlet {
             photoBoard.getTitle());
         out.printf("등록일: %s<br>\n", photoBoard.getCreatedDate());
         out.printf("조회수: %d<br>\n", photoBoard.getViewCount());
-        out.println("<p>사진파일 </p>\n");
+        out.println("사진 파일:<br>");
+        out.println("<p>");
         for (PhotoFile photoFile : photoBoard.getFiles()) {
-          out.printf("<p>> %s </p>\n", photoFile.getFilepath());
+          out.printf("<img src='../upload/photoboard/%s' height='100'>\n", photoFile.getFilepath());
         }
-
-        out.println("사진: <input name='file1' type='file'><br>");
-        out.println("사진: <input name='file2' type='file'><br>");
-        out.println("사진: <input name='file3' type='file'><br>");
-        out.println("사진: <input name='file4' type='file'><br>");
-        out.println("사진: <input name='file5' type='file'><br>");
+        out.println("</p>");
+        out.println("사진: <input name='file' type='file'><br>");
+        out.println("사진: <input name='file' type='file'><br>");
+        out.println("사진: <input name='file' type='file'><br>");
+        out.println("사진: <input name='file' type='file'><br>");
+        out.println("사진: <input name='file' type='file'><br>");
 
         out.println("<p><button>변경</button>");
         out.println("</form>");

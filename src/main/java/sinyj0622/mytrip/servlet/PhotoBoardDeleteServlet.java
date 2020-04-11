@@ -26,9 +26,10 @@ public class PhotoBoardDeleteServlet extends HttpServlet {
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
-
+      
+      
       photoBoardService.delete(no);
-      response.sendRedirect("list");
+      response.sendRedirect("list?planNo=" + planNo);
 
     } catch (Exception e) {
       request.setAttribute("error", e.getMessage());

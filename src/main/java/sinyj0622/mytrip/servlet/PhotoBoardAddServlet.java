@@ -3,19 +3,26 @@ package sinyj0622.mytrip.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
 import org.springframework.context.ApplicationContext;
+
 import sinyj0622.mytrip.domain.PhotoBoard;
 import sinyj0622.mytrip.domain.PhotoFile;
 import sinyj0622.mytrip.domain.Plan;
 import sinyj0622.mytrip.service.PhotoBoardService;
 import sinyj0622.mytrip.service.PlanService;
-
+@MultipartConfig(maxFileSize = 10000000)
 @WebServlet("/photoboard/add")
 public class PhotoBoardAddServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
@@ -37,15 +44,15 @@ public class PhotoBoardAddServlet extends HttpServlet {
       request.getRequestDispatcher("/header").include(request, response);
 
       out.println("<h1>여행사진 등록</h1>");
-      out.println("<form action='add' method='post'>");
+      out.println("<form action='add' method='post' enctype='multipart/form-data'>");
       out.printf("플랜번호: <input name='planNo'  type='text' value='%d' readonly><br>\n",
           +plan.getNo());
       out.println("제목: <input name='title'  type='text' ><br>\n");
-      out.println("<input name='file1'  type='file' ><br>\n");
-      out.println("<input name='file2'  type='file' ><br>\n");
-      out.println("<input name='file3'  type='file' ><br>\n");
-      out.println("<input name='file4'  type='file' ><br>\n");
-      out.println("<input name='file5'  type='file' ><br>\n");
+      out.println("<input name='file'  type='file' ><br>\n");
+      out.println("<input name='file'  type='file' ><br>\n");
+      out.println("<input name='file'  type='file' ><br>\n");
+      out.println("<input name='file'  type='file' ><br>\n");
+      out.println("<input name='file'  type='file' ><br>\n");
       out.println("<button>등록</button>");
       out.println("</form>");
 
@@ -74,11 +81,16 @@ public class PhotoBoardAddServlet extends HttpServlet {
       photoBoard.setPlan(plan);
 
       ArrayList<PhotoFile> photoFiles = new ArrayList<>();
-      for (int i = 1; i < 6; i++) {
-        String filepath = request.getParameter("file" + i);
-        if (filepath.length() > 0) {
-          photoFiles.add(new PhotoFile().setFilepath(filepath));
-        }
+      Collection<Part> parts = request.getParts();
+      String dirPath = request.getServletContext().getRealPath("/upload/photoboard");
+      for (Part photoPart : parts) {
+    	  if(!photoPart.getName().equals("file") || photoPart.getSize() <= 0) {
+    		  continue;
+    	  } else {
+    		  String filename = UUID.randomUUID().toString();
+    		  photoPart.write(dirPath + "/" + filename);
+    		  photoFiles.add(new PhotoFile().setFilepath(filename));
+    	  }
       }
 
       if (photoFiles.size() == 0) {

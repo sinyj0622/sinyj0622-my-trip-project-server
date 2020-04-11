@@ -1,16 +1,21 @@
 package sinyj0622.mytrip.servlet;
 
 import java.io.IOException;
+import java.util.UUID;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
 import org.springframework.context.ApplicationContext;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-
+@MultipartConfig(maxFileSize = 5000000)
 @WebServlet("/member/update")
 public class MemberUpdateServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
@@ -30,10 +35,16 @@ public class MemberUpdateServlet extends HttpServlet {
       member.setName(request.getParameter("name"));
       member.setEmail(request.getParameter("email"));
       member.setPassWord(request.getParameter("password"));
-      member.setMyphoto(request.getParameter("photo"));
       member.setPhonenumber(request.getParameter("tel"));
 
-
+      Part photoPart = request.getPart("myphoto");
+      if (photoPart.getSize() > 0) {
+    	  String dirPath = request.getServletContext().getRealPath("/upload/member");
+    	  String filename = UUID.randomUUID().toString();
+    	  photoPart.write(dirPath + "/" + filename);
+    	  member.setMyphoto(filename);
+      }
+      
       if (memberService.update(member) > 0) {
         response.sendRedirect("list");
       } else {

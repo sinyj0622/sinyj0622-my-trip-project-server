@@ -2,16 +2,21 @@ package sinyj0622.mytrip.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
 import org.springframework.context.ApplicationContext;
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
-
+@MultipartConfig(maxFileSize = 10000000)
 @WebServlet("/member/add")
 public class MemberAddServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
@@ -25,12 +30,12 @@ public class MemberAddServlet extends HttpServlet {
 
       request.getRequestDispatcher("/header").include(request, response);
       out.println("<h1>회원 입력</h1>");
-      out.println("<form action='add' method='post'>");
+      out.println("<form action='add' method='post' enctype='multipart/form-data'>");
       out.println("이름: <input name='name' type='text'><br>");
       out.println("별명: <input name='nickname' type='text'><br>");
       out.println("이메일: <input name='email' type='text'><br>");
       out.println("암호: <input name='passWord' type='password'><br>");
-      out.println("사진: <input name='myphoto' type='text'><br>");
+      out.println("사진: <input name='myphoto' type='file'><br>");
       out.println("전화: <input name='phonenumber' type='text'><br>");
       out.println("<button>제출</button>");
       out.println("</form>");
@@ -58,7 +63,15 @@ public class MemberAddServlet extends HttpServlet {
       member.setNickname(request.getParameter("nickname"));
       member.setEmail(request.getParameter("email"));
       member.setPassWord(request.getParameter("passWord"));
-      member.setMyphoto(request.getParameter("myphoto"));
+      
+      Part photoPart = request.getPart("myphoto");
+      if (photoPart.getSize() > 0) {
+    	  String dirPath = request.getServletContext().getRealPath("/upload/member");
+    	  String filename = UUID.randomUUID().toString();
+    	  photoPart.write(dirPath + "/" + filename);
+    	  
+    	  member.setMyphoto(filename);
+      }
       member.setPhonenumber(request.getParameter("phonenumber"));
 
       if (memberService.add(member) > 0) {
