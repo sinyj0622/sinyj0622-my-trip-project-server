@@ -17,64 +17,31 @@ import sinyj0622.mytrip.service.PhotoBoardService;
 
 @WebServlet("/photoboard/detail")
 public class PhotoBoardDetailServlet extends HttpServlet {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    try {
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-      ServletContext servletContext = request.getServletContext();
-      ApplicationContext iocContainer =
-          (ApplicationContext) servletContext.getAttribute("iocContainer");
-      PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			response.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			ServletContext servletContext = request.getServletContext();
+			ApplicationContext iocContainer =
+					(ApplicationContext) servletContext.getAttribute("iocContainer");
+			PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
 
-      int no = Integer.parseInt(request.getParameter("no"));
-      int planNo = Integer.parseInt(request.getParameter("planNo"));
-      PhotoBoard photoBoard = photoBoardService.get(no);
+			int no = Integer.parseInt(request.getParameter("no"));
+			int planNo = Integer.parseInt(request.getParameter("planNo"));
+			PhotoBoard photoBoard = photoBoardService.get(no);
+			request.setAttribute("detail", photoBoard);
+			request.setAttribute("planNo", planNo);
+
+			response.setContentType("text/html;charset=UTF-8");
+			request.getRequestDispatcher("/photoboard/detail.jsp").include(request, response);
 
 
-      request.getRequestDispatcher("/header").include(request, response);
-
-
-      out.println("  <h1>여행 사진</h1>");
-      out.println("  <a href='list'>목록</a><br>");
-
-      if (photoBoard == null) {
-        out.println("<p>사진 없음</p>");
-      } else {
-        out.println("<form action='update' method='post' enctype='multipart/form-data'>");
-        out.printf("플랜번호: <input name='planNo' type='text' readonly value='%d'><br>\n", //
-            planNo);
-        out.printf("사진번호: <input name='no' type='text' readonly value='%d'><br>\n", //
-            photoBoard.getNo());
-        out.println("내용:<br>");
-        out.printf("<textarea name='title' rows='5' cols='60'>%s</textarea><br>\n", //
-            photoBoard.getTitle());
-        out.printf("등록일: %s<br>\n", photoBoard.getCreatedDate());
-        out.printf("조회수: %d<br>\n", photoBoard.getViewCount());
-        out.println("사진 파일:<br>");
-        out.println("<p>");
-        for (PhotoFile photoFile : photoBoard.getFiles()) {
-          out.printf("<img src='../upload/photoboard/%s' height='100'>\n", photoFile.getFilepath());
-        }
-        out.println("</p>");
-        out.println("사진: <input name='file' type='file'><br>");
-        out.println("사진: <input name='file' type='file'><br>");
-        out.println("사진: <input name='file' type='file'><br>");
-        out.println("사진: <input name='file' type='file'><br>");
-        out.println("사진: <input name='file' type='file'><br>");
-
-        out.println("<p><button>변경</button>");
-        out.println("</form>");
-        out.printf("  <a href='delete?no=%d&planNo=%d'>삭제</a>", photoBoard.getNo(), planNo);
-
-        request.getRequestDispatcher("/footer").include(request, response);
-
-      }
-    } catch (Exception e) {
-      throw new ServletException(e);
-    }
-  }
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+	}
 }

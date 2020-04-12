@@ -15,50 +15,31 @@ import sinyj0622.mytrip.service.PhotoBoardService;
 
 @WebServlet("/photoboard/list")
 public class PhotoBoardListServlet extends HttpServlet {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    try {
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-      ServletContext servletContext = request.getServletContext();
-      ApplicationContext iocContainer =
-          (ApplicationContext) servletContext.getAttribute("iocContainer");
-      PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			response.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			ServletContext servletContext = request.getServletContext();
+			ApplicationContext iocContainer =
+					(ApplicationContext) servletContext.getAttribute("iocContainer");
+			PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
 
-      int planNo = Integer.parseInt(request.getParameter("planNo"));
+			int planNo = Integer.parseInt(request.getParameter("planNo"));
+			List<PhotoBoard> photoBoards = photoBoardService.listPlanPhoto(planNo);
+			request.setAttribute("planNo", planNo);
+			request.setAttribute("list", photoBoards);
 
-      request.getRequestDispatcher("/header").include(request, response);
+			response.setContentType("text/html;charset=UTF-8");
+			request.getRequestDispatcher("/photoboard/list.jsp").include(request, response);
 
-      out.println("  <h1>여행 사진 목록</h1>");
-      out.printf("  <a href='add?planNo=%d'>새 사진</a><br>", planNo);
-      out.println("  <table border='1'>");
-      out.println("  <tr>");
-      out.println("    <th>번호</th>");
-      out.println("    <th>제목</th>");
-      out.println("    <th>등록일</th>");
-      out.println("    <th>조회수</th>");
-      out.println("  </tr>");
 
-      List<PhotoBoard> photoBoards = photoBoardService.listPlanPhoto(planNo);
-      for (PhotoBoard photoBoard : photoBoards) {
-        out.printf("  <tr>"//
-            + "<td>%d</td> "//
-            + "<td><a href='detail?no=%d&planNo=%d'>%s</a></td> "//
-            + "<td>%s</td> "//
-            + "<td>%d</td> "//
-            + "</tr>\n", //
-            photoBoard.getNo(), photoBoard.getNo(), planNo, //
-            photoBoard.getTitle(), photoBoard.getCreatedDate(), photoBoard.getViewCount());
-      }
-      out.println("</table>");
-      request.getRequestDispatcher("/footer").include(request, response);
-
-    } catch (Exception e) {
-      throw new ServletException(e);
-    }
-  }
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+	}
 
 }

@@ -28,19 +28,9 @@ public class MemberAddServlet extends HttpServlet {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("<h1>회원 입력</h1>");
-      out.println("<form action='add' method='post' enctype='multipart/form-data'>");
-      out.println("이름: <input name='name' type='text'><br>");
-      out.println("별명: <input name='nickname' type='text'><br>");
-      out.println("이메일: <input name='email' type='text'><br>");
-      out.println("암호: <input name='passWord' type='password'><br>");
-      out.println("사진: <input name='myphoto' type='file'><br>");
-      out.println("전화: <input name='phonenumber' type='text'><br>");
-      out.println("<button>제출</button>");
-      out.println("</form>");
-
-      request.getRequestDispatcher("/footer").include(request, response);
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/member/form.jsp").include(request, response);
+      
     } catch (Exception e) {
       request.setAttribute("error", e.getMessage());
       request.setAttribute("url", "list");

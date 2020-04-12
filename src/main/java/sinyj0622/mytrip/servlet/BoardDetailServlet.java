@@ -30,23 +30,11 @@ public class BoardDetailServlet extends HttpServlet {
       int no = Integer.parseInt(request.getParameter("no"));
       Board board = boardService.get(no);
 
-      request.getRequestDispatcher("/header").include(request, response);
-
-      out.println("<h1>게시물 상세정보</h1>");
-      if (board != null) {
-        out.printf("번호: %d<br>\n", board.getNo());
-        out.printf("내용: %s<br>\n", board.getText());
-        out.printf("등록일: %s<br>\n", board.getDate());
-        out.printf("조회수: %d<br>\n", board.getViewCount());
-        out.printf("<p><a href='delete?no=%d'>삭제</a>\n", //
-            board.getNo());
-        out.printf("<a href='update?no=%d'>변경</a></p>\n", //
-            board.getNo());
-      } else {
-        out.println("<p>해당 번호의 게시물이 없습니다.</p>");
-      }
-
-      request.getRequestDispatcher("/footer").include(request, response);
+      request.setAttribute("detail", board);
+      
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/board/detail.jsp").include(request, response);
+      
 
     } catch (Exception e) {
       throw new ServletException(e);

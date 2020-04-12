@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sinyj0622.mytrip.domain.Member;
-@WebFilter("/*")
+//@WebFilter("/*")
 public class AutoFilter implements Filter{
 
 	@Override

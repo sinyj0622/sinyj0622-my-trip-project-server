@@ -23,15 +23,9 @@ public class BoardAddServlet extends HttpServlet {
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
-    request.getRequestDispatcher("/header").include(request, response);
-    out.println("<h1>게시물 입력</h1>");
-    out.println("<form action='add' method='post'>");
-    out.println("내용:<br>");
-    out.println("<textarea name='text' rows='5' cols='60'></textarea><br>");
-    out.println("<button>등록</button>");
-    out.println("</form>");
-
-    request.getRequestDispatcher("/footer").include(request, response);
+    response.setContentType("text/html;charset=UTF-8");
+    request.getRequestDispatcher("/board/form.jsp").include(request, response);
+    
   }
 
   @Override

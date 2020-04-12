@@ -59,7 +59,7 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
         photoBoard.setFiles(null);
       }
 
-      planNo = photoBoard.getPlan().getNo();
+      planNo = Integer.parseInt(request.getParameter("planNo"));
       photoBoardService.update(photoBoard);
       response.sendRedirect("list?planNo=" + planNo);
 

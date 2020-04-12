@@ -14,44 +14,29 @@ import sinyj0622.mytrip.service.PlanService;
 
 @WebServlet("/plan/detail")
 public class PlanDetailServlet extends HttpServlet {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    try {
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-      ServletContext servletContext = request.getServletContext();
-      ApplicationContext iocContainer =
-          (ApplicationContext) servletContext.getAttribute("iocContainer");
-      PlanService planService = iocContainer.getBean(PlanService.class);
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			response.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			ServletContext servletContext = request.getServletContext();
+			ApplicationContext iocContainer =
+					(ApplicationContext) servletContext.getAttribute("iocContainer");
+			PlanService planService = iocContainer.getBean(PlanService.class);
 
-      int no = Integer.parseInt(request.getParameter("no"));
-      Plan p = planService.get(no);
+			int no = Integer.parseInt(request.getParameter("no"));
+			Plan plan = planService.get(no);
+			request.setAttribute("detail", plan);
 
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("  <h1>여행 플랜 목록</h1>");
-      out.println("  <a href='list'>목록</a><br>");
+			response.setContentType("text/html;charset=UTF-8");
+			request.getRequestDispatcher("/plan/detail.jsp").include(request, response);
 
-      if (p != null) {
-        out.printf("<p>번호: %d</p>", p.getNo());
-        out.printf("<p>여행 주제: %s</p>", p.getTravelTitle());
-        out.printf("<p>여행지: %s</p>", p.getDestnation());
-        out.printf("<p>여행인원: %s</p>", p.getPerson());
-        out.printf("<p>여행 기간: %s ~ %s</p>", p.getStartDate(), p.getEndDate());
-        out.printf("<p>예상 경비: %s</p>", p.getTravelMoney());
 
-        out.printf("  <a href='update?no=%d'>변경</a>", p.getNo());
-        out.printf("  <a href='delete?no=%d'>삭제</a>", p.getNo());
-        out.printf("  <a href='../photoboard/list?planNo=%d'>여행사진첩</a>", p.getNo());
-      } else {
-        out.println("<p>해당 번호의 게시물이 없습니다.</p>");
-      }
-
-      request.getRequestDispatcher("/footer").include(request, response);
-    } catch (Exception e) {
-      throw new ServletException(e);
-    }
-  }
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+	}
 }

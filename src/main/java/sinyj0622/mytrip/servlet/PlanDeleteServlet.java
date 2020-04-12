@@ -28,10 +28,10 @@ public class PlanDeleteServlet extends HttpServlet {
       if (planService.delete(no) > 0) {
         response.sendRedirect("list");
       } else {
-        throw new Exception("삭제 오류");
+        throw new Exception("사진게시글이 존재하여 삭제할 수 없습니다.");
       }
     } catch (Exception e) {
-      request.setAttribute("error", e.getMessage());
+      request.setAttribute("error", e);
       request.setAttribute("url", "list");
       request.getRequestDispatcher("/error").forward(request, response);
     }

@@ -28,41 +28,13 @@ public class PlanListServlet extends HttpServlet {
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       PlanService planService = iocContainer.getBean(PlanService.class);
 
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("  <h1>여행 플랜 목록</h1>");
-      out.println("<form action='search'>");
-      out.println("여행 주제 <input name='title' type='text'><br>\n");
-      out.println("여행지 <input name='spot' type='text'>\n");
-      out.println("<button>검색</button><br>");
-      out.println("  <a href='add'>새 글</a><br>");
-      out.println("  <table border='1'>");
-      out.println("  <tr>");
-      out.println("    <th>번호</th>");
-      out.println("    <th>여행 주제</th>");
-      out.println("    <th>여행지</th>");
-      out.println("    <th>시작일</th>");
-      out.println("    <th>종료일</th>");
-      out.println("  </tr>");
-
       List<Plan> plans = planService.list();
-      for (Plan p : plans) {
-        out.printf("  <tr>"//
-            + "<td>%d</td> "//
-            + "<td><a href='detail?no=%d'>%s</a></td> "//
-            + "<td>%s</td> "//
-            + "<td>%s</td> "//
-            + "<td>%s</td>"//
-            + "</tr>\n", //
-            p.getNo(), //
-            p.getNo(), //
-            p.getTravelTitle(), p.getDestnation(), //
-            p.getStartDate(), //
-            p.getEndDate() //
-        );
-      }
-      out.println("</table>");
-
-      request.getRequestDispatcher("/footer").include(request, response);
+      request.setAttribute("list", plans);
+      
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/plan/list.jsp").include(request, response);
+      
+      
     } catch (Exception e) {
       throw new ServletException(e);
     }

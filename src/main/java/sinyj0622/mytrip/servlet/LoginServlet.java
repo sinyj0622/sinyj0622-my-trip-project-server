@@ -34,17 +34,9 @@ public class LoginServlet extends HttpServlet {
 			}
 
 			response.setContentType("text/html;charset=UTF-8");
-			PrintWriter out = response.getWriter();
+			request.setAttribute("email", email);
+			request.getRequestDispatcher("/member/loginform.jsp").include(request, response);
 
-			request.getRequestDispatcher("/header").include(request, response);
-			out.println("<h1>로그인</h1>");
-			out.println("<form action='login' method='post'>");
-			out.printf("이메일: <input name='email' type='email' value='%s'>", email);
-			out.println("<input name='userEmail' type='checkbox'>이메일 기억하기<br>");
-			out.println("암호: <input name='password' type='password'><br>");
-			out.println("<button>로그인</button>");
-			out.println("</form>");
-			request.getRequestDispatcher("/footer").include(request, response);
 
 		} catch (Exception e) {
 			request.setAttribute("error", e);
@@ -79,29 +71,13 @@ public class LoginServlet extends HttpServlet {
 
 			Member member = memberService.get(email, password);
 
-			out.println("<!DOCTYPE html>");
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<meta charset='UTF-8'>");
 			if (member != null) {
-				out.println("<meta http-equiv='refresh' content='2;url=../index.html'>");
-			} else {
-				out.println("<meta http-equiv='refresh' content='2;url=login'>");
-			}
-			out.println("<title>로그인</title>");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("<h1>로그인 결과</h1>");
-
-			if (member != null) {
-				out.printf("<p>'%s'님 환영합니다.</p>\n", member.getName());
 				request.getSession().setAttribute("loginUser", member); // 사용자 로그인 정보 저장
+				response.sendRedirect("/index.html");
 			} else {
-				out.println("<p>사용자 정보가 유효하지 않습니다.</p>");
+				response.sendRedirect("/auth/login");
 			}
 
-			out.println("</body>");
-			out.println("</html>");
 		} catch (Exception e) {
 			request.setAttribute("error", e.getMessage());
 			request.setAttribute("url", "/sinyj0622-my-trip-project-server");

@@ -26,36 +26,19 @@ public class BoardListServlet extends HttpServlet {
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
+      
       BoardService boardService = iocContainer.getBean(BoardService.class);
+      
+      List<Board> board = boardService.list();
 
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("  <h1>게시글</h1>");
-      out.println("  <a href='add'>새 글</a><br>");
-      out.println("  <table border='1'>");
-      out.println("  <tr>");
-      out.println("    <th>번호</th>");
-      out.println("    <th>제목</th>");
-      out.println("    <th>등록일</th>");
-      out.println("    <th>조회수</th>");
-      out.println("  </tr>");
-
-      List<Board> boards = boardService.list();
-      for (Board board : boards) {
-        out.printf("  <tr>"//
-            + "<td>%d</td> "//
-            + "<td><a href='detail?no=%d'>%s</a></td> "//
-            + "<td>%s</td> "//
-            + "<td>%d</td>"//
-            + "</tr>\n", //
-            board.getNo(), //
-            board.getNo(), //
-            board.getText(), //
-            board.getDate(), //
-            board.getViewCount() //
-        );
-      }
-      out.println("</table>");
-      request.getRequestDispatcher("/footer").include(request, response);
+      // JSP가 사용할 수 있도록 ServletRequest에 저장
+      request.setAttribute("list", board);
+      
+      // include는 처음 서블릿에서 콘텐트타입을 설정해줘야 한다
+      // request.getRequestDispatcher.inclue();
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/board/list.jsp").include(request, response);
+      
     } catch (Exception e) {
       throw new ServletException(e);
     }

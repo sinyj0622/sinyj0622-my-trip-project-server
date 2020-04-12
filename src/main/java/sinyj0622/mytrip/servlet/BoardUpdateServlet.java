@@ -30,27 +30,12 @@ public class BoardUpdateServlet extends HttpServlet {
       int no = Integer.parseInt(request.getParameter("no"));
       Board board = boardService.get(no);
 
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("<h1>게시물 변경</h1>");
-
-      if (board == null) {
-        out.println("<p>해당 번호의 게시글이 없습니다.</p>");
-      } else {
-        out.println("<form action='update' method='post'>");
-        out.printf("번호: <input name='no' readonly type='text' value='%d'><br>\n", //
-            board.getNo());
-        out.println("내용:<br>");
-        out.printf("<textarea name='text' rows='5' cols='60'>%s</textarea><br>\n", //
-            board.getText());
-        out.printf("등록일: %s<br>\n", //
-            board.getDate());
-        out.printf("조회수: %d<br>\n", //
-            board.getViewCount());
-        out.println("<button>변경</button>");
-        out.println("</form>");
-      }
-
-      request.getRequestDispatcher("/footer").include(request, response);
+      request.setAttribute("update", board);
+      
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/board/updateform.jsp").include(request, response);
+      
+      
     } catch (Exception e) {
       request.setAttribute("error", e.getMessage());
       request.setAttribute("url", "board/list");
@@ -81,7 +66,7 @@ public class BoardUpdateServlet extends HttpServlet {
 
     } catch (Exception e) {
       request.setAttribute("error", e.getMessage());
-      request.setAttribute("url", "board/list");
+      request.setAttribute("url", "list");
       request.getRequestDispatcher("/error").forward(request, response);
     }
   }

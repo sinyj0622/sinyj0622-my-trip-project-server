@@ -30,33 +30,12 @@ public class MemberDetailServlet extends HttpServlet {
       int no = Integer.parseInt(request.getParameter("no"));
 
       Member member = memberService.get(no);
+      request.setAttribute("detail", member);
+      
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/member/detail.jsp").include(request, response);
+      
 
-
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("<h1>회원 상세정보</h1>");
-
-      if (member != null) {
-        out.println("<form action='update' method='post' enctype='multipart/form-data'>");
-        out.printf("<img src='../upload/member/%s' height='300'><br>\n", member.getMyphoto());
-        out.printf("번호: <input name='no' type='text' readonly value='%d'><br>\n", //
-            member.getNo());
-        out.printf("이름: <input name='name' type='text' value='%s'><br>\n", //
-            member.getName());
-        out.printf("이메일: <input name='email' type='email' value='%s'><br>\n", //
-            member.getEmail());
-        out.println("암호: <input name='password' type='password'><br>");
-        out.println("사진: <input name='myphoto' type='file'><br>\n");
-        out.printf("전화: <input name='tel' type='tel' value='%s'><br>\n", //
-            member.getPhonenumber());
-        out.println("<p><button>변경</button>");
-        out.printf("<a href='delete?no=%d'>삭제</a></p>\n", //
-            member.getNo());
-        out.println("</form>");
-      } else {
-        out.println("<p>해당 번호의 회원이 없습니다.</p>");
-      }
-
-      request.getRequestDispatcher("/footer").include(request, response);
     } catch (Exception e) {
       throw new ServletException(e);
     }

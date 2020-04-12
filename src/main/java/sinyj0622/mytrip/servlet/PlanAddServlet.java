@@ -22,19 +22,9 @@ public class PlanAddServlet extends HttpServlet {
     try {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
-
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("<h1>여행 플랜 작성</h1>");
-      out.println("<form action='add' method='post'>");
-      out.println("여행 주제: <input name='title'  type='text' ><br>\n");
-      out.println("여행지: <input name='place'  type='text' ><br>\n");
-      out.println("여행인원: <input name='person'  type='number' >명<br>\n");
-      out.println("시작일: <input name='sdt'  type='date' ><br>\n");
-      out.println("종료일: <input name='edt'  type='date' ><br>\n");
-      out.println("예상 경비: <input name='money'  type='number'>만원<br>\n");
-      out.println("<button>등록</button>");
-      out.println("</form>");
-      request.getRequestDispatcher("/footer").include(request, response);
+      
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/plan/form.jsp").include(request, response);
 
     } catch (Exception e) {
       request.setAttribute("error", e.getMessage());

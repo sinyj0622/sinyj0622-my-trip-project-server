@@ -29,28 +29,12 @@ public class PlanUpdateServlet extends HttpServlet {
 
       int no = Integer.parseInt(request.getParameter("no"));
       Plan plan = planService.get(no);
-
-      request.getRequestDispatcher("/header").include(request, response);
-      out.println("<h1>여행 플랜 작성</h1>");
-
-
-      if (plan == null) {
-        out.println("<p>해당 번호의 플랜이 없습니다.</p>");
-      } else {
-        out.println("<form action='update' method='post'>");
-        out.printf("번호: <input name='no' readonly type='text' value='%d'><br>\n", plan.getNo());
-        out.printf("여행 주제: <input name='title'  type='text' value=%s><br>\n",
-            plan.getTravelTitle());
-        out.printf("여행지: <input name='place'  type='text' value=%s><br>\n", plan.getDestnation());
-        out.printf("여행인원: <input name='person'  type='number' value=%s>명<br>\n", plan.getPerson());
-        out.printf("시작일: <input name='sdt'  type='date' value=%s><br>\n", plan.getStartDate());
-        out.printf("종료일: <input name='edt'  type='date' value=%s><br>\n", plan.getEndDate());
-        out.printf("예상 경비: <input name='money' type='number' value=%s>만원<br>\n",
-            plan.getTravelMoney());
-        out.printf("<button>수정</button>");
-      }
-
-      request.getRequestDispatcher("/footer").include(request, response);
+      request.setAttribute("update", plan);
+      
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/plan/updateform.jsp").include(request, response);
+      
+      
     } catch (Exception e) {
       request.setAttribute("error", e.getMessage());
       request.setAttribute("url", "list");
