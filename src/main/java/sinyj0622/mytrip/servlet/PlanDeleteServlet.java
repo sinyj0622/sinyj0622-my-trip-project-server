@@ -25,13 +25,11 @@ public class PlanDeleteServlet extends HttpServlet {
 
       int no = Integer.parseInt(request.getParameter("no"));
 
-      if (planService.delete(no) > 0) {
-        response.sendRedirect("list");
-      } else {
-        throw new Exception("사진게시글이 존재하여 삭제할 수 없습니다.");
-      }
+      planService.delete(no);
+      response.sendRedirect("list");
+
     } catch (Exception e) {
-      request.setAttribute("error", e);
+      request.setAttribute("error", new Exception("사진게시글이 존재하여 삭제할 수 없습니다."));
       request.setAttribute("url", "list");
       request.getRequestDispatcher("/error").forward(request, response);
     }

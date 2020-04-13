@@ -18,7 +18,7 @@ PhotoBoard photoboard = (PhotoBoard) request.getAttribute("detail");
 %>
 
 <h1>여행 사진</h1>
-<a href='list'>목록</a>
+<a href='list?planNo=<%=planNo%>'>목록</a>
 <br>
 <form action='update' method='post' enctype='multipart/form-data'>
 	플랜번호: <input name='planNo' type='text' readonly value='<%=planNo%>'><br>
