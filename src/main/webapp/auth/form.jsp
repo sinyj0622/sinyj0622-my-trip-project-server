@@ -5,13 +5,9 @@
 
 <jsp:include page="/header.jsp"></jsp:include>    
 
-<%
-String email = (String) request.getAttribute("email");
-%>
-
 <h1>로그인</h1>
 <form action='login' method='post'>
-이메일: <input name='email' type='email' value='<%=email%>'><input name='userEmail' type='checkbox'>이메일 기억하기<br>
+이메일: <input name='email' type='email' value='<%=request.getAttribute("email")%>'><input name='userEmail' type='checkbox'>이메일 기억하기<br>
 암호: <input name='password' type='password'><br>
 <button>로그인</button>
 </form>
