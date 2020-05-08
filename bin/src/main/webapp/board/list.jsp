@@ -6,7 +6,7 @@
 
 <jsp:include page="/header.jsp"></jsp:include>
 
-  <h1>게시글</h1>
+  <h1>게시글(JSP + EL)</h1>
   <a href='add'>새 글</a><br>
   <table border='1'>
   <tr>
@@ -15,20 +15,23 @@
     <th>등록일</th>
     <th>조회수</th>
   </tr>
+<jsp:useBean id="list" 
+  type="java.util.List<Board>"
+  class="java.util.ArrayList"
+  scope="request"/>
 <% 
-  List<Board> boards = (List<Board>) request.getAttribute("list");
-
-for (Board board : boards){
-%> 
+  for(Board item : list) {
+    pageContext.setAttribute("item", item);
+%>
   <tr>
-  <td><%=board.getNo()%></td> 
-  <td><a href='detail?no=<%=board.getNo()%>'><%=board.getText()%></a></td> 
-  <td><%=board.getDate()%></td> 
-  <td><%=board.getViewCount()%></td>
+    <td>${item.no}</td> 
+    <td><a href='detail?no=${item.no}'>=> ${item.text}</a></td> 
+    <td>${item.date}</td> 
+    <td>${item.viewCount}</td>
   </tr>
-<% 
-}
-%>  
+<%
+  }
+%>
 </table>
 
 <jsp:include page="/footer.jsp"></jsp:include>

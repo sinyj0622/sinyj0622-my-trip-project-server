@@ -3,4 +3,18 @@
 
 # Ignore Gradle build output directory
 build
-/main/
+/.gitattributes
+/.gitignore
+/.settings/
+/README.md
+/board.json
+/board.ser2
+/build.gradle
+/doc/
+/gradle/
+/gradlew
+/gradlew.bat
+/member.json
+/member.ser2
+/plan.json
+/plan.ser2
