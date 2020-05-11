@@ -13,44 +13,38 @@ body {
 }
 div.container {
   background: white;
-  border: 1px solid gray;
   width: 600px;
 }
 </style>
 </head>
 <body>
-<nav class='navbar navbar-expand-lg navbar-light bg-light'>
-<a class='navbar-brand' href='#'>여행gogo</a>
-<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation'>
-  <span class='navbar-toggler-icon'></span>
-</button>
-<div class='collapse navbar-collapse' id='navbarNav'>
-  <ul class='navbar-nav mr-auto'>
-    <li class='nav-item'>
-      <a class='nav-link' href='/sinyj0622-my-trip-project/app/board/list'>게시글</span></a>
-    </li>
-    <li class='nav-item'>
-      <a class='nav-link' href='../plan/list'>여행플랜</a>
-    </li>
-    <li class='nav-item'>
-      <a class='nav-link' href='../member/list'>회원</a>
-    </li>
-  </ul>
-  
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link active" href="../board/list">게시글</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../plan/list">여행플랜</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../member/list">회원</a>
+  </li>
 <%
   Member loginUser = (Member) request.getSession().getAttribute("loginUser");
     if (loginUser != null) {
 %>
+  <li class="nav-item">
 <span class='navbar-text'><%=loginUser.getName()%></span>
-<a href='../auth/logout' class='btn btn-info btn-sm'>로그아웃</a>
+<a href='../auth/logout' class='nav-link'>로그아웃</a>
+  </li>
 <%
     } else {
 %>
-<a href='../auth/login' class='btn btn-info btn-sm'>로그인</a>
+  <li class="nav-item">
+<a href='../auth/form' class='nav-link'>로그인</a>
+  </li>
 <%
 }
 %>
    
-</div>
-</nav>
+</ul>
 <div class='container'>
