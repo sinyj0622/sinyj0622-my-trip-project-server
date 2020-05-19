@@ -56,6 +56,12 @@ public class MemberServiceImpl implements MemberService {
   }
 
 
+  @Override
+  public Member get(String email) throws Exception {
+    return memberDao.findByEmail(email);
+  }
+
+
 
 }
 

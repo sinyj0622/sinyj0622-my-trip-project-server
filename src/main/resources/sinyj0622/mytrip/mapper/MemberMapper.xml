@@ -33,7 +33,7 @@
 		<include refid="select1"/>
 	</select>
 
-	<insert id="insert" parameterType="Member">
+	<insert id="insert" parameterType="Member" useGeneratedKeys="true" keyColumn="member_id" keyProperty="no">
 		insert 
 		into
 		 mytrip_member(name, nick, email, pwd, photo, tel)
@@ -50,6 +50,13 @@
 		<include refid="select1"/>
 		  where member_id=#{no}
 	</select>
+	
+	 <select id="findByEmail" resultMap="MemberMap" parameterType="String">
+    select
+    <include refid="select1"/>
+      where email=#{email}
+  </select>
+	
 
 	<update id="update" parameterType="Member">
 		update

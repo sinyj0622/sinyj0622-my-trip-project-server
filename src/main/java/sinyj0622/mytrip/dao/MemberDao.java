@@ -20,4 +20,5 @@ public interface MemberDao {
 
   Member findByEmailAndPassword(Map<String, Object> params) throws Exception;
 
+  Member findByEmail(String email) throws Exception;
 }
