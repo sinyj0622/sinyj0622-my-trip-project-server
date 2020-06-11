@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
 
-<jsp:include page="../header.jsp"/>
 
 <form action='login' method='post'>
   <div class="form-group">
@@ -62,5 +61,4 @@ function requestAutoLogin(accessToken){
 </script>
 
 
-<jsp:include page="../footer.jsp"/>
     

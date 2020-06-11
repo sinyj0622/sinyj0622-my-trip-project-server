@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+    <definition name="auth/*" template="/WEB-INF/tiles/auth/template.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/auth/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/auth/{1}.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/auth/footer.jsp" />
+        <put-attribute name="jsFilename" value="{1}.js" />
+    </definition>
+    
+    
+    <definition name="board/*" template="/WEB-INF/tiles/board/template.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/board/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/board/{1}.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/board/footer.jsp" />
+        <put-attribute name="jsFilename" value="{1}.js" />
+    </definition>
+        
+     <definition name="member/*" template="/WEB-INF/tiles/member/template.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/member/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/member/{1}.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/member/footer.jsp" />
+        <put-attribute name="jsFilename" value="{1}.js" />
+    </definition>
+    
+    <definition name="photoboard/*" template="/WEB-INF/tiles/photoboard/template.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/photoboard/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/photoboard/{1}.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/photoboard/footer.jsp" />
+        <put-attribute name="jsFilename" value="{1}.js" />
+    </definition>
+    
+    <definition name="plan/*" template="/WEB-INF/tiles/plan/template.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/plan/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/plan/{1}.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/plan/footer.jsp" />
+        <put-attribute name="jsFilename" value="{1}.js" />
+    </definition>
+    
+</tiles-definitions>
+
+
