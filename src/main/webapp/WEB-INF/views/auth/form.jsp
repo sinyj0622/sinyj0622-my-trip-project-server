@@ -19,6 +19,7 @@
   <button type="submit" class="btn btn-outline-primary">로그인</button>
   <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 </fb:login-button>
+<div id="naver_id_login"><img src='${pageContext.servletContext.contextPath}/upload/img/naver.png' height='150px'></div>
   
 </form>
 <script type="text/javascript">
@@ -58,6 +59,15 @@ function requestAutoLogin(accessToken){
 	  location.href = "facebookLogin?accessToken=" + accessToken;
 }
 
+
+
+var naver_id_login = new naver_id_login("YOUR_CLIENT_ID", "YOUR_CALLBACK_URL");
+var state = naver_id_login.getUniqState();
+naver_id_login.setButton("white", 2,40);
+naver_id_login.setDomain("YOUR_SERVICE_URL");
+naver_id_login.setState(state);
+naver_id_login.setPopup();
+naver_id_login.init_naver_id_login();
 </script>
 
 

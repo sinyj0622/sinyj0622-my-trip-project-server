@@ -4,6 +4,9 @@
 
 <ul class="nav justify-content-center" style="padding-top:10px;">
   <li class="nav-item">
+    <a class="nav-link active" href="../../index.html">홈</a>
+  </li>
+  <li class="nav-item">
     <a class="nav-link active" href="../board/list">게시글</a>
   </li>
   <li class="nav-item">
