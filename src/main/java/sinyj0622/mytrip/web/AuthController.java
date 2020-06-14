@@ -1,11 +1,20 @@
 package sinyj0622.mytrip.web;
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +24,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import sinyj0622.mytrip.domain.Member;
 import sinyj0622.mytrip.service.MemberService;
 
@@ -26,6 +39,9 @@ public class AuthController {
 
   @Autowired
   MemberService memberService;
+  
+  @GetMapping("signUp")
+  public void signUp() {}
 
   @GetMapping("form")
   public void form() {}
@@ -65,6 +81,64 @@ public class AuthController {
     return "redirect:../../index.html";
   }
 
+  
+  @GetMapping("naverLogin")
+  public void naverLogin(HttpServletRequest request, HttpServletResponse response,HttpSession session,Model model) throws Exception {
+	  String clientId = "fNWSIg6R0T0j_Pe5Cig9";//애플리케이션 클라이언트 아이디값";
+	    String clientSecret = "1EqUNUsCNH";//애플리케이션 클라이언트 시크릿값";
+	    String code = request.getParameter("code");
+	    String state = request.getParameter("state");
+	    String redirectURI = URLEncoder.encode("http://localhost:9999/sinyj0622-my-trip-project-server/app/auth/naverLogin", "UTF-8");
+	    String apiURL;
+	    apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
+	    apiURL += "client_id=" + clientId;
+	    apiURL += "&client_secret=" + clientSecret;
+	    apiURL += "&redirect_uri=" + redirectURI;
+	    apiURL += "&code=" + code;
+	    apiURL += "&state=" + state;
+	    String access_token = "";
+	    String refresh_token = "";
+	    logger.info("apiURL="+apiURL);
+	    
+	    try {
+	      URL url = new URL(apiURL);
+	      HttpURLConnection con = (HttpURLConnection)url.openConnection();
+	      con.setRequestMethod("GET");
+	      int responseCode = con.getResponseCode();
+	      BufferedReader br;
+	      logger.info("responseCode="+responseCode);
+	      if(responseCode==200) { // 정상 호출
+	        br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	      } else {  // 에러 발생
+	        br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+	      }
+	      String inputLine;
+	      StringBuffer res = new StringBuffer();
+	      while ((inputLine = br.readLine()) != null) {
+	        res.append(inputLine);
+	      }
+	      br.close();
+	      if(responseCode==200) {
+	    	  logger.info(res.toString());
+	    	  
+	    	// json인 access_token을 String 형식으로 받아오기.
+	          JsonParser parsing = new JsonParser();
+	          JsonElement jsonElement = parsing.parse(res.toString());
+
+	          // Object obj = parsing.parse(res.toString());
+	          // JsonObject jsonObj = (JsonObject)obj;
+	          // access_token = (String)jsonObj.get("access_token");
+	          // refresh_token = (String)jsonObj.get("refresh_token");
+
+	          access_token = jsonElement.getAsJsonObject().get("access_token").toString();
+	          refresh_token = jsonElement.getAsJsonObject().get("refresh_token").toString();
+	      
+	      
+	      }
+	    } catch (Exception e) {
+	      System.out.println(e);
+	    }
+  }
 
 
   @SuppressWarnings("unchecked")

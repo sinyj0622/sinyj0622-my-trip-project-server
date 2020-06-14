@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
-
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.security.SecureRandom" %>
+<%@ page import="java.math.BigInteger" %>
 
 <form action='login' method='post'>
   <div class="form-group">
@@ -16,14 +18,24 @@
     <input type="checkbox" class="form-check-input" id="exampleCheck1">
     <label name='saveEmail' class="form-check-label" for="exampleCheck1">이메일 저장해두기</label>
   </div>
-  <button type="submit" class="btn btn-outline-primary">로그인</button>
+  <button type="submit" class="btn btn-outline-primary" style="float:left">로그인</button>
   <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 </fb:login-button>
-<div id="naver_id_login"><img src='${pageContext.servletContext.contextPath}/upload/img/naver.png' height='150px'></div>
-  
+ <%
+    String clientId = "fNWSIg6R0T0j_Pe5Cig9";//애플리케이션 클라이언트 아이디값";
+    String redirectURI = URLEncoder.encode("http://localhost:9999/sinyj0622-my-trip-project-server/app/auth/naverLogin", "UTF-8");
+    SecureRandom random = new SecureRandom();
+    String state = new BigInteger(130, random).toString();
+    String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
+    apiURL += "&client_id=" + clientId;
+    apiURL += "&redirect_uri=" + redirectURI;
+    apiURL += "&state=" + state;
+    session.setAttribute("state", state);
+ %>
+  <a href="<%=apiURL%>"><img height="50" src="http://static.nid.naver.com/oauth/small_g_in.PNG"/></a>
 </form>
-<script type="text/javascript">
 
+<script type="text/javascript">
 
 window.fbAsyncInit = function() {
   console.log("window.fbAsyncInit() 호출됨!");
@@ -59,15 +71,6 @@ function requestAutoLogin(accessToken){
 	  location.href = "facebookLogin?accessToken=" + accessToken;
 }
 
-
-
-var naver_id_login = new naver_id_login("YOUR_CLIENT_ID", "YOUR_CALLBACK_URL");
-var state = naver_id_login.getUniqState();
-naver_id_login.setButton("white", 2,40);
-naver_id_login.setDomain("YOUR_SERVICE_URL");
-naver_id_login.setState(state);
-naver_id_login.setPopup();
-naver_id_login.init_naver_id_login();
 </script>
 
 
