@@ -10,7 +10,7 @@
   </div>
 </div>
 
-  <a href='add'>새 글</a><br>
+  <a href='form'>새 글</a><br>
   <table border='1'>
   <tr>
     <th>번호</th>
